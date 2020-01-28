@@ -20,9 +20,14 @@ class Ball {
     }
 
     draw(ctx) {
-        ctx.beginPath();
-        ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
-        ctx.stroke();
+        //ctx is a number when clicked so I need to have a conditional here
+        if(typeof ctx === "object") {
+            ctx.beginPath();
+            ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.font = "30px sans-serif";
+            ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+        }
     }
 }
 

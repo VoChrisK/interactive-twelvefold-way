@@ -95,6 +95,8 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -124,9 +126,14 @@ function () {
   }, {
     key: "draw",
     value: function draw(ctx) {
-      ctx.beginPath();
-      ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
-      ctx.stroke();
+      //ctx is a number when clicked so I need to have a conditional here
+      if (_typeof(ctx) === "object") {
+        ctx.beginPath();
+        ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.font = "30px sans-serif";
+        ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+      }
     }
   }]);
 
@@ -175,20 +182,24 @@ document.addEventListener("DOMContentLoaded", function () {
   var newInterface = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](2, 5);
   var animation;
   canvasEl.addEventListener("mousedown", function (event) {
-    newInterface.balls.forEach(function (ball) {
-      if (ball.checkBounds(event)) {
-        animation = window.requestAnimationFrame(ball.draw);
-        ball.isClicked = true;
+    for (var i = 0; i < newInterface.balls.length; i++) {
+      if (newInterface.balls[i].checkBounds(event)) {
+        animation = window.requestAnimationFrame(newInterface.balls[i].draw);
+        newInterface.balls[i].isClicked = true;
+        break; //break here to resolve conflict between overlapping balls
       }
-    });
+    }
   });
   canvasEl.addEventListener("mousemove", function (event) {
     newInterface.balls.forEach(function (ball) {
       if (ball.isClicked) {
-        ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+        ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
+
         ball.pos[0] = event.clientX;
         ball.pos[1] = event.clientY;
-        ball.draw(ctx);
+        newInterface.balls.forEach(function (ball) {
+          return ball.draw(ctx);
+        }); //or use newInterface.start() instead
       }
     });
   });
@@ -198,7 +209,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (ball.isClicked) ball.isClicked = false;
     });
   });
-  window.ctx = ctx;
   newInterface.start(ctx);
 });
 
