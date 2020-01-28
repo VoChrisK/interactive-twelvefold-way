@@ -2,8 +2,9 @@ class Bin {
     constructor(label, pos, bounds) {
         this.label = label;
         this.pos = pos;
-        this.amount = [];
         this.bounds = bounds //[X1, X2, Y]
+
+        this.balls = [];
     }
 
     checkBounds(x, y) {
@@ -19,6 +20,19 @@ class Bin {
 
     checkBall(ball) {
         return this.checkBounds(ball.boundingBox[0][0], ball.boundingBox[0][1]) && this.checkBounds(ball.boundingBox[1][0], ball.boundingBox[1][1]) && this.checkBounds(ball.boundingBox[2][0], ball.boundingBox[2][1]) && this.checkBounds(ball.boundingBox[3][0], ball.boundingBox[3][1]);
+    }
+
+    addBall(ball) {
+        if(!this.balls.includes(ball) && this.checkBall(ball)) {
+            this.balls.push(ball);
+        }
+    }
+
+    removeBall(ball) {
+        if(this.balls.includes(ball) && !this.checkBall(ball)) {
+            let index = this.balls.indexOf(ball);
+            this.balls.splice(index, 1);
+        }
     }
 
     draw(ctx) {

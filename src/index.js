@@ -23,12 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 ball.pos[0] = event.clientX;
                 ball.pos[1] = event.clientY;
                 newInterface.draw(ctx);
-
-                newInterface.bins.forEach(bin => {
-                    if (bin.checkBall(ball)) {
-                        console.log("ball is in");
-                    }
-                })
             }
         });
     });
@@ -36,7 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
     canvasEl.addEventListener("mouseup", event => {
         window.cancelAnimationFrame(animation);
         newInterface.balls.forEach(ball => {
-            if (ball.isClicked) ball.isClicked = false;
+            if (ball.isClicked) {
+                ball.isClicked = false;
+                newInterface.bins.forEach(bin => {
+                    bin.addBall(ball);
+                    bin.removeBall(ball);
+                })
+            }
         });
     });
 

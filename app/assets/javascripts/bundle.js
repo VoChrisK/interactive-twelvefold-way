@@ -173,8 +173,9 @@ function () {
 
     this.label = label;
     this.pos = pos;
-    this.amount = [];
     this.bounds = bounds; //[X1, X2, Y]
+
+    this.balls = [];
   }
 
   _createClass(Bin, [{
@@ -187,6 +188,21 @@ function () {
     key: "checkBall",
     value: function checkBall(ball) {
       return this.checkBounds(ball.boundingBox[0][0], ball.boundingBox[0][1]) && this.checkBounds(ball.boundingBox[1][0], ball.boundingBox[1][1]) && this.checkBounds(ball.boundingBox[2][0], ball.boundingBox[2][1]) && this.checkBounds(ball.boundingBox[3][0], ball.boundingBox[3][1]);
+    }
+  }, {
+    key: "addBall",
+    value: function addBall(ball) {
+      if (!this.balls.includes(ball) && this.checkBall(ball)) {
+        this.balls.push(ball);
+      }
+    }
+  }, {
+    key: "removeBall",
+    value: function removeBall(ball) {
+      if (this.balls.includes(ball) && !this.checkBall(ball)) {
+        var index = this.balls.indexOf(ball);
+        this.balls.splice(index, 1);
+      }
     }
   }, {
     key: "draw",
@@ -242,18 +258,19 @@ document.addEventListener("DOMContentLoaded", function () {
         ball.pos[0] = event.clientX;
         ball.pos[1] = event.clientY;
         newInterface.draw(ctx);
-        newInterface.bins.forEach(function (bin) {
-          if (bin.checkBall(ball)) {
-            console.log("ball is in");
-          }
-        });
       }
     });
   });
   canvasEl.addEventListener("mouseup", function (event) {
     window.cancelAnimationFrame(animation);
     newInterface.balls.forEach(function (ball) {
-      if (ball.isClicked) ball.isClicked = false;
+      if (ball.isClicked) {
+        ball.isClicked = false;
+        newInterface.bins.forEach(function (bin) {
+          bin.addBall(ball);
+          bin.removeBall(ball);
+        });
+      }
     });
   });
   newInterface.draw(ctx);
@@ -333,13 +350,100 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bin */ "./src/bin.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+ //true values denote there exists a partition, false values denote there doesn't not exist a partition
+
+var Partition =
+/*#__PURE__*/
+function () {
+  function Partition(bins, ballType, binType, rules) {
+    _classCallCheck(this, Partition);
+
+    this.bins = bins; //array or object of bins
+
+    this.ballType = ballType;
+    this.binType = binType;
+    this, rules = rules; //unrestricted, injective, surjective
+  } //this function checks if there is a parititon. 
+  //It matches each input's bin with each partition's 
+  //bin to check if they have the same configuration. 
+  //A counter variable keeps track of simiarities: if 
+  //the counter equals to the total # of bins, then this 
+  //implies that the partition already exists
 
 
-var Partition = function Partition() {
-  _classCallCheck(this, Partition);
+  _createClass(Partition, [{
+    key: "checkBins",
+    value: function checkBins(bins) {
+      var counter = 0;
 
-  this.bins = [];
-};
+      for (var i = 0; i < this.bins.length; i++) {}
+
+      return counter === this.bins.length;
+    } //only if the bins and balls are distinguishable
+
+  }, {
+    key: "checkOrderOfBalls",
+    value: function checkOrderOfBalls(bin1, bin2) {
+      if (bin1.length !== bin2.length) return false;
+
+      for (var i = 0; i < bin1.length; i++) {
+        if (bin1[i] !== bin2[i]) return false; //return false if the order is incorrect
+      }
+
+      return true; //return true if the order is the same for both bins
+    } //only if the bins are indistinguishable and the balls are not.
+    //For a given order of balls, check against other bins in a partition 
+    // if there exist similar order. Return true 
+    //exist
+
+  }, {
+    key: "checkAgainstOtherBins",
+    value: function checkAgainstOtherBins() {} //only if the bins are distinguishable, and balls are indistinguishable, check count of bins
+
+  }, {
+    key: "checkTotalBalls",
+    value: function checkTotalBalls(bin1, bin2) {
+      return bin1.length === bin2.length;
+    }
+  }, {
+    key: "checkRules",
+    value: function checkRules(bin) {
+      if (this.rules.toLowerCase() === "injective") {
+        return this.checkInjective(bin);
+      } else if (this.rules.toLowerCase() === "surjective") {
+        return this.checkSurjective(bin);
+      } else {
+        return true;
+      }
+    } //if a bin has at most one ball
+
+  }, {
+    key: "checkInjective",
+    value: function checkInjective(bin) {
+      if (bin.length <= 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } //if a bin has at least one ball
+
+  }, {
+    key: "checkSurjective",
+    value: function checkSurjective(bin) {
+      if (bin.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }]);
+
+  return Partition;
+}();
 
 /* harmony default export */ __webpack_exports__["default"] = (Partition);
 
