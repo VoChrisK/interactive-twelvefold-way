@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     canvasEl.addEventListener("mousedown", event => {
         for(let i = 0; i < newInterface.balls.length; i++) {
-            if (newInterface.balls[i].checkBounds(event)) {
+            if (newInterface.balls[i].checkBounds(event.clientX, event.clientY)) {
                 animation = window.requestAnimationFrame(newInterface.balls[i].draw);
                 newInterface.balls[i].isClicked = true;
                 break; //break here to resolve conflict between overlapping balls
@@ -22,7 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
                 ball.pos[0] = event.clientX;
                 ball.pos[1] = event.clientY;
-                newInterface.balls.forEach(ball => ball.draw(ctx)); //or use newInterface.start() instead
+                newInterface.draw(ctx);
+
+                newInterface.bins.forEach(bin => {
+                    if (bin.checkBall(ball)) {
+                        console.log("ball is in");
+                    }
+                })
             }
         });
     });
@@ -34,5 +40,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    newInterface.start(ctx);
+    newInterface.draw(ctx);
 });

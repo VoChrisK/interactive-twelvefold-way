@@ -9,10 +9,14 @@ class Interface {
             this.balls[i] = new Ball(i, [100 * (i + 1), 50], 35);
         }
         this.bins = new Array(numBins);
+        for (let i = 0; i < this.bins.length; i++) {
+            this.bins[i] = new Bin(i, [350 * i, 200], [40, 250, 250]);
+        }
     }
 
-    start(ctx) {
+    draw(ctx) {
         this.balls.forEach(ball => ball.draw(ctx));
+        this.bins.forEach(bin => bin.draw(ctx));
     }
 }
 

@@ -113,27 +113,31 @@ function () {
     this.pos = pos;
     this.radius = radius;
     this.isClicked = false;
+    this.boundingBox = [[this.pos[0] - this.radius, this.pos[1] - this.radius], [this.pos[0] - this.radius, this.pos[1] + this.radius], [this.pos[0] + this.radius, this.pos[1] - this.radius], [this.pos[0] + this.radius, this.pos[1] + this.radius]];
   }
 
   _createClass(Ball, [{
     key: "checkBounds",
-    value: function checkBounds(event) {
-      var x = event.clientX;
-      var y = event.clientY;
-      var box = [[this.pos[0] - this.radius, this.pos[1] - this.radius], [this.pos[0] - this.radius, this.pos[1] + this.radius], [this.pos[0] + this.radius, this.pos[1] - this.radius], [this.pos[0] + this.radius, this.pos[1] + this.radius]];
-      return x >= box[0][0] && y >= box[0][1] && x >= box[1][0] && y < box[1][1] && x < box[2][0] && y >= box[2][1] && x < box[3][0] && y < box[3][1];
+    value: function checkBounds(x, y) {
+      return x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1] && x >= this.boundingBox[1][0] && y < this.boundingBox[1][1] && x < this.boundingBox[2][0] && y >= this.boundingBox[2][1] && x < this.boundingBox[3][0] && y < this.boundingBox[3][1];
     }
   }, {
     key: "draw",
     value: function draw(ctx) {
       //ctx is a number when clicked so I need to have a conditional here
       if (_typeof(ctx) === "object") {
+        this.recalculateBoundingBox();
         ctx.beginPath();
         ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
         ctx.stroke();
         ctx.font = "30px sans-serif";
         ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
       }
+    }
+  }, {
+    key: "recalculateBoundingBox",
+    value: function recalculateBoundingBox() {
+      this.boundingBox = [[this.pos[0] - this.radius, this.pos[1] - this.radius], [this.pos[0] - this.radius, this.pos[1] + this.radius], [this.pos[0] + this.radius, this.pos[1] - this.radius], [this.pos[0] + this.radius, this.pos[1] + this.radius]];
     }
   }]);
 
@@ -153,13 +157,53 @@ function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Bin = function Bin() {
-  _classCallCheck(this, Bin);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.amount = [];
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Bin =
+/*#__PURE__*/
+function () {
+  function Bin(label, pos, bounds) {
+    _classCallCheck(this, Bin);
+
+    this.label = label;
+    this.pos = pos;
+    this.amount = [];
+    this.bounds = bounds; //[X1, X2, Y]
+  }
+
+  _createClass(Bin, [{
+    key: "checkBounds",
+    value: function checkBounds(x, y) {
+      var box = [[this.pos[0], this.pos[1]], [this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]]];
+      return x >= box[0][0] && y >= box[0][1] && x >= box[1][0] && y < box[1][1] && x < box[2][0] && y < box[2][1] && x < box[3][0] && y >= box[3][1];
+    }
+  }, {
+    key: "checkBall",
+    value: function checkBall(ball) {
+      return this.checkBounds(ball.boundingBox[0][0], ball.boundingBox[0][1]) && this.checkBounds(ball.boundingBox[1][0], ball.boundingBox[1][1]) && this.checkBounds(ball.boundingBox[2][0], ball.boundingBox[2][1]) && this.checkBounds(ball.boundingBox[3][0], ball.boundingBox[3][1]);
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      if (_typeof(ctx) === "object") {
+        ctx.beginPath();
+        ctx.moveTo(this.pos[0], this.pos[1]);
+        ctx.lineTo(this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]);
+        ctx.lineTo(this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]);
+        ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]);
+        ctx.stroke();
+      }
+    }
+  }]);
+
+  return Bin;
+}();
 
 /* harmony default export */ __webpack_exports__["default"] = (Bin);
 
@@ -183,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var animation;
   canvasEl.addEventListener("mousedown", function (event) {
     for (var i = 0; i < newInterface.balls.length; i++) {
-      if (newInterface.balls[i].checkBounds(event)) {
+      if (newInterface.balls[i].checkBounds(event.clientX, event.clientY)) {
         animation = window.requestAnimationFrame(newInterface.balls[i].draw);
         newInterface.balls[i].isClicked = true;
         break; //break here to resolve conflict between overlapping balls
@@ -197,9 +241,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         ball.pos[0] = event.clientX;
         ball.pos[1] = event.clientY;
-        newInterface.balls.forEach(function (ball) {
-          return ball.draw(ctx);
-        }); //or use newInterface.start() instead
+        newInterface.draw(ctx);
+        newInterface.bins.forEach(function (bin) {
+          if (bin.checkBall(ball)) {
+            console.log("ball is in");
+          }
+        });
       }
     });
   });
@@ -209,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (ball.isClicked) ball.isClicked = false;
     });
   });
-  newInterface.start(ctx);
+  newInterface.draw(ctx);
 });
 
 /***/ }),
@@ -249,13 +296,20 @@ function () {
     }
 
     this.bins = new Array(numBins);
+
+    for (var _i = 0; _i < this.bins.length; _i++) {
+      this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i, [350 * _i, 200], [40, 250, 250]);
+    }
   }
 
   _createClass(Interface, [{
-    key: "start",
-    value: function start(ctx) {
+    key: "draw",
+    value: function draw(ctx) {
       this.balls.forEach(function (ball) {
         return ball.draw(ctx);
+      });
+      this.bins.forEach(function (bin) {
+        return bin.draw(ctx);
       });
     }
   }]);
