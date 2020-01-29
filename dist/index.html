@@ -1,6 +1,9 @@
 <html>
 
 <head>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="application/javascript" src="../app/assets/javascripts/bundle.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./../stylesheets/reset.css" type="text/css">
@@ -8,7 +11,7 @@
 </head>
 
 <body>
-    <header class="header-container">
+    <header id="top-of-page" class="header-container">
         <h1 class="header-name">Interactive Twelvefold Way</h1>
         <ul class="links">
 
@@ -32,6 +35,81 @@
                 <button class="submit">Submit</button>
             </form>
         </aside>
+    </section>
+
+    <section class="extras">
+        <section class="grid-formulas">
+            <h1>Twelvefold Way</h1>
+            <h1>Unrestricted <i class="fa fa-question-circle"></i></h1>
+            <h1>Injective <i class="fa fa-question-circle"></i></h1>
+            <h1>Surjective <i class="fa fa-question-circle"></i></h1>
+
+            <h1>
+                k Distinguishable Balls
+                <br>
+                n Distinguishable Bins
+            </h1>
+            <a class="dd unr" href="#top-of-page">$$n^k$$</a>
+            <a class="dd inj" href="#top-of-page">
+                $$\frac{n!}{(n-k)!}$$
+            </a>
+            <a class="dd sur" href="#top-of-page">
+                $$S(k,n) × n!$$
+            </a>
+
+            <h1>
+                k Distinguishable Balls
+                <br>
+                n Indistinguishable Bins
+            </h1>
+            <a class="di unr" href="#top-of-page">
+                $$\sum_{i=0}^k S(k,i)$$
+            </a>
+            <a class="di inj" href="#top-of-page">
+                \[ \begin{cases}
+                1 & k\leq n \\
+                0 & otherwise
+                \end{cases}
+                \]
+            </a>
+            <a class="di sur" href="#top-of-page">
+                $$S(k,n)$$
+            </a>
+
+            <h1>
+                k Indistinguishable Balls
+                <br>
+                n Distinguishable Bins
+            </h1>
+            <a class="id unr" href="#top-of-page">
+                $${n-1 \choose k-1}$$
+            </a>
+            <a class="id inj" href="#top-of-page">
+                $${n \choose k}$$
+            </a>
+            <a class="id sur" href="#top-of-page">
+                $${n+k-1 \choose n-1}$$
+            </a>
+
+            <h1>
+                k Indistinguishable Balls
+                <br>
+                n Indistinguishable Bins
+            </h1>
+            <a class="ii unr" href="#top-of-page">
+                $$\sum_{i=0}^k P(k,i)$$
+            </a>
+            <a class="ii inj" href="#top-of-page">
+                \[ \begin{cases}
+                1 & k\leq n \\
+                0 & otherwise
+                \end{cases}
+                \]
+            </a>
+            <a class="ii sur" href="#top-of-page">
+                $$P(k,n)$$
+            </a>
+        </section>
     </section>
 </body>
 

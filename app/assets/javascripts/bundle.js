@@ -252,47 +252,194 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _interface__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./interface */ "./src/interface.js");
+/* harmony import */ var _interface_view__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./interface-view */ "./src/interface-view.js");
+/* harmony import */ var _util_formulas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../util/formulas */ "./util/formulas.js");
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
   var canvasEl = document.getElementById("canvas");
   var ctx = canvasEl.getContext("2d");
-  var newInterface = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](4, 3);
+  var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_2__["calculateDDUnrestricted"])(3, 3);
+  var newInterfaceView = new _interface_view__WEBPACK_IMPORTED_MODULE_1__["default"]("distinguishable", "distinguishable", "unrestricted", result, ctx);
   var animation;
-  console.log(canvasEl.getBoundingClientRect());
   canvasEl.addEventListener("mousedown", function (event) {
-    for (var i = 0; i < newInterface.balls.length; i++) {
-      if (newInterface.balls[i].checkBounds(event.offsetX, event.offsetY)) {
-        animation = window.requestAnimationFrame(newInterface.balls[i].draw);
-        newInterface.balls[i].isClicked = true;
+    for (var i = 0; i < newInterfaceView["interface"].balls.length; i++) {
+      if (newInterfaceView["interface"].balls[i].checkBounds(event.offsetX, event.offsetY)) {
+        animation = window.requestAnimationFrame(newInterfaceView["interface"].balls[i].draw);
+        newInterfaceView["interface"].balls[i].isClicked = true;
         break; //break here to resolve conflict between overlapping balls
       }
     }
   });
   canvasEl.addEventListener("mousemove", function (event) {
-    newInterface.balls.forEach(function (ball) {
+    newInterfaceView["interface"].balls.forEach(function (ball) {
       if (ball.isClicked) {
         ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
 
         ball.pos[0] = event.offsetX;
         ball.pos[1] = event.offsetY;
-        newInterface.draw(ctx);
+        newInterfaceView["interface"].draw(ctx);
       }
     });
   });
   canvasEl.addEventListener("mouseup", function (event) {
     window.cancelAnimationFrame(animation);
-    newInterface.balls.forEach(function (ball) {
+    newInterfaceView["interface"].balls.forEach(function (ball) {
       if (ball.isClicked) {
         ball.isClicked = false;
-        newInterface.bins.forEach(function (bin) {
+        newInterfaceView["interface"].bins.forEach(function (bin) {
           bin.addBall(ball);
           bin.removeBall(ball);
         });
       }
     });
   });
-  newInterface.draw(ctx);
+  newInterfaceView.addEventsToRules();
+  newInterfaceView.addEventsToCases();
+  newInterfaceView.addEventsToButtons();
+  newInterfaceView.start();
 });
+
+/***/ }),
+
+/***/ "./src/interface-view.js":
+/*!*******************************!*\
+  !*** ./src/interface-view.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _interface__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./interface */ "./src/interface.js");
+/* harmony import */ var _util_formulas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../util/formulas */ "./util/formulas.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+var InterfaceView =
+/*#__PURE__*/
+function () {
+  function InterfaceView(ballType, binType, rules, numPartitons, ctx) {
+    _classCallCheck(this, InterfaceView);
+
+    this.ballType = ballType;
+    this.binType = binType;
+    this.rules = rules;
+    this.numPartitons = numPartitons;
+    this.ctx = ctx;
+    this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3, 100, 300);
+  }
+
+  _createClass(InterfaceView, [{
+    key: "addEventsToCases",
+    value: function addEventsToCases() {
+      var _this = this;
+
+      var case1 = document.getElementsByClassName("dd");
+      var case2 = document.getElementsByClassName("di");
+      var case3 = document.getElementsByClassName("id");
+      var case4 = document.getElementsByClassName("ii");
+
+      for (var i = 0; i < case1.length; i++) {
+        case1[i].addEventListener("click", function (event) {
+          _this.ballType = "distinguishable";
+          _this.binType = "distinguishable";
+
+          _this.resetInterface();
+
+          _this.start();
+        });
+        case2[i].addEventListener("click", function (event) {
+          _this.ballType = "distinguishable";
+          _this.binType = "indistinguishable";
+
+          _this.resetInterface();
+
+          _this.start();
+        });
+        case3[i].addEventListener("click", function (event) {
+          _this.ballType = "indistinguishable";
+          _this.binType = "distinguishable";
+
+          _this.resetInterface();
+
+          _this.start();
+        });
+        case4[i].addEventListener("click", function (event) {
+          _this.ballType = "indistinguishable";
+          _this.binType = "indistinguishable";
+
+          _this.resetInterface();
+
+          _this.start();
+        });
+      }
+    }
+  }, {
+    key: "addEventsToRules",
+    value: function addEventsToRules() {
+      var _this2 = this;
+
+      var rule1 = document.getElementsByClassName("unr");
+      var rule2 = document.getElementsByClassName("inj");
+      var rule3 = document.getElementsByClassName("sur");
+
+      for (var i = 0; i < rule1.length; i++) {
+        rule1[i].addEventListener("click", function (event) {
+          _this2.rules = "unrestricted";
+        });
+        rule2[i].addEventListener("click", function (event) {
+          _this2.rules = "injective";
+        });
+        rule3[i].addEventListener("click", function (event) {
+          _this2.rules = "surjective";
+        });
+      }
+    }
+  }, {
+    key: "addEventsToButtons",
+    value: function addEventsToButtons() {
+      var _this3 = this;
+
+      document.getElementsByClassName("submit-partition")[0].addEventListener("submit", function (event) {
+        if (_this3["interface"].addPartition(event, _this3.rules, _this3.ballType, _this3.binType)) {
+          console.log(_this3["interface"].partitions);
+        } else {
+          console.log("Cannot add partition!");
+        }
+      });
+    }
+  }, {
+    key: "resetState",
+    value: function resetState() {
+      this["interface"].setBalls();
+      var canvasEl = document.getElementById("canvas");
+      this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+    }
+  }, {
+    key: "resetInterface",
+    value: function resetInterface() {
+      this.resetState();
+      this["interface"].partitions = [];
+    }
+  }, {
+    key: "start",
+    value: function start() {
+      this["interface"].draw(this.ctx);
+    }
+  }]);
+
+  return InterfaceView;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (InterfaceView);
 
 /***/ }),
 
@@ -323,36 +470,33 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Interface =
 /*#__PURE__*/
 function () {
-  function Interface(numBalls, numBins, ballType, binType) {
-    var _this = this;
-
+  function Interface(numBalls, numBins, ballPosition, binPosition) {
     _classCallCheck(this, Interface);
 
     this.balls = new Array(numBalls);
     this.bins = new Array(numBins);
+    this.ballPosition = ballPosition;
+    this.binPosition = binPosition;
     this.partitions = [];
-    document.getElementsByClassName("submit-partition")[0].addEventListener("submit", function (event) {
-      if (_this.addPartition(event)) {
-        console.log(_this.partitions);
-      } else {
-        console.log("Cannot add partition!");
-      }
-    });
-
-    for (var i = 0; i < this.balls.length; i++) {
-      this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i + 1, [100 * (i + 1), 50], 35);
-    }
-
-    for (var _i = 0; _i < this.bins.length; _i++) {
-      this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [300 * _i + 20, 400], [40, 210, 200]);
-    }
+    this.setBalls();
   }
 
   _createClass(Interface, [{
+    key: "setBalls",
+    value: function setBalls() {
+      for (var i = 0; i < this.balls.length; i++) {
+        this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i + 1, [this.ballPosition * (i + 1), 50], 35);
+      }
+
+      for (var _i = 0; _i < this.bins.length; _i++) {
+        this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [this.binPosition * _i + 20, 400], [40, 210, 200]);
+      }
+    }
+  }, {
     key: "violateConstraints",
-    value: function violateConstraints() {
+    value: function violateConstraints(rules) {
       for (var i = 0; i < this.bins.length; i++) {
-        if (!Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["checkConstraints"])("unrestricted", this.bins[i])) return true;
+        if (!Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["checkConstraints"])(rules, this.bins[i])) return true;
       }
 
       return false;
@@ -368,9 +512,9 @@ function () {
 
   }, {
     key: "checkEachPartition",
-    value: function checkEachPartition() {
+    value: function checkEachPartition(ballType, binType) {
       for (var i = 0; i < this.partitions.length; i++) {
-        if (this.partitions[i].checkBins(this.bins, Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["determineCases"])("distinguishable", "distinguishable"))) {
+        if (this.partitions[i].checkBins(this.bins, Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["determineCases"])(ballType, binType))) {
           return true;
         }
       }
@@ -379,11 +523,11 @@ function () {
     }
   }, {
     key: "addPartition",
-    value: function addPartition(event) {
+    value: function addPartition(event, rules, ballType, binType) {
       event.preventDefault();
-      if (this.checkEachPartition() || this.violateConstraints() || !this.checkBalls()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
+      if (this.checkEachPartition(ballType, binType) || this.violateConstraints(rules) || !this.checkBalls()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
 
-      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins)), "surjective"));
+      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins)), rules));
       return true;
     }
   }, {
@@ -569,6 +713,132 @@ var checkSurjective = function checkSurjective(bin) {
   } else {
     return false;
   }
+};
+
+/***/ }),
+
+/***/ "./util/formulas.js":
+/*!**************************!*\
+  !*** ./util/formulas.js ***!
+  \**************************/
+/*! exports provided: calculateDDUnrestricted, calculateDDInjective, calculateDDSurjective, calculateDIUnrestricted, calculateDIInjective, calculateDISurjective, calculateIDUnrestricted, calculateIDInjective, calculateIDSurjective, calculateIIUnrestricted, calculateIIInjective, calculateIISurjective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDDUnrestricted", function() { return calculateDDUnrestricted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDDInjective", function() { return calculateDDInjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDDSurjective", function() { return calculateDDSurjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDIUnrestricted", function() { return calculateDIUnrestricted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDIInjective", function() { return calculateDIInjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDISurjective", function() { return calculateDISurjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIDUnrestricted", function() { return calculateIDUnrestricted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIDInjective", function() { return calculateIDInjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIDSurjective", function() { return calculateIDSurjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIIUnrestricted", function() { return calculateIIUnrestricted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIIInjective", function() { return calculateIIInjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIISurjective", function() { return calculateIISurjective; });
+//function naming convention: First character is label (Distinguishable or Indistinguishable) of ball, second character is label of bin, last word is rules
+//k distinguishable balls, n distinguishable bins, no restrictions
+var calculateDDUnrestricted = function calculateDDUnrestricted(n, k) {
+  return Math.pow(n, k);
+}; //k distinguishable balls, n distinguishable bins, injective
+
+var calculateDDInjective = function calculateDDInjective(n, k) {
+  var max = n - k + 1;
+  var total = 1;
+
+  while (n > max) {
+    total *= n;
+    n -= 1;
+  }
+
+  return total * max;
+}; //k distinguishable balls, n distinguishable bins, surjective
+
+var calculateDDSurjective = function calculateDDSurjective(n, k) {
+  return calculateStirlingNumber(n, k) * calculateFactorial(n);
+}; //k distinguishable balls, n indistinguishable bins, no restrictions
+
+var calculateDIUnrestricted = function calculateDIUnrestricted(n, k) {
+  return calculateBinomialCoefficient(k - 1, n - 1);
+};
+var calculateDIInjective = function calculateDIInjective(n, k) {
+  return calculateBinomialCoefficient(n, k);
+}; //k distinguishable balls, n indistinguishable bins, surjective
+
+var calculateDISurjective = function calculateDISurjective(n, k) {
+  return calculateBinomialCoefficient(n + k + 1, n - 1);
+}; //k indistinguishable balls, n distinguishable bins, no restrictions
+
+var calculateIDUnrestricted = function calculateIDUnrestricted(n, k) {
+  var numbers = getNumbersArray(k);
+
+  var formula = function formula(acc, i) {
+    return acc + calculateStirlingNumber(k, i);
+  };
+
+  return numbers.reduce(formula, 0);
+}; //k indistinguishable balls, n distinguishable bins, injective
+
+var calculateIDInjective = function calculateIDInjective(n, k) {
+  if (k <= n) {
+    return 1;
+  } else {
+    return 0;
+  }
+}; //k indistinguishable balls, n distinguishable bins, surjective
+
+var calculateIDSurjective = function calculateIDSurjective(n, k) {
+  return calculateStirlingNumber(n, k);
+}; //k indistinguishable balls, n indistinguishable bins, no restrictions
+
+var calculateIIUnrestricted = function calculateIIUnrestricted(n, k) {}; //k indistinguishable balls, n indistinguishable bins, injective
+
+var calculateIIInjective = function calculateIIInjective(n, k) {
+  if (k <= n) {
+    return 1;
+  } else {
+    return 0;
+  }
+}; //k indistinguishable balls, n indistinguishable bins, surjective
+
+var calculateIISurjective = function calculateIISurjective(n, k) {};
+
+var calculateStirlingNumber = function calculateStirlingNumber(n, k) {
+  var numbers = getNumbersArray(k);
+
+  var formula = function formula(acc, i) {
+    return acc + Math.pow(-1, i) * calculateBinomialCoefficient(k, i) * Math.pow(k - i, n);
+  };
+
+  var sumResults = numbers.reduce(formula, 0);
+  return 1 / calculateFactorial(k) * sumResults;
+};
+
+var calculateBinomialCoefficient = function calculateBinomialCoefficient(n, k) {
+  return Math.floor(calculateFactorial(n) / (calculateFactorial(n - k) * calculateFactorial(k)));
+};
+
+var calculateFactorial = function calculateFactorial(n) {
+  var total = 1;
+
+  while (n > 0) {
+    total *= n;
+    n -= 1;
+  }
+
+  return total;
+};
+
+var getNumbersArray = function getNumbersArray(n) {
+  var numbers = new Array(n + 1);
+
+  for (var i = 0; i < numbers.length; i++) {
+    numbers[i] = i;
+  }
+
+  return numbers;
 };
 
 /***/ })

@@ -4,30 +4,28 @@ import Partition from './partiton';
 import { determineCases, checkConstraints } from '../util/checks';
 
 class Interface {
-    constructor(numBalls, numBins, ballType, binType) {
+    constructor(numBalls, numBins, ballPosition, binPosition) {
         this.balls = new Array(numBalls);
         this.bins = new Array(numBins);
+        this.ballPosition = ballPosition;
+        this.binPosition = binPosition;
         this.partitions = [];
-        document.getElementsByClassName("submit-partition")[0].addEventListener("submit", event => {
-            if(this.addPartition(event)) {
-                console.log(this.partitions);
-            } else {
-                console.log("Cannot add partition!");
-            }
-        });
+        this.setBalls();
+    }
 
-        for(let i = 0; i < this.balls.length; i++) {
-            this.balls[i] = new Ball(i + 1, [100 * (i + 1), 50], 35);
+    setBalls() {
+        for (let i = 0; i < this.balls.length; i++) {
+            this.balls[i] = new Ball(i + 1, [this.ballPosition * (i + 1), 50], 35);
         }
 
         for (let i = 0; i < this.bins.length; i++) {
-            this.bins[i] = new Bin(i + 1, [(300 * i) + 20, 400], [40, 210, 200]);
+            this.bins[i] = new Bin(i + 1, [(this.binPosition * i) + 20, 400], [40, 210, 200]);
         }
     }
 
-    violateConstraints() {
+    violateConstraints(rules) {
         for(let i = 0; i < this.bins.length; i++) {
-            if(!checkConstraints("unrestricted", this.bins[i])) return true;
+            if(!checkConstraints(rules, this.bins[i])) return true;
         }
 
         return false;
@@ -39,9 +37,9 @@ class Interface {
     }
 
     //checks if there exists a partition that is identical. Returns true if that's the case
-    checkEachPartition() {
+    checkEachPartition(ballType, binType) {
         for (let i = 0; i < this.partitions.length; i++) {
-            if (this.partitions[i].checkBins(this.bins, determineCases("distinguishable", "distinguishable"))) {
+            if (this.partitions[i].checkBins(this.bins, determineCases(ballType, binType))) {
                 return true;
             }
         }
@@ -49,12 +47,12 @@ class Interface {
         return false;
     }
 
-    addPartition(event) {
+    addPartition(event, rules, ballType, binType) {
         event.preventDefault();
-        if(this.checkEachPartition() || this.violateConstraints() || !this.checkBalls()) return false;
+        if(this.checkEachPartition(ballType, binType) || this.violateConstraints(rules) || !this.checkBalls()) return false;
 
         //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
-        this.partitions.push(new Partition(JSON.parse(JSON.stringify(this.bins)), "surjective"));
+        this.partitions.push(new Partition(JSON.parse(JSON.stringify(this.bins)), rules));
         return true;
     }
 
