@@ -176,14 +176,25 @@ function () {
     this.bounds = bounds; //[X1, X2, Y]
 
     this.balls = [];
+    this.boundingBox = [[this.pos[0], this.pos[1]], [this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]]];
   }
 
   _createClass(Bin, [{
     key: "checkBounds",
     value: function checkBounds(x, y) {
-      var box = [[this.pos[0], this.pos[1]], [this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]]];
-      return x >= box[0][0] && y >= box[0][1] && x >= box[1][0] && y < box[1][1] && x < box[2][0] && y < box[2][1] && x < box[3][0] && y >= box[3][1];
-    }
+      return x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1] && x >= this.boundingBox[1][0] && y < this.boundingBox[1][1] && x < this.boundingBox[2][0] && y < this.boundingBox[2][1] && x < this.boundingBox[3][0] && y >= this.boundingBox[3][1];
+    } // checkCollision(x, y) {
+    //     let line1 = [this.boundingBox[1][0] - this.boundingBox[0][0], this.boundingBox[1][1] - this.boundingBox[0][1]];
+    //     let line2 = [this.boundingBox[2][0] - this.boundingBox[1][0], this.boundingBox[2][1] - this.boundingBox[1][1]];
+    //     let line3 = [this.boundingBox[3][0] - this.boundingBox[2][0], this.boundingBox[3][1] - this.boundingBox[2][1]];
+    //     if(x === line1[0], y === line1[1]) {
+    //         this.pos = line1;
+    //     } else if(x === line2[0], line2[1]) {
+    //         this.pos = line2;
+    //     } else if(x === line3[0], line3[1]) {
+    //     }
+    // }
+
   }, {
     key: "checkBall",
     value: function checkBall(ball) {
@@ -208,6 +219,7 @@ function () {
     key: "draw",
     value: function draw(ctx) {
       if (_typeof(ctx) === "object") {
+        this.recalculateBoundingBox();
         ctx.beginPath();
         ctx.moveTo(this.pos[0], this.pos[1]);
         ctx.lineTo(this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]);
@@ -215,6 +227,11 @@ function () {
         ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]);
         ctx.stroke();
       }
+    }
+  }, {
+    key: "recalculateBoundingBox",
+    value: function recalculateBoundingBox() {
+      this.boundingBox = [[this.pos[0], this.pos[1]], [this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]], [this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]]];
     }
   }]);
 
@@ -323,11 +340,11 @@ function () {
     });
 
     for (var i = 0; i < this.balls.length; i++) {
-      this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i, [100 * (i + 1), 50], 35);
+      this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i + 1, [100 * (i + 1), 50], 35);
     }
 
     for (var _i = 0; _i < this.bins.length; _i++) {
-      this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i, [300 * _i + 20, 400], [40, 210, 200]);
+      this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [300 * _i + 20, 400], [40, 210, 200]);
     }
   }
 
@@ -335,17 +352,25 @@ function () {
     key: "violateConstraints",
     value: function violateConstraints() {
       for (var i = 0; i < this.bins.length; i++) {
-        if (!Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["checkConstraints"])("surjective", this.bins[i])) return true;
+        if (!Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["checkConstraints"])("unrestricted", this.bins[i])) return true;
       }
 
       return false;
+    } //this function checks if all balls are in the bins by checking if the total balls in bins equals to the total balls
+
+  }, {
+    key: "checkBalls",
+    value: function checkBalls() {
+      return this.balls.length === this.bins.reduce(function (acc, bin) {
+        return acc + bin.balls.length;
+      }, 0);
     } //checks if there exists a partition that is identical. Returns true if that's the case
 
   }, {
     key: "checkEachPartition",
     value: function checkEachPartition() {
       for (var i = 0; i < this.partitions.length; i++) {
-        if (this.partitions[i].checkBins(this.bins, Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["determineCases"])("distinguishable", "indistinguishable"))) {
+        if (this.partitions[i].checkBins(this.bins, Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["determineCases"])("distinguishable", "distinguishable"))) {
           return true;
         }
       }
@@ -356,7 +381,7 @@ function () {
     key: "addPartition",
     value: function addPartition(event) {
       event.preventDefault();
-      if (this.checkEachPartition() || this.violateConstraints()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
+      if (this.checkEachPartition() || this.violateConstraints() || !this.checkBalls()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
 
       this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins)), "surjective"));
       return true;
@@ -422,7 +447,7 @@ function () {
       var counter = 0;
 
       for (var i = 0; i < this.bins.length; i++) {
-        if (checkBothBins(bins[i], this.bins)) {
+        if (checkBothBins(bins[i], this.bins, i)) {
           counter++;
         }
       }
@@ -452,21 +477,23 @@ __webpack_require__.r(__webpack_exports__);
 var determineCases = function determineCases(ballType, binType) {
   if (ballType.toLowerCase() === "distinguishable") {
     if (binType.toLowerCase() === "distinguishable") {
-      return function (bin1, bin2) {
-        return checkOrderOfBalls(bin1.balls, bin2.balls2);
+      return function (bin1, bin2, i) {
+        return checkOrderOfBalls(bin1.balls, bin2[i].balls);
       };
     } else if (binType.toLowerCase() === "indistinguishable") {
       return function (bin1, bin2) {
-        return checkAgainstOtherBins(bin1.balls, bin2);
+        return checkAgainstOtherBins(bin1.balls, bin2, checkForSimilarBalls);
       };
     }
   } else if (ballType.toLowerCase() === "indistinguishable") {
     if (binType.toLowerCase() === "distinguishable") {
-      return function (bin1, bin2) {
-        return checkTotalBalls(bin1.balls, bin2.balls);
+      return function (bin1, bin2, i) {
+        return checkTotalBalls(bin1.balls, bin2[i].balls);
       };
     } else if (binType.toLowerCase() === "indistinguishable") {
-      return null;
+      return function (bin1, bin2) {
+        return checkAgainstOtherBins(bin1.balls, bin2, checkForSimilarLength);
+      };
     }
   }
 }; //only if the bins and balls are distinguishable
@@ -484,18 +511,37 @@ var checkOrderOfBalls = function checkOrderOfBalls(balls1, balls2) {
 
 var checkTotalBalls = function checkTotalBalls(bin1, bin2) {
   return bin1.length === bin2.length;
-}; // only if the bins are indistinguishable and the balls are not.
-// For a given order of balls, check against other bins in a partition 
-// if there exist similar order. Return true if it does.
-// later I will optimize this by using objects for bins
+}; // For a given order of balls, check against other bins in a partition 
+// if there exist similar order.
 
 
-var checkAgainstOtherBins = function checkAgainstOtherBins(balls, otherBins) {
+var checkAgainstOtherBins = function checkAgainstOtherBins(balls, otherBins, checkCallback) {
   for (var i = 0; i < otherBins.length; i++) {
-    if (checkOrderOfBalls(balls, otherBins[i].balls)) return true;
+    if (checkCallback(balls, otherBins[i].balls)) return true;
   }
 
   return false;
+}; //this function checks if two bins have the same balls, but not necessarily in order
+
+
+var checkForSimilarBalls = function checkForSimilarBalls(balls1, balls2) {
+  if (balls1.length !== balls2.length) return false;
+  var labels = {};
+
+  for (var i = 0; i < balls2.length; i++) {
+    labels[balls2[i].label] = balls2[i].label;
+  }
+
+  for (var _i = 0; _i < balls1.length; _i++) {
+    if (!Boolean(labels[balls1[_i].label])) return false;
+  }
+
+  return true; //return true if the order is the same for both bins
+}; //this function checks if two bins have the same amount of balls, regardless of their labels
+
+
+var checkForSimilarLength = function checkForSimilarLength(balls1, balls2) {
+  return balls1.length === balls2.length;
 };
 
 var checkConstraints = function checkConstraints(rules, bin) {

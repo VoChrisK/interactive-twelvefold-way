@@ -17,7 +17,7 @@ class Partition {
     checkBins(bins, checkBothBins) {
         let counter = 0;
         for(let i = 0; i < this.bins.length; i++) {
-            if (checkBothBins(bins[i], this.bins)) {
+            if (checkBothBins(bins[i], this.bins, i)) {
                 counter++;
             }
         }
