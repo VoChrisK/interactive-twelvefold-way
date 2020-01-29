@@ -17,34 +17,12 @@ class Partition {
     checkBins(bins, checkBothBins) {
         let counter = 0;
         for(let i = 0; i < this.bins.length; i++) {
-            if (checkBothBins(bins[i].balls, this.bins[i].balls)) {
+            if (checkBothBins(bins[i], this.bins)) {
                 counter++;
             }
         }
 
-        console.log(counter);
         return counter === this.bins.length;
-    }
-
-    //only if the bins are indistinguishable and the balls are not.
-    //For a given order of balls, check against other bins in a partition 
-    // if there exist similar order. Return true if it does.
-    //later I will optimize this by using objects for bins
-    // checkAgainstOtherBins(balls, otherBins) {
-    //     for(let i = 0; i < otherBins.length; i++) {
-    //         if(otherBins[i].balls.length === balls.length) {
-    //             for(let j = 0; j < otherBins[i].balls.length; j++) {
-    //                 if(otherBins[i].balls[j] !== balls[j]) return false;
-    //             }
-    //         }
-    //     }
-
-    //     return false;
-    // }
-
-    //only if the bins are distinguishable, and balls are indistinguishable, check count of bins
-    checkTotalBalls(bin1, bin2) {
-        return bin1.length === bin2.length
     }
 }
 

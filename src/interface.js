@@ -21,13 +21,13 @@ class Interface {
         }
 
         for (let i = 0; i < this.bins.length; i++) {
-            this.bins[i] = new Bin(i, [350 * i, 200], [40, 250, 250]);
+            this.bins[i] = new Bin(i, [(300 * i) + 20, 400], [40, 210, 200]);
         }
     }
 
     violateConstraints() {
         for(let i = 0; i < this.bins.length; i++) {
-            if(!checkConstraints("injective", this.bins[i])) return true;
+            if(!checkConstraints("surjective", this.bins[i])) return true;
         }
 
         return false;
@@ -36,7 +36,7 @@ class Interface {
     //checks if there exists a partition that is identical. Returns true if that's the case
     checkEachPartition() {
         for (let i = 0; i < this.partitions.length; i++) {
-            if (this.partitions[i].checkBins(this.bins, determineCases("distinguishable", "distinguishable"))) {
+            if (this.partitions[i].checkBins(this.bins, determineCases("distinguishable", "indistinguishable"))) {
                 return true;
             }
         }
@@ -49,7 +49,7 @@ class Interface {
         if(this.checkEachPartition() || this.violateConstraints()) return false;
 
         //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
-        this.partitions.push(new Partition(JSON.parse(JSON.stringify(this.bins)), "injective"));
+        this.partitions.push(new Partition(JSON.parse(JSON.stringify(this.bins)), "surjective"));
         return true;
     }
 

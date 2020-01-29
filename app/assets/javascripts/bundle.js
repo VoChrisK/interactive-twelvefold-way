@@ -237,13 +237,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _interface__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./interface */ "./src/interface.js");
 
 document.addEventListener("DOMContentLoaded", function () {
-  var canvasEl = document.getElementById("interface");
+  var canvasEl = document.getElementById("canvas");
   var ctx = canvasEl.getContext("2d");
-  var newInterface = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3);
+  var newInterface = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](4, 3);
   var animation;
+  console.log(canvasEl.getBoundingClientRect());
   canvasEl.addEventListener("mousedown", function (event) {
     for (var i = 0; i < newInterface.balls.length; i++) {
-      if (newInterface.balls[i].checkBounds(event.clientX, event.clientY)) {
+      if (newInterface.balls[i].checkBounds(event.offsetX, event.offsetY)) {
         animation = window.requestAnimationFrame(newInterface.balls[i].draw);
         newInterface.balls[i].isClicked = true;
         break; //break here to resolve conflict between overlapping balls
@@ -255,8 +256,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (ball.isClicked) {
         ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
 
-        ball.pos[0] = event.clientX;
-        ball.pos[1] = event.clientY;
+        ball.pos[0] = event.offsetX;
+        ball.pos[1] = event.offsetY;
         newInterface.draw(ctx);
       }
     });
@@ -326,7 +327,7 @@ function () {
     }
 
     for (var _i = 0; _i < this.bins.length; _i++) {
-      this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i, [350 * _i, 200], [40, 250, 250]);
+      this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i, [300 * _i + 20, 400], [40, 210, 200]);
     }
   }
 
@@ -334,7 +335,7 @@ function () {
     key: "violateConstraints",
     value: function violateConstraints() {
       for (var i = 0; i < this.bins.length; i++) {
-        if (!Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["checkConstraints"])("injective", this.bins[i])) return true;
+        if (!Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["checkConstraints"])("surjective", this.bins[i])) return true;
       }
 
       return false;
@@ -344,7 +345,7 @@ function () {
     key: "checkEachPartition",
     value: function checkEachPartition() {
       for (var i = 0; i < this.partitions.length; i++) {
-        if (this.partitions[i].checkBins(this.bins, Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["determineCases"])("distinguishable", "distinguishable"))) {
+        if (this.partitions[i].checkBins(this.bins, Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["determineCases"])("distinguishable", "indistinguishable"))) {
           return true;
         }
       }
@@ -357,7 +358,7 @@ function () {
       event.preventDefault();
       if (this.checkEachPartition() || this.violateConstraints()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
 
-      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins)), "injective"));
+      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins)), "surjective"));
       return true;
     }
   }, {
@@ -421,33 +422,12 @@ function () {
       var counter = 0;
 
       for (var i = 0; i < this.bins.length; i++) {
-        if (checkBothBins(bins[i].balls, this.bins[i].balls)) {
+        if (checkBothBins(bins[i], this.bins)) {
           counter++;
         }
       }
 
-      console.log(counter);
       return counter === this.bins.length;
-    } //only if the bins are indistinguishable and the balls are not.
-    //For a given order of balls, check against other bins in a partition 
-    // if there exist similar order. Return true if it does.
-    //later I will optimize this by using objects for bins
-    // checkAgainstOtherBins(balls, otherBins) {
-    //     for(let i = 0; i < otherBins.length; i++) {
-    //         if(otherBins[i].balls.length === balls.length) {
-    //             for(let j = 0; j < otherBins[i].balls.length; j++) {
-    //                 if(otherBins[i].balls[j] !== balls[j]) return false;
-    //             }
-    //         }
-    //     }
-    //     return false;
-    // }
-    //only if the bins are distinguishable, and balls are indistinguishable, check count of bins
-
-  }, {
-    key: "checkTotalBalls",
-    value: function checkTotalBalls(bin1, bin2) {
-      return bin1.length === bin2.length;
     }
   }]);
 
@@ -469,21 +449,21 @@ function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "determineCases", function() { return determineCases; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkConstraints", function() { return checkConstraints; });
-var _this = undefined;
-
 var determineCases = function determineCases(ballType, binType) {
   if (ballType.toLowerCase() === "distinguishable") {
     if (binType.toLowerCase() === "distinguishable") {
-      return function (balls1, balls2) {
-        return checkOrderOfBalls(balls1, balls2);
+      return function (bin1, bin2) {
+        return checkOrderOfBalls(bin1.balls, bin2.balls2);
       };
     } else if (binType.toLowerCase() === "indistinguishable") {
-      return function (bin1, bin2) {};
+      return function (bin1, bin2) {
+        return checkAgainstOtherBins(bin1.balls, bin2);
+      };
     }
   } else if (ballType.toLowerCase() === "indistinguishable") {
     if (binType.toLowerCase() === "distinguishable") {
       return function (bin1, bin2) {
-        return _this.checkTotalBalls(bin1, bin2);
+        return checkTotalBalls(bin1.balls, bin2.balls);
       };
     } else if (binType.toLowerCase() === "indistinguishable") {
       return null;
@@ -499,6 +479,23 @@ var checkOrderOfBalls = function checkOrderOfBalls(balls1, balls2) {
   }
 
   return true; //return true if the order is the same for both bins
+}; //only if the bins are distinguishable, and balls are indistinguishable, check count of bins
+
+
+var checkTotalBalls = function checkTotalBalls(bin1, bin2) {
+  return bin1.length === bin2.length;
+}; // only if the bins are indistinguishable and the balls are not.
+// For a given order of balls, check against other bins in a partition 
+// if there exist similar order. Return true if it does.
+// later I will optimize this by using objects for bins
+
+
+var checkAgainstOtherBins = function checkAgainstOtherBins(balls, otherBins) {
+  for (var i = 0; i < otherBins.length; i++) {
+    if (checkOrderOfBalls(balls, otherBins[i].balls)) return true;
+  }
+
+  return false;
 };
 
 var checkConstraints = function checkConstraints(rules, bin) {

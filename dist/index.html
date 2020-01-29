@@ -1,15 +1,38 @@
 <html>
 
 <head>
+    <script type="application/javascript" src="../app/assets/javascripts/bundle.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./../stylesheets/reset.css" type="text/css">
     <link rel="stylesheet" href="./../stylesheets/index.css" type="text/css">
 </head>
 
 <body>
-    <canvas id="interface" width="1000" height="700" ></canvas>
-    <form class="submit-partition">
-        <input type="submit" value="Submit">
-    </form>
-    <script type="application/javascript" src="../app/assets/javascripts/bundle.js"></script>
+    <header class="header-container">
+        <h1 class="header-name">Interactive Twelvefold Way</h1>
+        <ul class="links">
+
+        </ul>
+        <p class="info">Twelvefold Way is a systematic classification of twelve formulas relating to two finite sets in Combinatorics.</p>
+        <p class="instructions"><strong>Instructions: </strong>Click and hold a ball to drag it. You must place it in a bin in order for that ball to count. Press submit when you place all the balls in the bins.
+        <p class="tips">Your goal is to find all partitions for a given problem. If you get stuck on a problem, refer to hints and more info!</p>
+        <p class="more-info">If you want to change formulas, please refer to the grid at the bottom of the screen.</p>
+    </header>
+
+    <section class="main-interaction">
+        <section class="interface">
+            <canvas id="canvas" width="1220" height="700" ></canvas>
+        </section>
+        <aside class="sidebar">
+            <section class="history">
+                <h1>Partition History</h1>
+                <!-- Add some partitions here over time -->
+            </section>
+            <form class="submit-partition">
+                <button class="submit">Submit</button>
+            </form>
+        </aside>
+    </section>
 </body>
 
 </html>
