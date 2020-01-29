@@ -3,7 +3,7 @@ import Interface from './interface';
 document.addEventListener("DOMContentLoaded", () => {
     const canvasEl = document.getElementById("interface");
     const ctx = canvasEl.getContext("2d");
-    const newInterface = new Interface(2, 5);
+    const newInterface = new Interface(3, 3);
     let animation;
 
     canvasEl.addEventListener("mousedown", event => {

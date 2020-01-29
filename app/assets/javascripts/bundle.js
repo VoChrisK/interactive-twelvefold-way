@@ -239,7 +239,7 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", function () {
   var canvasEl = document.getElementById("interface");
   var ctx = canvasEl.getContext("2d");
-  var newInterface = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](2, 5);
+  var newInterface = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3);
   var animation;
   canvasEl.addEventListener("mousedown", function (event) {
     for (var i = 0; i < newInterface.balls.length; i++) {
@@ -290,6 +290,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bin */ "./src/bin.js");
 /* harmony import */ var _ball__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ball */ "./src/ball.js");
 /* harmony import */ var _partiton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./partiton */ "./src/partiton.js");
+/* harmony import */ var _util_checks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/checks */ "./util/checks.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -300,19 +301,29 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var Interface =
 /*#__PURE__*/
 function () {
-  function Interface(numBalls, numBins) {
+  function Interface(numBalls, numBins, ballType, binType) {
+    var _this = this;
+
     _classCallCheck(this, Interface);
 
     this.balls = new Array(numBalls);
+    this.bins = new Array(numBins);
+    this.partitions = [];
+    document.getElementsByClassName("submit-partition")[0].addEventListener("submit", function (event) {
+      if (_this.addPartition(event)) {
+        console.log(_this.partitions);
+      } else {
+        console.log("Cannot add partition!");
+      }
+    });
 
     for (var i = 0; i < this.balls.length; i++) {
       this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i, [100 * (i + 1), 50], 35);
     }
-
-    this.bins = new Array(numBins);
 
     for (var _i = 0; _i < this.bins.length; _i++) {
       this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i, [350 * _i, 200], [40, 250, 250]);
@@ -320,6 +331,36 @@ function () {
   }
 
   _createClass(Interface, [{
+    key: "violateConstraints",
+    value: function violateConstraints() {
+      for (var i = 0; i < this.bins.length; i++) {
+        if (!Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["checkConstraints"])("injective", this.bins[i])) return true;
+      }
+
+      return false;
+    } //checks if there exists a partition that is identical. Returns true if that's the case
+
+  }, {
+    key: "checkEachPartition",
+    value: function checkEachPartition() {
+      for (var i = 0; i < this.partitions.length; i++) {
+        if (this.partitions[i].checkBins(this.bins, Object(_util_checks__WEBPACK_IMPORTED_MODULE_3__["determineCases"])("distinguishable", "distinguishable"))) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "addPartition",
+    value: function addPartition(event) {
+      event.preventDefault();
+      if (this.checkEachPartition() || this.violateConstraints()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
+
+      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins)), "injective"));
+      return true;
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       this.balls.forEach(function (ball) {
@@ -359,86 +400,54 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Partition =
 /*#__PURE__*/
 function () {
-  function Partition(bins, ballType, binType, rules) {
+  function Partition(bins, rules) {
     _classCallCheck(this, Partition);
 
     this.bins = bins; //array or object of bins
 
-    this.ballType = ballType;
-    this.binType = binType;
-    this, rules = rules; //unrestricted, injective, surjective
+    this.rules = rules; //unrestricted, injective, surjective
   } //this function checks if there is a parititon. 
   //It matches each input's bin with each partition's 
   //bin to check if they have the same configuration. 
   //A counter variable keeps track of simiarities: if 
   //the counter equals to the total # of bins, then this 
-  //implies that the partition already exists
+  //implies that the partition already exists or the parition
+  //does not adhere to the rules
 
 
   _createClass(Partition, [{
     key: "checkBins",
-    value: function checkBins(bins) {
+    value: function checkBins(bins, checkBothBins) {
       var counter = 0;
 
-      for (var i = 0; i < this.bins.length; i++) {}
-
-      return counter === this.bins.length;
-    } //only if the bins and balls are distinguishable
-
-  }, {
-    key: "checkOrderOfBalls",
-    value: function checkOrderOfBalls(bin1, bin2) {
-      if (bin1.length !== bin2.length) return false;
-
-      for (var i = 0; i < bin1.length; i++) {
-        if (bin1[i] !== bin2[i]) return false; //return false if the order is incorrect
+      for (var i = 0; i < this.bins.length; i++) {
+        if (checkBothBins(bins[i].balls, this.bins[i].balls)) {
+          counter++;
+        }
       }
 
-      return true; //return true if the order is the same for both bins
+      console.log(counter);
+      return counter === this.bins.length;
     } //only if the bins are indistinguishable and the balls are not.
     //For a given order of balls, check against other bins in a partition 
-    // if there exist similar order. Return true 
-    //exist
-
-  }, {
-    key: "checkAgainstOtherBins",
-    value: function checkAgainstOtherBins() {} //only if the bins are distinguishable, and balls are indistinguishable, check count of bins
+    // if there exist similar order. Return true if it does.
+    //later I will optimize this by using objects for bins
+    // checkAgainstOtherBins(balls, otherBins) {
+    //     for(let i = 0; i < otherBins.length; i++) {
+    //         if(otherBins[i].balls.length === balls.length) {
+    //             for(let j = 0; j < otherBins[i].balls.length; j++) {
+    //                 if(otherBins[i].balls[j] !== balls[j]) return false;
+    //             }
+    //         }
+    //     }
+    //     return false;
+    // }
+    //only if the bins are distinguishable, and balls are indistinguishable, check count of bins
 
   }, {
     key: "checkTotalBalls",
     value: function checkTotalBalls(bin1, bin2) {
       return bin1.length === bin2.length;
-    }
-  }, {
-    key: "checkRules",
-    value: function checkRules(bin) {
-      if (this.rules.toLowerCase() === "injective") {
-        return this.checkInjective(bin);
-      } else if (this.rules.toLowerCase() === "surjective") {
-        return this.checkSurjective(bin);
-      } else {
-        return true;
-      }
-    } //if a bin has at most one ball
-
-  }, {
-    key: "checkInjective",
-    value: function checkInjective(bin) {
-      if (bin.length <= 1) {
-        return true;
-      } else {
-        return false;
-      }
-    } //if a bin has at least one ball
-
-  }, {
-    key: "checkSurjective",
-    value: function checkSurjective(bin) {
-      if (bin.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
     }
   }]);
 
@@ -446,6 +455,78 @@ function () {
 }();
 
 /* harmony default export */ __webpack_exports__["default"] = (Partition);
+
+/***/ }),
+
+/***/ "./util/checks.js":
+/*!************************!*\
+  !*** ./util/checks.js ***!
+  \************************/
+/*! exports provided: determineCases, checkConstraints */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "determineCases", function() { return determineCases; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkConstraints", function() { return checkConstraints; });
+var _this = undefined;
+
+var determineCases = function determineCases(ballType, binType) {
+  if (ballType.toLowerCase() === "distinguishable") {
+    if (binType.toLowerCase() === "distinguishable") {
+      return function (balls1, balls2) {
+        return checkOrderOfBalls(balls1, balls2);
+      };
+    } else if (binType.toLowerCase() === "indistinguishable") {
+      return function (bin1, bin2) {};
+    }
+  } else if (ballType.toLowerCase() === "indistinguishable") {
+    if (binType.toLowerCase() === "distinguishable") {
+      return function (bin1, bin2) {
+        return _this.checkTotalBalls(bin1, bin2);
+      };
+    } else if (binType.toLowerCase() === "indistinguishable") {
+      return null;
+    }
+  }
+}; //only if the bins and balls are distinguishable
+
+var checkOrderOfBalls = function checkOrderOfBalls(balls1, balls2) {
+  if (balls1.length !== balls2.length) return false;
+
+  for (var i = 0; i < balls1.length; i++) {
+    if (balls1[i].label !== balls2[i].label) return false; //return false if the order is incorrect
+  }
+
+  return true; //return true if the order is the same for both bins
+};
+
+var checkConstraints = function checkConstraints(rules, bin) {
+  if (rules.toLowerCase() === "injective") {
+    return checkInjective(bin);
+  } else if (rules.toLowerCase() === "surjective") {
+    return checkSurjective(bin);
+  } else {
+    return true;
+  }
+}; //if a bin has at most one ball
+
+var checkInjective = function checkInjective(bin) {
+  if (bin.balls.length <= 1) {
+    return true;
+  } else {
+    return false;
+  }
+}; //if a bin has at least one ball
+
+
+var checkSurjective = function checkSurjective(bin) {
+  if (bin.balls.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 /***/ })
 
