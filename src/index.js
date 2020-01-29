@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
                 ball.pos[0] = event.offsetX;
                 ball.pos[1] = event.offsetY;
-                newInterfaceView.interface.draw(ctx);
+                newInterfaceView.start();
             }
         });
     });
@@ -38,9 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 newInterfaceView.interface.bins.forEach(bin => {
                     bin.addBall(ball);
                     bin.removeBall(ball);
-                })
+                });
             }
         });
+        ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
+        newInterfaceView.start();
     });
 
     newInterfaceView.addEventsToRules();

@@ -1,6 +1,7 @@
 import Interface from "./interface";
 import * as Formulas from './../util/formulas';
 
+//this class is concerned with the presentation/event handling of the interface
 class InterfaceView {
     constructor(ballType, binType, rules, numPartitons, ctx) {
         this.ballType = ballType;
@@ -88,7 +89,7 @@ class InterfaceView {
     }
 
     start() {
-        this.interface.draw(this.ctx);
+        this.interface.draw(this.ctx, this.ballType, this.binType);
     }
 }
 

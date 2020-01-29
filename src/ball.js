@@ -16,7 +16,7 @@ class Ball {
         return (x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1]) && (x >= this.boundingBox[1][0] && y < this.boundingBox[1][1]) && (x < this.boundingBox[2][0] && y >= this.boundingBox[2][1]) && (x < this.boundingBox[3][0] && y < this.boundingBox[3][1]);
     }
 
-    draw(ctx) {
+    draw(ctx, ballType) {
         //ctx is a number when clicked so I need to have a conditional here
         if(typeof ctx === "object") {
             this.recalculateBoundingBox();
@@ -24,7 +24,10 @@ class Ball {
             ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
             ctx.stroke();
             ctx.font = "30px sans-serif";
-            ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+
+            if(ballType === "distinguishable") {
+                ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+            }
         }
     }
 

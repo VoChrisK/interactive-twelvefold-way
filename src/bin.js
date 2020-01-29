@@ -47,7 +47,7 @@ class Bin {
         }
     }
 
-    draw(ctx) {
+    draw(ctx, binType) {
         if (typeof ctx === "object") {
             this.recalculateBoundingBox();
             ctx.beginPath();
@@ -56,6 +56,11 @@ class Bin {
             ctx.lineTo(this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]);
             ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]);
             ctx.stroke();
+
+            if(binType === "distinguishable") {
+                ctx.fillText(this.label, this.pos[0] + 115, this.pos[1] + 105);
+            }
+            ctx.fillText(this.balls.length, this.pos[0] + this.bounds[0] + 80, this.pos[1] + this.bounds[1] + 25);
         }
     }
 

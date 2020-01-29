@@ -123,7 +123,7 @@ function () {
     }
   }, {
     key: "draw",
-    value: function draw(ctx) {
+    value: function draw(ctx, ballType) {
       //ctx is a number when clicked so I need to have a conditional here
       if (_typeof(ctx) === "object") {
         this.recalculateBoundingBox();
@@ -131,7 +131,10 @@ function () {
         ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
         ctx.stroke();
         ctx.font = "30px sans-serif";
-        ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+
+        if (ballType === "distinguishable") {
+          ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+        }
       }
     }
   }, {
@@ -217,7 +220,7 @@ function () {
     }
   }, {
     key: "draw",
-    value: function draw(ctx) {
+    value: function draw(ctx, binType) {
       if (_typeof(ctx) === "object") {
         this.recalculateBoundingBox();
         ctx.beginPath();
@@ -226,6 +229,12 @@ function () {
         ctx.lineTo(this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]);
         ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]);
         ctx.stroke();
+
+        if (binType === "distinguishable") {
+          ctx.fillText(this.label, this.pos[0] + 115, this.pos[1] + 105);
+        }
+
+        ctx.fillText(this.balls.length, this.pos[0] + this.bounds[0] + 80, this.pos[1] + this.bounds[1] + 25);
       }
     }
   }, {
@@ -279,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         ball.pos[0] = event.offsetX;
         ball.pos[1] = event.offsetY;
-        newInterfaceView["interface"].draw(ctx);
+        newInterfaceView.start();
       }
     });
   });
@@ -294,6 +303,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       }
     });
+    ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
+
+    newInterfaceView.start();
   });
   newInterfaceView.addEventsToRules();
   newInterfaceView.addEventsToCases();
@@ -321,7 +333,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
-
+ //this class is concerned with the presentation/event handling of the interface
 
 var InterfaceView =
 /*#__PURE__*/
@@ -432,7 +444,7 @@ function () {
   }, {
     key: "start",
     value: function start() {
-      this["interface"].draw(this.ctx);
+      this["interface"].draw(this.ctx, this.ballType, this.binType);
     }
   }]);
 
@@ -465,7 +477,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-
+ //this class is concerned with the logic of the interface
 
 var Interface =
 /*#__PURE__*/
@@ -532,12 +544,12 @@ function () {
     }
   }, {
     key: "draw",
-    value: function draw(ctx) {
+    value: function draw(ctx, ballType, binType) {
       this.balls.forEach(function (ball) {
-        return ball.draw(ctx);
+        return ball.draw(ctx, ballType);
       });
       this.bins.forEach(function (bin) {
-        return bin.draw(ctx);
+        return bin.draw(ctx, binType);
       });
     }
   }]);

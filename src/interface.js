@@ -3,6 +3,7 @@ import Ball from './ball';
 import Partition from './partiton';
 import { determineCases, checkConstraints } from '../util/checks';
 
+//this class is concerned with the logic of the interface
 class Interface {
     constructor(numBalls, numBins, ballPosition, binPosition) {
         this.balls = new Array(numBalls);
@@ -56,9 +57,9 @@ class Interface {
         return true;
     }
 
-    draw(ctx) {
-        this.balls.forEach(ball => ball.draw(ctx));
-        this.bins.forEach(bin => bin.draw(ctx));
+    draw(ctx, ballType, binType) {
+        this.balls.forEach(ball => ball.draw(ctx, ballType));
+        this.bins.forEach(bin => bin.draw(ctx, binType));
     }
 }
 
