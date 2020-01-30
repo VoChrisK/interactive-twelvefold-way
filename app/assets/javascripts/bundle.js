@@ -346,7 +346,7 @@ function () {
     this.rules = rules;
     this.numPartitons = numPartitons;
     this.ctx = ctx;
-    this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3, 100, 300);
+    this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3, [100, 50], [300, 540]);
   }
 
   _createClass(InterfaceView, [{
@@ -420,7 +420,7 @@ function () {
     value: function addEventsToButtons() {
       var _this3 = this;
 
-      document.getElementsByClassName("submit-partition")[0].addEventListener("submit", function (event) {
+      document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
         if (_this3["interface"].addPartition(event, _this3.rules, _this3.ballType, _this3.binType)) {
           console.log(_this3["interface"].partitions);
         } else {
@@ -497,11 +497,11 @@ function () {
     key: "setBalls",
     value: function setBalls() {
       for (var i = 0; i < this.balls.length; i++) {
-        this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i + 1, [this.ballPosition * (i + 1), 50], 35);
+        this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i + 1, [this.ballPosition[0] * (i + 1), this.ballPosition[1]], 35);
       }
 
       for (var _i = 0; _i < this.bins.length; _i++) {
-        this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [this.binPosition * _i + 20, 400], [40, 210, 200]);
+        this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [this.binPosition[0] * _i + 20, this.binPosition[1]], [40, 210, 200]);
       }
     }
   }, {

@@ -1,10 +1,21 @@
 <html>
 
 <head>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="application/javascript" src="../app/assets/javascripts/bundle.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Teko&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./../stylesheets/reset.css" type="text/css">
     <link rel="stylesheet" href="./../stylesheets/index.css" type="text/css">
@@ -12,10 +23,20 @@
 
 <body>
     <header id="top-of-page" class="header-container">
-        <h1 class="header-name">Interactive Twelvefold Way</h1>
-        <ul class="links">
+        <nav class="header-nav">
+            <ul class="nav-links">
+                <li><a href="#">About</a></li>
+                <li><a href="#formulas">Formulas</a></li>
+                <li><a href="#">Portfolio</a></li>
+            </ul>
+            <ul class="maker-links">
+                <a href="https://github.com/VoChrisK/interactive-twelvefold-way" target="_blank" class="fa fa-github"></a>
+                <a href="https://www.linkedin.com/in/chris-vo-/" target="_blank" class="fa fa-linkedin"></a>
+                <a href="https://angel.co/chris-vo-3?public_profile=1" target="_blank" class="fa fa-angellist"></a>
+            </ul>
+        </nav>
 
-        </ul>
+        <h1 class="header-name">Interactive Twelvefold Way</h1>
         <p class="info">Twelvefold Way is a systematic classification of twelve formulas relating to two finite sets in Combinatorics.</p>
         <p class="instructions"><strong>Instructions: </strong>Click and hold a ball to drag it. You must place it in a bin in order for that ball to count. Press submit when you place all the balls in the bins.
         <p class="tips">Your goal is to find all partitions for a given problem. If you get stuck on a problem, refer to hints and more info!</p>
@@ -23,32 +44,59 @@
     </header>
 
     <section class="main-interaction">
+        <aside class="sidebar">
+            <h1 class="configuration-count">Configurations: 0/27</h1>
+
+            <div class="sliders">
+                <label for="ball-count">
+                    Balls
+                    <input type="range" id="ball-count" min="1" max="5" orient="vertical">
+                    <strong class="num-balls">0</strong>
+                </label>
+    
+                <label for="bin-count">Bins
+                    <input type="range" id="bin-count" min="1" max="5" orient="vertical">
+                    <strong class="num-bins">0</strong>
+                </label>
+            </div>
+
+            <div class="button-group">
+                <button class="reset-state">Reset Balls/Bins</button>
+                <button class="reset-problem">Reset Problem</button>
+                <button class="more-info">More Info</button>
+                <button class="hints">Hints</button>
+                <button class="show-config">Show A Configuration</button>
+                <button class="show-solution">Show Solution</button>
+            </div>
+        </aside>
+
         <section class="interface">
-            <canvas id="canvas" width="1220" height="700" ></canvas>
+            <canvas id="canvas" width="1220" height="795" ></canvas>
         </section>
+
         <aside class="sidebar">
             <section class="history">
                 <h1>Partition History</h1>
                 <!-- Add some partitions here over time -->
             </section>
-            <form class="submit-partition">
+            <form class="submit-config">
                 <button class="submit">Submit</button>
             </form>
         </aside>
+
     </section>
 
     <section class="extras">
-        <section class="grid-formulas">
-            <h1>Twelvefold Way</h1>
-            <h1>Unrestricted <i class="fa fa-question-circle"></i></h1>
-            <h1>Injective <i class="fa fa-question-circle"></i></h1>
-            <h1>Surjective <i class="fa fa-question-circle"></i></h1>
+        <section id="formulas" class="grid-formulas">
 
-            <h1>
-                k Distinguishable Balls
-                <br>
-                n Distinguishable Bins
-            </h1>
+            <h1 class="grid-label"><strong>$k$</strong> balls</h1>
+            <h1 class="grid-label"><strong>$n$</strong> bins</h1>
+            <h1 class="grid-label">Unrestricted <i class="fa fa-question-circle"></i></h1>
+            <h1 class="grid-label">Injective <i class="fa fa-question-circle"></i></h1>
+            <h1 class="grid-label">Surjective <i class="fa fa-question-circle"></i></h1>
+
+            <h1>distinguishable</h1>
+            <h1>distinguishable</h1>
             <a class="dd unr" href="#top-of-page">$$n^k$$</a>
             <a class="dd inj" href="#top-of-page">
                 $$\frac{n!}{(n-k)!}$$
@@ -57,11 +105,8 @@
                 $$S(k,n) × n!$$
             </a>
 
-            <h1>
-                k Distinguishable Balls
-                <br>
-                n Indistinguishable Bins
-            </h1>
+            <h1>distinguishable</h1>
+            <h1>indistinguishable</h1>
             <a class="di unr" href="#top-of-page">
                 $$\sum_{i=0}^k S(k,i)$$
             </a>
@@ -76,11 +121,8 @@
                 $$S(k,n)$$
             </a>
 
-            <h1>
-                k Indistinguishable Balls
-                <br>
-                n Distinguishable Bins
-            </h1>
+            <h1>indistinguishable</h1>
+            <h1>distinguishable</h1>
             <a class="id unr" href="#top-of-page">
                 $${n-1 \choose k-1}$$
             </a>
@@ -91,11 +133,8 @@
                 $${n+k-1 \choose n-1}$$
             </a>
 
-            <h1>
-                k Indistinguishable Balls
-                <br>
-                n Indistinguishable Bins
-            </h1>
+            <h1>indistinguishable</h1>
+            <h1>indistinguishable</h1>
             <a class="ii unr" href="#top-of-page">
                 $$\sum_{i=0}^k P(k,i)$$
             </a>

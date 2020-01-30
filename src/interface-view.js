@@ -9,7 +9,7 @@ class InterfaceView {
         this.rules = rules;
         this.numPartitons = numPartitons;
         this.ctx = ctx;
-        this.interface = new Interface(3, 3, 100, 300);
+        this.interface = new Interface(3, 3, [100, 50], [300, 540]);
     }
 
     addEventsToCases() {
@@ -68,7 +68,7 @@ class InterfaceView {
     }
 
     addEventsToButtons() {
-        document.getElementsByClassName("submit-partition")[0].addEventListener("submit", event => {
+        document.getElementsByClassName("submit-config")[0].addEventListener("submit", event => {
             if (this.interface.addPartition(event, this.rules, this.ballType, this.binType)) {
                 console.log(this.interface.partitions);
             } else {

@@ -16,11 +16,11 @@ class Interface {
 
     setBalls() {
         for (let i = 0; i < this.balls.length; i++) {
-            this.balls[i] = new Ball(i + 1, [this.ballPosition * (i + 1), 50], 35);
+            this.balls[i] = new Ball(i + 1, [this.ballPosition[0] * (i + 1), this.ballPosition[1]], 35);
         }
 
         for (let i = 0; i < this.bins.length; i++) {
-            this.bins[i] = new Bin(i + 1, [(this.binPosition * i) + 20, 400], [40, 210, 200]);
+            this.bins[i] = new Bin(i + 1, [(this.binPosition[0] * i) + 20, this.binPosition[1]], [40, 210, 200]);
         }
     }
 
