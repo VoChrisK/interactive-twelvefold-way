@@ -16,7 +16,7 @@ class Interface {
     }
 
     setBalls(numBalls) {
-        this.balls = new Array(numBalls);
+        this.balls = new Array(parseInt(numBalls));
 
         for (let i = 0; i < this.balls.length; i++) {
             this.balls[i] = new Ball(i + 1, [this.ballPosition[0] * (i + 1), this.ballPosition[1]], 35);
@@ -24,7 +24,7 @@ class Interface {
     }
 
     setBins(numBins) {
-        this.bins = new Array(numBins);
+        this.bins = new Array(parseInt(numBins));
 
         for (let i = 0; i < this.bins.length; i++) {
             this.bins[i] = new Bin(i + 1, [(this.binPosition[0] * i) + 20, this.binPosition[1]], [40, 160, 300]);

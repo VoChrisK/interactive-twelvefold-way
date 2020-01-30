@@ -11,8 +11,8 @@ class InterfaceView {
         this.currentPartitions = 0;
         this.numPartitons = numPartitons;
         this.ctx = ctx;
-        this.interface = new Interface(3, 3, [100, 50], [245, 440]);
-        this.interfaceAlt = new InterfaceAlt(3, 3, [100, 50], [100, 100]);
+        this.interface = new Interface(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML, [100, 50], [245, 440]);
+        this.interfaceAlt = new InterfaceAlt(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML, [133, 400], [100, 200]);
     }
 
     addEventsToCases() {
@@ -43,7 +43,7 @@ class InterfaceView {
                 this.binType = "distinguishable";
                 this.calculateFormula();
                 this.resetInterface();
-                if(this.rules !== "injective") {
+                if(this.usesStarsAndBars()) {
                     this.startAlt();
                 } else {
                     this.start();
@@ -104,6 +104,10 @@ class InterfaceView {
         document.getElementsByClassName("configuration-count")[0].innerHTML = `Configurations: ${this.currentPartitions}/${this.numPartitons}`;
     }
 
+    usesStarsAndBars() {
+        return this.ballType === "indistinguishable" && this.binType === "distinguishable" && (this.rules === "unrestricted" || this.rules === "surjective");
+    }
+
     calculateFormula() {
         console.log(this.ballType + " " + this.binType + " " + this.rules);
         this.numPartitons = determineFormula(this.ballType, this.binType, this.rules)(this.interface.balls.length, this.interface.bins.length);
@@ -119,26 +123,56 @@ class InterfaceView {
             newValue = event.target.value;
             document.getElementsByClassName("num-balls")[0].innerHTML = event.target.value;
             if(newValue > this.interface.balls.length) {
-                this.interface.addBall();
+                if(this.usesStarsAndBars()) {
+                    this.interfaceAlt.addBar();
+                    this.calculateFormula();
+                    this.startAlt();
+                } else {
+                    this.interface.addBall();
+                    this.calculateFormula();
+                    this.start();
+                }
             } else {
-                this.interface.removeBall();
-                this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+                if(this.usesStarsAndBars()) {
+                    this.interfaceAlt.removeBar();
+                    this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+                    this.calculateFormula();
+                    this.startAlt();
+                } else {
+                    this.interface.removeBall();
+                    this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+                    this.calculateFormula();
+                    this.start();
+                }
             }
-            this.calculateFormula();
-            this.start();
         });
 
         document.getElementById("bin-count").addEventListener("input", event => {
             newValue = event.target.value;
             document.getElementsByClassName("num-bins")[0].innerHTML = event.target.value;
             if (newValue > this.interface.bins.length) {
-                this.interface.addBin();
+                if(this.usesStarsAndBars()) {
+                    this.interfaceAlt.addStar();
+                    this.calculateFormula();
+                    this.startAlt();
+                } else {
+                    this.interface.addBin();
+                    this.calculateFormula();
+                    this.start();
+                }
             } else {
-                this.interface.removeBin();
-                this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+                if(this.usesStarsAndBars()) {
+                    this.interfaceAlt.removeStar();
+                    this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);                    
+                    this.calculateFormula();
+                    this.startAlt();
+                } else {
+                    this.interface.removeBin();
+                    this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+                    this.calculateFormula();
+                    this.start();
+                }
             }
-            this.calculateFormula();
-            this.start();
         });
     }
 

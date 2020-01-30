@@ -1,4 +1,5 @@
 import Star from "./star";
+import Bar from './bar';
 
 //this class is concerned with handling the logic for stars and bars
 class InterfaceAlt {
@@ -8,19 +9,44 @@ class InterfaceAlt {
         this.starPosition = starPosition;
         this.barPosition = barPosition;
         this.setStars(numStars);
+        this.setBars(numBars);
     }
 
     setStars(numStars) {
-        this.stars = new Array(numStars);
+        this.stars = new Array(parseInt(numStars));
 
         for (let i = 0; i < this.stars.length; i++) {
-            this.stars[i] = new Star([133 * (i + 1), 400]);
+            this.stars[i] = new Star([this.starPosition[0] * (i + 1), this.starPosition[1]]);
         }
+    }
+
+    setBars(numBars) {
+        this.bars = new Array(parseInt(numBars));
+
+        for(let i = 0; i < this.bars.length; i++) {
+            this.bars[i] = new Bar([this.barPosition[0] * (i + 1), this.barPosition[1]], 10, 60);
+        }
+    }
+
+    addStar() {
+        this.stars.push(new Star([this.starPosition[0] * (this.stars.length + 1), this.starPosition[1]]));
+    }
+
+    removeStar() {
+        this.stars.pop();
+    }
+
+    addBar() {
+        this.bars.push(new Bar([this.barPosition[0] * (this.bars.length + 1), this.barPosition[1]], 10, 60));        
+    }
+
+    removeBar() {
+        this.bars.pop();
     }
 
     draw(ctx) {
         this.stars.forEach(star => star.draw(ctx));
-        // this.barss.forEach(bar => bar.draw(ctx));
+        this.bars.forEach(bar => bar.draw(ctx));
     }
 }
 

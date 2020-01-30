@@ -151,6 +151,70 @@ function () {
 
 /***/ }),
 
+/***/ "./src/bar.js":
+/*!********************!*\
+  !*** ./src/bar.js ***!
+  \********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Bar =
+/*#__PURE__*/
+function () {
+  function Bar(pos, width, height) {
+    _classCallCheck(this, Bar);
+
+    this.pos = pos;
+    this.width = width;
+    this.height = height;
+    this.isClicked = false;
+    this.boundingBox = [[this.pos[0], this.pos[1]], [this.pos[0] + this.width, this.pos[1]], [this.pos[0] + this.width, this.pos[1] + this.height], [this.pos[0], this.pos[1] + this.height]];
+  }
+
+  _createClass(Bar, [{
+    key: "checkBounds",
+    value: function checkBounds(x, y) {
+      return x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1] && x < this.boundingBox[1][0] && y >= this.boundingBox[1][1] && x < this.boundingBox[2][0] && y < this.boundingBox[2][1] && x >= this.boundingBox[3][0] && y < this.boundingBox[3][1];
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      if (_typeof(ctx) === "object") {
+        this.recalculateBoundingBox();
+        ctx.beginPath();
+        ctx.moveTo(this.pos[0], this.pos[1]);
+        ctx.lineTo(this.pos[0] + this.width, this.pos[1]);
+        ctx.lineTo(this.pos[0] + this.width, this.pos[1] + this.height);
+        ctx.lineTo(this.pos[0], this.pos[1] + this.height);
+        ctx.lineTo(this.pos[0], this.pos[1]);
+        ctx.stroke();
+        ctx.fill();
+      }
+    }
+  }, {
+    key: "recalculateBoundingBox",
+    value: function recalculateBoundingBox() {
+      this.boundingBox = [[this.pos[0], this.pos[1]], [this.pos[0] + this.width, this.pos[1]], [this.pos[0] + this.width, this.pos[1] + this.height], [this.pos[0], this.pos[1] + this.height]];
+    }
+  }]);
+
+  return Bar;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Bar);
+
+/***/ }),
+
 /***/ "./src/bin.js":
 /*!********************!*\
   !*** ./src/bin.js ***!
@@ -269,43 +333,75 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", function () {
   var canvasEl = document.getElementById("canvas");
   var ctx = canvasEl.getContext("2d");
-  var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_2__["determineFormula"])("distinguishable", "distinguishable", "unrestricted")(3, 3);
+  var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_2__["determineFormula"])("distinguishable", "distinguishable", "unrestricted")(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML);
   var newInterfaceView = new _interface_view__WEBPACK_IMPORTED_MODULE_1__["default"]("distinguishable", "distinguishable", "unrestricted", result, ctx);
   var animation;
   canvasEl.addEventListener("mousedown", function (event) {
-    for (var i = 0; i < newInterfaceView["interface"].balls.length; i++) {
-      if (newInterfaceView["interface"].balls[i].checkBounds(event.offsetX, event.offsetY)) {
-        animation = window.requestAnimationFrame(newInterfaceView["interface"].balls[i].draw);
-        newInterfaceView["interface"].balls[i].isClicked = true;
-        break; //break here to resolve conflict between overlapping balls
+    if (newInterfaceView.usesStarsAndBars()) {
+      for (var i = 0; i < newInterfaceView.interfaceAlt.bars.length; i++) {
+        if (newInterfaceView.interfaceAlt.bars[i].checkBounds(event.offsetX, event.offsetY)) {
+          console.log("hey");
+          animation = window.requestAnimationFrame(newInterfaceView.interfaceAlt.bars[i].draw);
+          newInterfaceView.interfaceAlt.bars[i].isClicked = true;
+          break; //break here to resolve conflict between overlapping balls
+        }
+      }
+    } else {
+      for (var _i = 0; _i < newInterfaceView["interface"].balls.length; _i++) {
+        if (newInterfaceView["interface"].balls[_i].checkBounds(event.offsetX, event.offsetY)) {
+          animation = window.requestAnimationFrame(newInterfaceView["interface"].balls[_i].draw);
+          newInterfaceView["interface"].balls[_i].isClicked = true;
+          break; //break here to resolve conflict between overlapping balls
+        }
       }
     }
   });
   canvasEl.addEventListener("mousemove", function (event) {
-    newInterfaceView["interface"].balls.forEach(function (ball) {
-      if (ball.isClicked) {
-        ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
+    if (newInterfaceView.usesStarsAndBars()) {
+      newInterfaceView.interfaceAlt.bars.forEach(function (bar) {
+        if (bar.isClicked) {
+          ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
 
-        ball.pos[0] = event.offsetX;
-        ball.pos[1] = event.offsetY;
-        newInterfaceView.start();
-      }
-    });
+          bar.pos[0] = event.offsetX;
+          bar.pos[1] = event.offsetY;
+        }
+      });
+      newInterfaceView.startAlt();
+    } else {
+      newInterfaceView["interface"].balls.forEach(function (ball) {
+        if (ball.isClicked) {
+          ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
+
+          ball.pos[0] = event.offsetX;
+          ball.pos[1] = event.offsetY;
+        }
+      });
+      newInterfaceView.start();
+    }
   });
   canvasEl.addEventListener("mouseup", function (event) {
     window.cancelAnimationFrame(animation);
-    newInterfaceView["interface"].balls.forEach(function (ball) {
-      if (ball.isClicked) {
-        ball.isClicked = false;
-        newInterfaceView["interface"].bins.forEach(function (bin) {
-          bin.addBall(ball);
-          bin.removeBall(ball);
-        });
-      }
-    });
     ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
 
-    newInterfaceView.start();
+    if (newInterfaceView.usesStarsAndBars()) {
+      newInterfaceView.interfaceAlt.bars.forEach(function (bar) {
+        if (bar.isClicked) {
+          bar.isClicked = false;
+        }
+      });
+      newInterfaceView.startAlt();
+    } else {
+      newInterfaceView["interface"].balls.forEach(function (ball) {
+        if (ball.isClicked) {
+          ball.isClicked = false;
+          newInterfaceView["interface"].bins.forEach(function (bin) {
+            bin.addBall(ball);
+            bin.removeBall(ball);
+          });
+        }
+      });
+      newInterfaceView.start();
+    }
   });
   newInterfaceView.addEventsToRules();
   newInterfaceView.addEventsToCases();
@@ -326,11 +422,13 @@ document.addEventListener("DOMContentLoaded", function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _star__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./star */ "./src/star.js");
+/* harmony import */ var _bar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bar */ "./src/bar.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
  //this class is concerned with handling the logic for stars and bars
 
@@ -345,23 +443,56 @@ function () {
     this.starPosition = starPosition;
     this.barPosition = barPosition;
     this.setStars(numStars);
+    this.setBars(numBars);
   }
 
   _createClass(InterfaceAlt, [{
     key: "setStars",
     value: function setStars(numStars) {
-      this.stars = new Array(numStars);
+      this.stars = new Array(parseInt(numStars));
 
       for (var i = 0; i < this.stars.length; i++) {
-        this.stars[i] = new _star__WEBPACK_IMPORTED_MODULE_0__["default"]([133 * (i + 1), 400]);
+        this.stars[i] = new _star__WEBPACK_IMPORTED_MODULE_0__["default"]([this.starPosition[0] * (i + 1), this.starPosition[1]]);
       }
+    }
+  }, {
+    key: "setBars",
+    value: function setBars(numBars) {
+      this.bars = new Array(parseInt(numBars));
+
+      for (var i = 0; i < this.bars.length; i++) {
+        this.bars[i] = new _bar__WEBPACK_IMPORTED_MODULE_1__["default"]([this.barPosition[0] * (i + 1), this.barPosition[1]], 10, 60);
+      }
+    }
+  }, {
+    key: "addStar",
+    value: function addStar() {
+      this.stars.push(new _star__WEBPACK_IMPORTED_MODULE_0__["default"]([this.starPosition[0] * (this.stars.length + 1), this.starPosition[1]]));
+    }
+  }, {
+    key: "removeStar",
+    value: function removeStar() {
+      this.stars.pop();
+    }
+  }, {
+    key: "addBar",
+    value: function addBar() {
+      this.bars.push(new _bar__WEBPACK_IMPORTED_MODULE_1__["default"]([this.barPosition[0] * (this.bars.length + 1), this.barPosition[1]], 10, 60));
+    }
+  }, {
+    key: "removeBar",
+    value: function removeBar() {
+      this.bars.pop();
     }
   }, {
     key: "draw",
     value: function draw(ctx) {
       this.stars.forEach(function (star) {
         return star.draw(ctx);
-      }); // this.barss.forEach(bar => bar.draw(ctx));
+      });
+      this.bars.forEach(function (bar) {
+        return bar.draw(ctx);
+      });
     }
   }]);
 
@@ -406,8 +537,8 @@ function () {
     this.currentPartitions = 0;
     this.numPartitons = numPartitons;
     this.ctx = ctx;
-    this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3, [100, 50], [245, 440]);
-    this.interfaceAlt = new _interface_alt__WEBPACK_IMPORTED_MODULE_2__["default"](3, 3, [100, 50], [100, 100]);
+    this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML, [100, 50], [245, 440]);
+    this.interfaceAlt = new _interface_alt__WEBPACK_IMPORTED_MODULE_2__["default"](document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML, [133, 400], [100, 200]);
   }
 
   _createClass(InterfaceView, [{
@@ -449,7 +580,7 @@ function () {
 
           _this.resetInterface();
 
-          if (_this.rules !== "injective") {
+          if (_this.usesStarsAndBars()) {
             _this.startAlt();
           } else {
             _this.start();
@@ -521,6 +652,11 @@ function () {
       document.getElementsByClassName("configuration-count")[0].innerHTML = "Configurations: ".concat(this.currentPartitions, "/").concat(this.numPartitons);
     }
   }, {
+    key: "usesStarsAndBars",
+    value: function usesStarsAndBars() {
+      return this.ballType === "indistinguishable" && this.binType === "distinguishable" && (this.rules === "unrestricted" || this.rules === "surjective");
+    }
+  }, {
     key: "calculateFormula",
     value: function calculateFormula() {
       console.log(this.ballType + " " + this.binType + " " + this.rules);
@@ -540,32 +676,76 @@ function () {
         document.getElementsByClassName("num-balls")[0].innerHTML = event.target.value;
 
         if (newValue > _this4["interface"].balls.length) {
-          _this4["interface"].addBall();
+          if (_this4.usesStarsAndBars()) {
+            _this4.interfaceAlt.addBar();
+
+            _this4.calculateFormula();
+
+            _this4.startAlt();
+          } else {
+            _this4["interface"].addBall();
+
+            _this4.calculateFormula();
+
+            _this4.start();
+          }
         } else {
-          _this4["interface"].removeBall();
+          if (_this4.usesStarsAndBars()) {
+            _this4.interfaceAlt.removeBar();
 
-          _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+
+            _this4.calculateFormula();
+
+            _this4.startAlt();
+          } else {
+            _this4["interface"].removeBall();
+
+            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+
+            _this4.calculateFormula();
+
+            _this4.start();
+          }
         }
-
-        _this4.calculateFormula();
-
-        _this4.start();
       });
       document.getElementById("bin-count").addEventListener("input", function (event) {
         newValue = event.target.value;
         document.getElementsByClassName("num-bins")[0].innerHTML = event.target.value;
 
         if (newValue > _this4["interface"].bins.length) {
-          _this4["interface"].addBin();
+          if (_this4.usesStarsAndBars()) {
+            _this4.interfaceAlt.addStar();
+
+            _this4.calculateFormula();
+
+            _this4.startAlt();
+          } else {
+            _this4["interface"].addBin();
+
+            _this4.calculateFormula();
+
+            _this4.start();
+          }
         } else {
-          _this4["interface"].removeBin();
+          if (_this4.usesStarsAndBars()) {
+            _this4.interfaceAlt.removeStar();
 
-          _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+
+            _this4.calculateFormula();
+
+            _this4.startAlt();
+          } else {
+            _this4["interface"].removeBin();
+
+            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+
+            _this4.calculateFormula();
+
+            _this4.start();
+          }
         }
-
-        _this4.calculateFormula();
-
-        _this4.start();
       });
     }
   }, {
@@ -644,7 +824,7 @@ function () {
   _createClass(Interface, [{
     key: "setBalls",
     value: function setBalls(numBalls) {
-      this.balls = new Array(numBalls);
+      this.balls = new Array(parseInt(numBalls));
 
       for (var i = 0; i < this.balls.length; i++) {
         this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i + 1, [this.ballPosition[0] * (i + 1), this.ballPosition[1]], 35);
@@ -653,7 +833,7 @@ function () {
   }, {
     key: "setBins",
     value: function setBins(numBins) {
-      this.bins = new Array(numBins);
+      this.bins = new Array(parseInt(numBins));
 
       for (var i = 0; i < this.bins.length; i++) {
         this.bins[i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](i + 1, [this.binPosition[0] * i + 20, this.binPosition[1]], [40, 160, 300]);
