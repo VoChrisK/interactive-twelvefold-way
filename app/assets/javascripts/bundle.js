@@ -269,7 +269,7 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", function () {
   var canvasEl = document.getElementById("canvas");
   var ctx = canvasEl.getContext("2d");
-  var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_2__["calculateDDUnrestricted"])(3, 3);
+  var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_2__["determineFormula"])("distinguishable", "distinguishable", "unrestricted")(3, 3);
   var newInterfaceView = new _interface_view__WEBPACK_IMPORTED_MODULE_1__["default"]("distinguishable", "distinguishable", "unrestricted", result, ctx);
   var animation;
   canvasEl.addEventListener("mousedown", function (event) {
@@ -316,6 +316,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
+/***/ "./src/interface-alt.js":
+/*!******************************!*\
+  !*** ./src/interface-alt.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _star__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./star */ "./src/star.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+ //this class is concerned with handling the logic for stars and bars
+
+var InterfaceAlt =
+/*#__PURE__*/
+function () {
+  function InterfaceAlt(numStars, numBars, starPosition, barPosition) {
+    _classCallCheck(this, InterfaceAlt);
+
+    this.stars;
+    this.bars;
+    this.starPosition = starPosition;
+    this.barPosition = barPosition;
+    this.setStars(numStars);
+  }
+
+  _createClass(InterfaceAlt, [{
+    key: "setStars",
+    value: function setStars(numStars) {
+      this.stars = new Array(numStars);
+
+      for (var i = 0; i < this.stars.length; i++) {
+        this.stars[i] = new _star__WEBPACK_IMPORTED_MODULE_0__["default"]([133 * (i + 1), 400]);
+      }
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      this.stars.forEach(function (star) {
+        return star.draw(ctx);
+      }); // this.barss.forEach(bar => bar.draw(ctx));
+    }
+  }]);
+
+  return InterfaceAlt;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (InterfaceAlt);
+
+/***/ }),
+
 /***/ "./src/interface-view.js":
 /*!*******************************!*\
   !*** ./src/interface-view.js ***!
@@ -327,11 +383,13 @@ document.addEventListener("DOMContentLoaded", function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _interface__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./interface */ "./src/interface.js");
 /* harmony import */ var _util_formulas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../util/formulas */ "./util/formulas.js");
+/* harmony import */ var _interface_alt__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./interface-alt */ "./src/interface-alt.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
  //this class is concerned with the presentation/event handling of the interface
@@ -349,6 +407,7 @@ function () {
     this.numPartitons = numPartitons;
     this.ctx = ctx;
     this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3, [100, 50], [245, 440]);
+    this.interfaceAlt = new _interface_alt__WEBPACK_IMPORTED_MODULE_2__["default"](3, 3, [100, 50], [100, 100]);
   }
 
   _createClass(InterfaceView, [{
@@ -366,6 +425,8 @@ function () {
           _this.ballType = "distinguishable";
           _this.binType = "distinguishable";
 
+          _this.calculateFormula();
+
           _this.resetInterface();
 
           _this.start();
@@ -373,6 +434,8 @@ function () {
         case2[i].addEventListener("click", function (event) {
           _this.ballType = "distinguishable";
           _this.binType = "indistinguishable";
+
+          _this.calculateFormula();
 
           _this.resetInterface();
 
@@ -382,13 +445,21 @@ function () {
           _this.ballType = "indistinguishable";
           _this.binType = "distinguishable";
 
+          _this.calculateFormula();
+
           _this.resetInterface();
 
-          _this.start();
+          if (_this.rules !== "injective") {
+            _this.startAlt();
+          } else {
+            _this.start();
+          }
         });
         case4[i].addEventListener("click", function (event) {
           _this.ballType = "indistinguishable";
           _this.binType = "indistinguishable";
+
+          _this.calculateFormula();
 
           _this.resetInterface();
 
@@ -430,6 +501,8 @@ function () {
       document.getElementsByClassName("reset-problem")[0].addEventListener("click", function (event) {
         _this3.resetInterface();
 
+        _this3.addToConfigurations();
+
         _this3.start();
       });
       document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
@@ -446,6 +519,14 @@ function () {
     key: "addToConfigurations",
     value: function addToConfigurations() {
       document.getElementsByClassName("configuration-count")[0].innerHTML = "Configurations: ".concat(this.currentPartitions, "/").concat(this.numPartitons);
+    }
+  }, {
+    key: "calculateFormula",
+    value: function calculateFormula() {
+      console.log(this.ballType + " " + this.binType + " " + this.rules);
+      this.numPartitons = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_1__["determineFormula"])(this.ballType, this.binType, this.rules)(this["interface"].balls.length, this["interface"].bins.length);
+      this.currentPartitions = 0;
+      this.addToConfigurations();
     }
   }, {
     key: "updateCount",
@@ -466,6 +547,8 @@ function () {
           _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
         }
 
+        _this4.calculateFormula();
+
         _this4.start();
       });
       document.getElementById("bin-count").addEventListener("input", function (event) {
@@ -480,9 +563,9 @@ function () {
           _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
         }
 
-        _this4.start();
+        _this4.calculateFormula();
 
-        console.log(_this4["interface"].bins.length);
+        _this4.start();
       });
     }
   }, {
@@ -498,11 +581,17 @@ function () {
     value: function resetInterface() {
       this.resetState();
       this["interface"].partitions = [];
+      this.currentPartitions = 0;
     }
   }, {
     key: "start",
     value: function start() {
       this["interface"].draw(this.ctx, this.ballType, this.binType);
+    }
+  }, {
+    key: "startAlt",
+    value: function startAlt() {
+      this.interfaceAlt.draw(this.ctx);
     }
   }]);
 
@@ -705,6 +794,57 @@ function () {
 
 /***/ }),
 
+/***/ "./src/star.js":
+/*!*********************!*\
+  !*** ./src/star.js ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Star =
+/*#__PURE__*/
+function () {
+  function Star(pos) {
+    _classCallCheck(this, Star);
+
+    this.pos = pos;
+  }
+
+  _createClass(Star, [{
+    key: "draw",
+    value: function draw(ctx) {
+      ctx.beginPath();
+      ctx.moveTo(this.pos[0] - 5, this.pos[1] - 3);
+      ctx.lineTo(this.pos[0] + 4, this.pos[1] + 24);
+      ctx.lineTo(this.pos[0] + 35, this.pos[1] + 25);
+      ctx.lineTo(this.pos[0] + 9, this.pos[1] + 37);
+      ctx.lineTo(this.pos[0] + 20, this.pos[1] + 60);
+      ctx.lineTo(this.pos[0] - 5, this.pos[1] + 42);
+      ctx.lineTo(this.pos[0] - 27, this.pos[1] + 60);
+      ctx.lineTo(this.pos[0] - 19, this.pos[1] + 37);
+      ctx.lineTo(this.pos[0] - 45, this.pos[1] + 25);
+      ctx.lineTo(this.pos[0] - 14, this.pos[1] + 24);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fill();
+    }
+  }]);
+
+  return Star;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Star);
+
+/***/ }),
+
 /***/ "./util/checks.js":
 /*!************************!*\
   !*** ./util/checks.js ***!
@@ -819,57 +959,111 @@ var checkSurjective = function checkSurjective(bin) {
 /*!**************************!*\
   !*** ./util/formulas.js ***!
   \**************************/
-/*! exports provided: calculateDDUnrestricted, calculateDDInjective, calculateDDSurjective, calculateDIUnrestricted, calculateDIInjective, calculateDISurjective, calculateIDUnrestricted, calculateIDInjective, calculateIDSurjective, calculateIIUnrestricted, calculateIIInjective, calculateIISurjective */
+/*! exports provided: determineFormula */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDDUnrestricted", function() { return calculateDDUnrestricted; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDDInjective", function() { return calculateDDInjective; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDDSurjective", function() { return calculateDDSurjective; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDIUnrestricted", function() { return calculateDIUnrestricted; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDIInjective", function() { return calculateDIInjective; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDISurjective", function() { return calculateDISurjective; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIDUnrestricted", function() { return calculateIDUnrestricted; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIDInjective", function() { return calculateIDInjective; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIDSurjective", function() { return calculateIDSurjective; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIIUnrestricted", function() { return calculateIIUnrestricted; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIIInjective", function() { return calculateIIInjective; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateIISurjective", function() { return calculateIISurjective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "determineFormula", function() { return determineFormula; });
 //function naming convention: First character is label (Distinguishable or Indistinguishable) of ball, second character is label of bin, last word is rules
-//k distinguishable balls, n distinguishable bins, no restrictions
-var calculateDDUnrestricted = function calculateDDUnrestricted(n, k) {
+var determineFormula = function determineFormula(ballType, binType, rules) {
+  switch (ballType) {
+    case "distinguishable":
+      switch (binType) {
+        case "distinguishable":
+          switch (rules) {
+            case "unrestricted":
+              return calculateDDUnrestricted;
+
+            case "injective":
+              return calculateDDInjective;
+
+            case "surjective":
+              return calculateDDSurjective;
+          }
+
+        case "indistinguishable":
+          switch (rules) {
+            case "unrestricted":
+              return calculateDIUnrestricted;
+
+            case "injective":
+              return calculateDIInjective;
+
+            case "surjective":
+              return calculateDISurjective;
+          }
+
+      }
+
+    case "indistinguishable":
+      switch (binType) {
+        case "distinguishable":
+          switch (rules) {
+            case "unrestricted":
+              return calculateIDUnrestricted;
+
+            case "injective":
+              return calculateIDInjective;
+
+            case "surjective":
+              return calculateIDSurjective;
+          }
+
+        case "indistinguishable":
+          switch (rules) {
+            case "unrestricted":
+              return calculateIIUnrestricted;
+
+            case "injective":
+              return calculateIIInjective;
+
+            case "surjective":
+              return calculateIISurjective;
+          }
+
+      }
+
+    default:
+      return null;
+  }
+
+  ;
+}; //k distinguishable balls, n distinguishable bins, no restrictions
+
+var calculateDDUnrestricted = function calculateDDUnrestricted(k, n) {
   return Math.pow(n, k);
 }; //k distinguishable balls, n distinguishable bins, injective
 
-var calculateDDInjective = function calculateDDInjective(n, k) {
-  var max = n - k + 1;
-  var total = 1;
 
-  while (n > max) {
-    total *= n;
-    n -= 1;
-  }
-
-  return total * max;
+var calculateDDInjective = function calculateDDInjective(k, n) {
+  console.log(k + " " + n);
+  if (k > n) return 0;
+  return calculateFactorial(n) / calculateFactorial(n - k);
 }; //k distinguishable balls, n distinguishable bins, surjective
 
-var calculateDDSurjective = function calculateDDSurjective(n, k) {
-  return calculateStirlingNumber(n, k) * calculateFactorial(n);
-}; //k distinguishable balls, n indistinguishable bins, no restrictions
 
-var calculateDIUnrestricted = function calculateDIUnrestricted(n, k) {
-  return calculateBinomialCoefficient(k - 1, n - 1);
-};
-var calculateDIInjective = function calculateDIInjective(n, k) {
-  return calculateBinomialCoefficient(n, k);
-}; //k distinguishable balls, n indistinguishable bins, surjective
-
-var calculateDISurjective = function calculateDISurjective(n, k) {
-  return calculateBinomialCoefficient(n + k + 1, n - 1);
+var calculateDDSurjective = function calculateDDSurjective(k, n) {
+  return calculateStirlingNumber(k, n) * calculateFactorial(n);
 }; //k indistinguishable balls, n distinguishable bins, no restrictions
 
-var calculateIDUnrestricted = function calculateIDUnrestricted(n, k) {
+
+var calculateIDUnrestricted = function calculateIDUnrestricted(k, n) {
+  return calculateBinomialCoefficient(k - 1, n - 1);
+}; //k indistinguishable balls, n distinguishable bins, injective
+
+
+var calculateIDInjective = function calculateIDInjective(k, n) {
+  return calculateBinomialCoefficient(n, k);
+}; //k indistinguishable balls, n distinguishable bins, surjective
+
+
+var calculateIDSurjective = function calculateIDSurjective(k, n) {
+  return calculateBinomialCoefficient(n + k + 1, n - 1);
+}; //k distinguishable balls, n indistinguishable bins, no restrictions
+
+
+var calculateDIUnrestricted = function calculateDIUnrestricted(k, n) {
   var numbers = getNumbersArray(k);
 
   var formula = function formula(acc, i) {
@@ -877,29 +1071,34 @@ var calculateIDUnrestricted = function calculateIDUnrestricted(n, k) {
   };
 
   return numbers.reduce(formula, 0);
-}; //k indistinguishable balls, n distinguishable bins, injective
+}; //k distinguishable balls, n indistinguishable bins, injective
 
-var calculateIDInjective = function calculateIDInjective(n, k) {
+
+var calculateDIInjective = function calculateDIInjective(k, n) {
   if (k <= n) {
     return 1;
   } else {
     return 0;
   }
-}; //k indistinguishable balls, n distinguishable bins, surjective
+}; //k distinguishable balls, n indistinguishable bins, surjective
 
-var calculateIDSurjective = function calculateIDSurjective(n, k) {
-  return calculateStirlingNumber(n, k);
+
+var calculateDISurjective = function calculateDISurjective(k, n) {
+  return calculateStirlingNumber(k, n);
 }; //k indistinguishable balls, n indistinguishable bins, no restrictions
+
 
 var calculateIIUnrestricted = function calculateIIUnrestricted(n, k) {}; //k indistinguishable balls, n indistinguishable bins, injective
 
-var calculateIIInjective = function calculateIIInjective(n, k) {
+
+var calculateIIInjective = function calculateIIInjective(k, n) {
   if (k <= n) {
     return 1;
   } else {
     return 0;
   }
 }; //k indistinguishable balls, n indistinguishable bins, surjective
+
 
 var calculateIISurjective = function calculateIISurjective(n, k) {};
 

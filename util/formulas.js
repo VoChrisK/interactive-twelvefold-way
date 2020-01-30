@@ -1,49 +1,96 @@
 //function naming convention: First character is label (Distinguishable or Indistinguishable) of ball, second character is label of bin, last word is rules
 
+export const determineFormula = (ballType, binType, rules) => {
+    switch(ballType) {
+        case "distinguishable":
+            switch(binType) {
+                case "distinguishable":
+                    switch(rules) {
+                        case "unrestricted":
+                            return calculateDDUnrestricted;
+                        case "injective":
+                            return calculateDDInjective;
+                        case "surjective":
+                            return calculateDDSurjective;
+                    }
+                case "indistinguishable":
+                    switch(rules) {
+                        case "unrestricted":
+                            return calculateDIUnrestricted;
+                        case "injective":
+                            return calculateDIInjective;
+                        case "surjective":
+                            return calculateDISurjective;
+                    }
+            }
+        case "indistinguishable":
+            switch (binType) {
+                case "distinguishable":
+                    switch (rules) {
+                        case "unrestricted":
+                            return calculateIDUnrestricted;
+                        case "injective":
+                            return calculateIDInjective;
+                        case "surjective":
+                            return calculateIDSurjective;
+                    }
+                case "indistinguishable":
+                    switch (rules) {
+                        case "unrestricted":
+                            return calculateIIUnrestricted;
+                        case "injective":
+                            return calculateIIInjective;
+                        case "surjective":
+                            return calculateIISurjective;
+                    }
+            }
+        default:
+            return null;
+    };
+};
+
 //k distinguishable balls, n distinguishable bins, no restrictions
-export const calculateDDUnrestricted = (n, k) => {
+const calculateDDUnrestricted = (k, n) => {
     return Math.pow(n, k);
 };
 
 //k distinguishable balls, n distinguishable bins, injective
-export const calculateDDInjective = (n, k) => {
-    let max = n - k + 1;
-    let total = 1;
-    while (n > max) {
-        total *= n;
-        n -= 1;
-    }
-    return total * max;
+const calculateDDInjective = (k, n) => {
+    console.log(k + " " + n);
+    if(k > n) return 0;
+
+    return calculateFactorial(n) / calculateFactorial(n-k);
 };
 
 //k distinguishable balls, n distinguishable bins, surjective
-export const calculateDDSurjective = (n, k) => {
-    return calculateStirlingNumber(n, k) * calculateFactorial(n);
-};
-
-//k distinguishable balls, n indistinguishable bins, no restrictions
-export const calculateDIUnrestricted = (n, k) => {
-    return calculateBinomialCoefficient(k-1, n-1);
-};
-
-export const calculateDIInjective = (n, k) => {
-    return calculateBinomialCoefficient(n, k);
-};
-
-//k distinguishable balls, n indistinguishable bins, surjective
-export const calculateDISurjective = (n, k) => {
-    return calculateBinomialCoefficient(n+k+1, n-1);
+const calculateDDSurjective = (k, n) => {
+    return calculateStirlingNumber(k, n) * calculateFactorial(n);
 };
 
 //k indistinguishable balls, n distinguishable bins, no restrictions
-export const calculateIDUnrestricted = (n, k) => {
+const calculateIDUnrestricted = (k, n) => {
+    return calculateBinomialCoefficient(k-1, n-1);
+};
+
+//k indistinguishable balls, n distinguishable bins, injective
+const calculateIDInjective = (k, n) => {
+    return calculateBinomialCoefficient(n, k);
+};
+
+//k indistinguishable balls, n distinguishable bins, surjective
+const calculateIDSurjective = (k, n) => {
+    return calculateBinomialCoefficient(n+k+1, n-1);
+};
+
+//k distinguishable balls, n indistinguishable bins, no restrictions
+const calculateDIUnrestricted = (k, n) => {
     let numbers = getNumbersArray(k);
     let formula = (acc, i) => acc + calculateStirlingNumber(k, i)
     return numbers.reduce(formula, 0);
 };
 
-//k indistinguishable balls, n distinguishable bins, injective
-export const calculateIDInjective = (n, k) => {
+//k distinguishable balls, n indistinguishable bins, injective
+const calculateDIInjective = (k, n) => {
     if(k <= n) {
         return 1;
     } else {
@@ -51,18 +98,18 @@ export const calculateIDInjective = (n, k) => {
     }
 };
 
-//k indistinguishable balls, n distinguishable bins, surjective
-export const calculateIDSurjective = (n, k) => {
-    return calculateStirlingNumber(n, k);
+//k distinguishable balls, n indistinguishable bins, surjective
+const calculateDISurjective = (k, n) => {
+    return calculateStirlingNumber(k, n);
 };
 
 //k indistinguishable balls, n indistinguishable bins, no restrictions
-export const calculateIIUnrestricted = (n, k) => {
+const calculateIIUnrestricted = (n, k) => {
 
 };
 
 //k indistinguishable balls, n indistinguishable bins, injective
-export const calculateIIInjective = (n, k) => {
+const calculateIIInjective = (k, n) => {
     if (k <= n) {
         return 1;
     } else {
@@ -71,7 +118,7 @@ export const calculateIIInjective = (n, k) => {
 };
 
 //k indistinguishable balls, n indistinguishable bins, surjective
-export const calculateIISurjective = (n, k) => {
+const calculateIISurjective = (n, k) => {
 
 };
 

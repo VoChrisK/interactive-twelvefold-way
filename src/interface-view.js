@@ -1,5 +1,6 @@
 import Interface from "./interface";
-import * as Formulas from './../util/formulas';
+import { determineFormula } from './../util/formulas';
+import InterfaceAlt from "./interface-alt";
 
 //this class is concerned with the presentation/event handling of the interface
 class InterfaceView {
@@ -11,6 +12,7 @@ class InterfaceView {
         this.numPartitons = numPartitons;
         this.ctx = ctx;
         this.interface = new Interface(3, 3, [100, 50], [245, 440]);
+        this.interfaceAlt = new InterfaceAlt(3, 3, [100, 50], [100, 100]);
     }
 
     addEventsToCases() {
@@ -23,6 +25,7 @@ class InterfaceView {
             case1[i].addEventListener("click", event => {
                 this.ballType = "distinguishable";
                 this.binType = "distinguishable";
+                this.calculateFormula();
                 this.resetInterface();
                 this.start();
             });
@@ -30,6 +33,7 @@ class InterfaceView {
             case2[i].addEventListener("click", event => {
                 this.ballType = "distinguishable";
                 this.binType = "indistinguishable";
+                this.calculateFormula();
                 this.resetInterface();
                 this.start();
             });
@@ -37,13 +41,19 @@ class InterfaceView {
             case3[i].addEventListener("click", event => {
                 this.ballType = "indistinguishable";
                 this.binType = "distinguishable";
+                this.calculateFormula();
                 this.resetInterface();
-                this.start();
+                if(this.rules !== "injective") {
+                    this.startAlt();
+                } else {
+                    this.start();
+                }
             });
 
             case4[i].addEventListener("click", event => {
                 this.ballType = "indistinguishable";
                 this.binType = "indistinguishable";
+                this.calculateFormula();
                 this.resetInterface();
                 this.start();
             });
@@ -76,6 +86,7 @@ class InterfaceView {
         
         document.getElementsByClassName("reset-problem")[0].addEventListener("click", event => {
             this.resetInterface();
+            this.addToConfigurations();
             this.start();
         });
 
@@ -93,6 +104,13 @@ class InterfaceView {
         document.getElementsByClassName("configuration-count")[0].innerHTML = `Configurations: ${this.currentPartitions}/${this.numPartitons}`;
     }
 
+    calculateFormula() {
+        console.log(this.ballType + " " + this.binType + " " + this.rules);
+        this.numPartitons = determineFormula(this.ballType, this.binType, this.rules)(this.interface.balls.length, this.interface.bins.length);
+        this.currentPartitions = 0;
+        this.addToConfigurations();
+    }
+
     updateCount(canvasEl) {
         let newValue;
 
@@ -106,6 +124,7 @@ class InterfaceView {
                 this.interface.removeBall();
                 this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
             }
+            this.calculateFormula();
             this.start();
         });
 
@@ -118,8 +137,8 @@ class InterfaceView {
                 this.interface.removeBin();
                 this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
             }
+            this.calculateFormula();
             this.start();
-            console.log(this.interface.bins.length);
         });
     }
 
@@ -133,10 +152,15 @@ class InterfaceView {
     resetInterface() {
         this.resetState();
         this.interface.partitions = [];
+        this.currentPartitions = 0;
     }
 
     start() {
         this.interface.draw(this.ctx, this.ballType, this.binType);
+    }
+
+    startAlt() {
+        this.interfaceAlt.draw(this.ctx);
     }
 }
 

@@ -1,11 +1,11 @@
 import Interface from './interface';
 import InterfaceView from './interface-view';
-import { calculateDDUnrestricted } from './../util/formulas';
+import { determineFormula } from './../util/formulas';
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvasEl = document.getElementById("canvas");
     const ctx = canvasEl.getContext("2d");
-    const result = calculateDDUnrestricted(3, 3);
+    const result = determineFormula("distinguishable", "distinguishable", "unrestricted")(3, 3);
     const newInterfaceView = new InterfaceView("distinguishable", "distinguishable", "unrestricted", result, ctx);
     let animation;
 
