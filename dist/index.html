@@ -39,7 +39,7 @@
         <h1 class="header-name">Interactive Twelvefold Way</h1>
         <p class="info">Twelvefold Way is a systematic classification of twelve formulas relating to two finite sets in Combinatorics.</p>
         <p class="instructions"><strong>Instructions: </strong>Click and hold a ball to drag it. You must place it in a bin in order for that ball to count. Press submit when you place all the balls in the bins.
-        <p class="tips">Your goal is to find all partitions for a given problem. If you get stuck on a problem, refer to hints and more info!</p>
+        <p class="tips">Your goal is to find all configurations for a given problem. If you get stuck on a problem, refer to hints and more info!</p>
         <p class="more-info">If you want to change formulas, please refer to the grid at the bottom of the screen.</p>
     </header>
 
@@ -48,15 +48,15 @@
             <h1 class="configuration-count">Configurations: 0/27</h1>
 
             <div class="sliders">
-                <label for="ball-count">
+                <label id="ball-label" for="ball-count">
                     Balls
                     <input type="range" id="ball-count" min="1" max="5" orient="vertical">
-                    <strong class="num-balls">0</strong>
+                    <strong class="num-balls">3</strong>
                 </label>
     
-                <label for="bin-count">Bins
+                <label id="bin-label" for="bin-count">Bins
                     <input type="range" id="bin-count" min="1" max="5" orient="vertical">
-                    <strong class="num-bins">0</strong>
+                    <strong class="num-bins">3</strong>
                 </label>
             </div>
 
@@ -76,8 +76,7 @@
 
         <aside class="sidebar">
             <section class="history">
-                <h1>Partition History</h1>
-                <!-- Add some partitions here over time -->
+                <h1>Configuration History</h1>
             </section>
             <form class="submit-config">
                 <button class="submit">Submit</button>

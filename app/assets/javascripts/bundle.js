@@ -231,10 +231,10 @@ function () {
         ctx.stroke();
 
         if (binType === "distinguishable") {
-          ctx.fillText(this.label, this.pos[0] + 115, this.pos[1] + 105);
+          ctx.fillText(this.label, this.pos[0] + 95, this.pos[1] + 150);
         }
 
-        ctx.fillText(this.balls.length, this.pos[0] + this.bounds[0] + 80, this.pos[1] + this.bounds[1] + 25);
+        ctx.fillText(this.balls.length, this.pos[0] + this.bounds[1] - 65, this.pos[1] + this.bounds[2] + 30);
       }
     }
   }, {
@@ -310,6 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
   newInterfaceView.addEventsToRules();
   newInterfaceView.addEventsToCases();
   newInterfaceView.addEventsToButtons();
+  newInterfaceView.updateCount(canvasEl);
   newInterfaceView.start();
 });
 
@@ -344,9 +345,10 @@ function () {
     this.ballType = ballType;
     this.binType = binType;
     this.rules = rules;
+    this.currentPartitions = 0;
     this.numPartitons = numPartitons;
     this.ctx = ctx;
-    this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3, [100, 50], [300, 540]);
+    this["interface"] = new _interface__WEBPACK_IMPORTED_MODULE_0__["default"](3, 3, [100, 50], [245, 440]);
   }
 
   _createClass(InterfaceView, [{
@@ -420,18 +422,74 @@ function () {
     value: function addEventsToButtons() {
       var _this3 = this;
 
+      document.getElementsByClassName("reset-state")[0].addEventListener("click", function (event) {
+        _this3.resetState();
+
+        _this3.start();
+      });
+      document.getElementsByClassName("reset-problem")[0].addEventListener("click", function (event) {
+        _this3.resetInterface();
+
+        _this3.start();
+      });
       document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
         if (_this3["interface"].addPartition(event, _this3.rules, _this3.ballType, _this3.binType)) {
-          console.log(_this3["interface"].partitions);
+          _this3.currentPartitions++;
+
+          _this3.addToConfigurations();
         } else {
           console.log("Cannot add partition!");
         }
       });
     }
   }, {
+    key: "addToConfigurations",
+    value: function addToConfigurations() {
+      document.getElementsByClassName("configuration-count")[0].innerHTML = "Configurations: ".concat(this.currentPartitions, "/").concat(this.numPartitons);
+    }
+  }, {
+    key: "updateCount",
+    value: function updateCount(canvasEl) {
+      var _this4 = this;
+
+      var newValue;
+      document.getElementById("ball-count").addEventListener("input", function (event) {
+        event.preventDefault();
+        newValue = event.target.value;
+        document.getElementsByClassName("num-balls")[0].innerHTML = event.target.value;
+
+        if (newValue > _this4["interface"].balls.length) {
+          _this4["interface"].addBall();
+        } else {
+          _this4["interface"].removeBall();
+
+          _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+        }
+
+        _this4.start();
+      });
+      document.getElementById("bin-count").addEventListener("input", function (event) {
+        newValue = event.target.value;
+        document.getElementsByClassName("num-bins")[0].innerHTML = event.target.value;
+
+        if (newValue > _this4["interface"].bins.length) {
+          _this4["interface"].addBin();
+        } else {
+          _this4["interface"].removeBin();
+
+          _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
+        }
+
+        _this4.start();
+
+        console.log(_this4["interface"].bins.length);
+      });
+    }
+  }, {
     key: "resetState",
     value: function resetState() {
-      this["interface"].setBalls();
+      this["interface"].setBalls(this["interface"].balls.length);
+      this["interface"].setBins(this["interface"].bins.length);
       var canvasEl = document.getElementById("canvas");
       this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
     }
@@ -485,24 +543,52 @@ function () {
   function Interface(numBalls, numBins, ballPosition, binPosition) {
     _classCallCheck(this, Interface);
 
-    this.balls = new Array(numBalls);
-    this.bins = new Array(numBins);
+    this.balls;
+    this.bins;
     this.ballPosition = ballPosition;
     this.binPosition = binPosition;
     this.partitions = [];
-    this.setBalls();
+    this.setBalls(numBalls);
+    this.setBins(numBins);
   }
 
   _createClass(Interface, [{
     key: "setBalls",
-    value: function setBalls() {
+    value: function setBalls(numBalls) {
+      this.balls = new Array(numBalls);
+
       for (var i = 0; i < this.balls.length; i++) {
         this.balls[i] = new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](i + 1, [this.ballPosition[0] * (i + 1), this.ballPosition[1]], 35);
       }
+    }
+  }, {
+    key: "setBins",
+    value: function setBins(numBins) {
+      this.bins = new Array(numBins);
 
-      for (var _i = 0; _i < this.bins.length; _i++) {
-        this.bins[_i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [this.binPosition[0] * _i + 20, this.binPosition[1]], [40, 210, 200]);
+      for (var i = 0; i < this.bins.length; i++) {
+        this.bins[i] = new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](i + 1, [this.binPosition[0] * i + 20, this.binPosition[1]], [40, 160, 300]);
       }
+    }
+  }, {
+    key: "addBall",
+    value: function addBall() {
+      this.balls.push(new _ball__WEBPACK_IMPORTED_MODULE_1__["default"](this.balls.length + 1, [this.ballPosition[0] * (this.balls.length + 1), this.ballPosition[1]], 35));
+    }
+  }, {
+    key: "removeBall",
+    value: function removeBall() {
+      this.balls.pop();
+    }
+  }, {
+    key: "addBin",
+    value: function addBin() {
+      this.bins.push(new _bin__WEBPACK_IMPORTED_MODULE_0__["default"](this.bins.length + 1, [this.binPosition[0] * this.bins.length + 20, this.binPosition[1]], [40, 160, 300]));
+    }
+  }, {
+    key: "removeBin",
+    value: function removeBin() {
+      this.bins.pop();
     }
   }, {
     key: "violateConstraints",

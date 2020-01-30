@@ -48,5 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
     newInterfaceView.addEventsToRules();
     newInterfaceView.addEventsToCases();
     newInterfaceView.addEventsToButtons();
+    newInterfaceView.updateCount(canvasEl);
     newInterfaceView.start();
 });

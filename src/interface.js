@@ -6,22 +6,45 @@ import { determineCases, checkConstraints } from '../util/checks';
 //this class is concerned with the logic of the interface
 class Interface {
     constructor(numBalls, numBins, ballPosition, binPosition) {
-        this.balls = new Array(numBalls);
-        this.bins = new Array(numBins);
+        this.balls;
+        this.bins;
         this.ballPosition = ballPosition;
         this.binPosition = binPosition;
         this.partitions = [];
-        this.setBalls();
+        this.setBalls(numBalls);
+        this.setBins(numBins);
     }
 
-    setBalls() {
+    setBalls(numBalls) {
+        this.balls = new Array(numBalls);
+
         for (let i = 0; i < this.balls.length; i++) {
             this.balls[i] = new Ball(i + 1, [this.ballPosition[0] * (i + 1), this.ballPosition[1]], 35);
         }
+    }
+
+    setBins(numBins) {
+        this.bins = new Array(numBins);
 
         for (let i = 0; i < this.bins.length; i++) {
-            this.bins[i] = new Bin(i + 1, [(this.binPosition[0] * i) + 20, this.binPosition[1]], [40, 210, 200]);
+            this.bins[i] = new Bin(i + 1, [(this.binPosition[0] * i) + 20, this.binPosition[1]], [40, 160, 300]);
         }
+    }
+
+    addBall() {
+        this.balls.push(new Ball(this.balls.length + 1, [this.ballPosition[0] * (this.balls.length + 1), this.ballPosition[1]], 35));
+    }
+
+    removeBall() {
+        this.balls.pop();
+    }
+
+    addBin() {
+        this.bins.push(new Bin(this.bins.length + 1, [(this.binPosition[0] * (this.bins.length)) + 20, this.binPosition[1]], [40, 160, 300]));
+    }
+
+    removeBin() {
+        this.bins.pop();
     }
 
     violateConstraints(rules) {

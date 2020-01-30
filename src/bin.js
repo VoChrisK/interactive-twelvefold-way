@@ -58,9 +58,9 @@ class Bin {
             ctx.stroke();
 
             if(binType === "distinguishable") {
-                ctx.fillText(this.label, this.pos[0] + 115, this.pos[1] + 105);
+                ctx.fillText(this.label, this.pos[0] + 95, this.pos[1] + 150);
             }
-            ctx.fillText(this.balls.length, this.pos[0] + this.bounds[0] + 80, this.pos[1] + this.bounds[1] + 25);
+            ctx.fillText(this.balls.length, this.pos[0] + this.bounds[1] - 65, this.pos[1] + this.bounds[2] + 30);
         }
     }
 
