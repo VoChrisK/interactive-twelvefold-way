@@ -48,16 +48,17 @@
             <h1 class="configuration-count">Configurations: 0/27</h1>
 
             <div class="sliders">
-                <label id="ball-label" for="ball-count">
-                    Balls
+                <div id="ball-label">
+                    <h1 id="ball-label-header">Balls</h1>
                     <input type="range" id="ball-count" min="1" max="5" orient="vertical">
                     <strong class="num-balls">3</strong>
-                </label>
+                </div>
     
-                <label id="bin-label" for="bin-count">Bins
+                <div id="bin-label">
+                    <h1 id="bin-label-header">Bins</h1>
                     <input type="range" id="bin-count" min="1" max="5" orient="vertical">
                     <strong class="num-bins">3</strong>
-                </label>
+                </div>
             </div>
 
             <div class="button-group">
@@ -123,13 +124,13 @@
             <h1>indistinguishable</h1>
             <h1>distinguishable</h1>
             <a class="id unr" href="#top-of-page">
-                $${n-1 \choose k-1}$$
+                $${n+k-1 \choose n-1}$$
             </a>
             <a class="id inj" href="#top-of-page">
                 $${n \choose k}$$
             </a>
             <a class="id sur" href="#top-of-page">
-                $${n+k-1 \choose n-1}$$
+                $${n-1 \choose k-1}$$
             </a>
 
             <h1>indistinguishable</h1>

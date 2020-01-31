@@ -102,11 +102,11 @@ body {
     border-bottom: 2px solid black;
 }
 
-.sliders > label {
+.sliders > div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     font-family: "Lato", sans-serif;
     font-size: 24px;
 }

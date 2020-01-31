@@ -1,6 +1,7 @@
 import Interface from './interface';
 import InterfaceView from './interface-view';
 import { determineFormula } from './../util/formulas';
+import * as EventListeners from './../util/event_listeners';
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvasEl = document.getElementById("canvas");
@@ -76,9 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    newInterfaceView.addEventsToRules();
-    newInterfaceView.addEventsToCases();
-    newInterfaceView.addEventsToButtons();
+    //order matters -> rules before cases
+    EventListeners.addEventsToRules(newInterfaceView);
+    EventListeners.addEventsToCases(newInterfaceView);
+    EventListeners.addEventsToButtons(newInterfaceView);
     newInterfaceView.updateCount(canvasEl);
     newInterfaceView.start();
 });

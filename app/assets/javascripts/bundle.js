@@ -327,6 +327,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _interface__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./interface */ "./src/interface.js");
 /* harmony import */ var _interface_view__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./interface-view */ "./src/interface-view.js");
 /* harmony import */ var _util_formulas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../util/formulas */ "./util/formulas.js");
+/* harmony import */ var _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../util/event_listeners */ "./util/event_listeners.js");
+
 
 
 
@@ -402,10 +404,11 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       newInterfaceView.start();
     }
-  });
-  newInterfaceView.addEventsToRules();
-  newInterfaceView.addEventsToCases();
-  newInterfaceView.addEventsToButtons();
+  }); //order matters -> rules before cases
+
+  _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__["addEventsToRules"](newInterfaceView);
+  _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__["addEventsToCases"](newInterfaceView);
+  _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__["addEventsToButtons"](newInterfaceView);
   newInterfaceView.updateCount(canvasEl);
   newInterfaceView.start();
 });
@@ -542,111 +545,6 @@ function () {
   }
 
   _createClass(InterfaceView, [{
-    key: "addEventsToCases",
-    value: function addEventsToCases() {
-      var _this = this;
-
-      var case1 = document.getElementsByClassName("dd");
-      var case2 = document.getElementsByClassName("di");
-      var case3 = document.getElementsByClassName("id");
-      var case4 = document.getElementsByClassName("ii");
-
-      for (var i = 0; i < case1.length; i++) {
-        case1[i].addEventListener("click", function (event) {
-          _this.ballType = "distinguishable";
-          _this.binType = "distinguishable";
-
-          _this.calculateFormula();
-
-          _this.resetInterface();
-
-          _this.start();
-        });
-        case2[i].addEventListener("click", function (event) {
-          _this.ballType = "distinguishable";
-          _this.binType = "indistinguishable";
-
-          _this.calculateFormula();
-
-          _this.resetInterface();
-
-          _this.start();
-        });
-        case3[i].addEventListener("click", function (event) {
-          _this.ballType = "indistinguishable";
-          _this.binType = "distinguishable";
-
-          _this.calculateFormula();
-
-          _this.resetInterface();
-
-          if (_this.usesStarsAndBars()) {
-            _this.startAlt();
-          } else {
-            _this.start();
-          }
-        });
-        case4[i].addEventListener("click", function (event) {
-          _this.ballType = "indistinguishable";
-          _this.binType = "indistinguishable";
-
-          _this.calculateFormula();
-
-          _this.resetInterface();
-
-          _this.start();
-        });
-      }
-    }
-  }, {
-    key: "addEventsToRules",
-    value: function addEventsToRules() {
-      var _this2 = this;
-
-      var rule1 = document.getElementsByClassName("unr");
-      var rule2 = document.getElementsByClassName("inj");
-      var rule3 = document.getElementsByClassName("sur");
-
-      for (var i = 0; i < rule1.length; i++) {
-        rule1[i].addEventListener("click", function (event) {
-          _this2.rules = "unrestricted";
-        });
-        rule2[i].addEventListener("click", function (event) {
-          _this2.rules = "injective";
-        });
-        rule3[i].addEventListener("click", function (event) {
-          _this2.rules = "surjective";
-        });
-      }
-    }
-  }, {
-    key: "addEventsToButtons",
-    value: function addEventsToButtons() {
-      var _this3 = this;
-
-      document.getElementsByClassName("reset-state")[0].addEventListener("click", function (event) {
-        _this3.resetState();
-
-        _this3.start();
-      });
-      document.getElementsByClassName("reset-problem")[0].addEventListener("click", function (event) {
-        _this3.resetInterface();
-
-        _this3.addToConfigurations();
-
-        _this3.start();
-      });
-      document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
-        if (_this3["interface"].addPartition(event, _this3.rules, _this3.ballType, _this3.binType)) {
-          _this3.currentPartitions++;
-
-          _this3.addToConfigurations();
-        } else {
-          console.log("Cannot add partition!");
-        }
-      });
-    }
-  }, {
     key: "addToConfigurations",
     value: function addToConfigurations() {
       document.getElementsByClassName("configuration-count")[0].innerHTML = "Configurations: ".concat(this.currentPartitions, "/").concat(this.numPartitons);
@@ -659,92 +557,119 @@ function () {
   }, {
     key: "calculateFormula",
     value: function calculateFormula() {
-      console.log(this.ballType + " " + this.binType + " " + this.rules);
-      this.numPartitons = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_1__["determineFormula"])(this.ballType, this.binType, this.rules)(this["interface"].balls.length, this["interface"].bins.length);
+      if (this.usesStarsAndBars()) {
+        this.numPartitons = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_1__["determineFormula"])(this.ballType, this.binType, this.rules)(this.interfaceAlt.bars.length + 1, this.interfaceAlt.stars.length);
+      } else {
+        this.numPartitons = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_1__["determineFormula"])(this.ballType, this.binType, this.rules)(this["interface"].balls.length, this["interface"].bins.length);
+      }
+
       this.currentPartitions = 0;
       this.addToConfigurations();
     }
   }, {
+    key: "changeLabels",
+    value: function changeLabels() {
+      var ballLabel = document.getElementById("ball-label-header");
+      var binLabel = document.getElementById("bin-label-header");
+
+      if (this.usesStarsAndBars()) {
+        ballLabel.innerText = "Bars";
+      } else {
+        ballLabel.innerText = "Balls";
+      }
+
+      if (this.usesStarsAndBars()) {
+        binLabel.innerText = "Stars";
+      } else {
+        binLabel.innerText = "Bins";
+      }
+    }
+  }, {
+    key: "updateValues",
+    value: function updateValues() {
+      if (this.usesStarsAndBars()) {
+        this.interfaceAlt.setBars(document.getElementsByClassName("num-balls")[0].innerHTML - 1);
+        this.interfaceAlt.setStars(document.getElementsByClassName("num-bins")[0].innerHTML);
+      } else {
+        this["interface"].setBalls(document.getElementsByClassName("num-balls")[0].innerHTML);
+        this["interface"].setBins(document.getElementsByClassName("num-bins")[0].innerHTML);
+      }
+    }
+  }, {
+    key: "updateAmount",
+    value: function updateAmount(value) {
+      if (this.usesStarsAndBars()) {
+        document.getElementsByClassName("num-balls")[0].innerHTML = value - 1;
+      } else {
+        document.getElementsByClassName("num-balls")[0].innerHTML = value;
+      }
+    }
+  }, {
     key: "updateCount",
     value: function updateCount(canvasEl) {
-      var _this4 = this;
+      var _this = this;
 
       var newValue;
       document.getElementById("ball-count").addEventListener("input", function (event) {
         event.preventDefault();
         newValue = event.target.value;
-        document.getElementsByClassName("num-balls")[0].innerHTML = event.target.value;
 
-        if (newValue > _this4["interface"].balls.length) {
-          if (_this4.usesStarsAndBars()) {
-            _this4.interfaceAlt.addBar();
+        _this.updateAmount(parseInt(newValue));
 
-            _this4.calculateFormula();
-
-            _this4.startAlt();
+        if (_this.usesStarsAndBars()) {
+          if (newValue > _this.interfaceAlt.bars.length) {
+            _this.interfaceAlt.addBar();
           } else {
-            _this4["interface"].addBall();
+            _this.interfaceAlt.removeBar();
 
-            _this4.calculateFormula();
-
-            _this4.start();
+            _this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
           }
+
+          _this.calculateFormula();
+
+          _this.startAlt();
         } else {
-          if (_this4.usesStarsAndBars()) {
-            _this4.interfaceAlt.removeBar();
-
-            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
-
-            _this4.calculateFormula();
-
-            _this4.startAlt();
+          if (newValue > _this["interface"].balls.length) {
+            _this["interface"].addBall();
           } else {
-            _this4["interface"].removeBall();
+            _this["interface"].removeBall();
 
-            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
-
-            _this4.calculateFormula();
-
-            _this4.start();
+            _this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
           }
+
+          _this.calculateFormula();
+
+          _this.start();
         }
       });
       document.getElementById("bin-count").addEventListener("input", function (event) {
         newValue = event.target.value;
         document.getElementsByClassName("num-bins")[0].innerHTML = event.target.value;
 
-        if (newValue > _this4["interface"].bins.length) {
-          if (_this4.usesStarsAndBars()) {
-            _this4.interfaceAlt.addStar();
-
-            _this4.calculateFormula();
-
-            _this4.startAlt();
+        if (_this.usesStarsAndBars()) {
+          if (newValue > _this.interfaceAlt.stars.length) {
+            _this.interfaceAlt.addStar();
           } else {
-            _this4["interface"].addBin();
+            _this.interfaceAlt.removeStar();
 
-            _this4.calculateFormula();
-
-            _this4.start();
+            _this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
           }
+
+          _this.calculateFormula();
+
+          _this.startAlt();
         } else {
-          if (_this4.usesStarsAndBars()) {
-            _this4.interfaceAlt.removeStar();
-
-            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
-
-            _this4.calculateFormula();
-
-            _this4.startAlt();
+          if (newValue > _this["interface"].bins.length) {
+            _this["interface"].addBin();
           } else {
-            _this4["interface"].removeBin();
+            _this["interface"].removeBin();
 
-            _this4.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
-
-            _this4.calculateFormula();
-
-            _this4.start();
+            _this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
           }
+
+          _this.calculateFormula();
+
+          _this.start();
         }
       });
     }
@@ -762,6 +687,21 @@ function () {
       this.resetState();
       this["interface"].partitions = [];
       this.currentPartitions = 0;
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.updateValues();
+      this.calculateFormula();
+      this.resetInterface();
+      this.changeLabels();
+
+      if (this.usesStarsAndBars()) {
+        document.getElementsByClassName("num-balls")[0].innerHTML = this.interfaceAlt.bars.length;
+        this.startAlt();
+      } else {
+        this.start();
+      }
     }
   }, {
     key: "start",
@@ -1135,6 +1075,98 @@ var checkSurjective = function checkSurjective(bin) {
 
 /***/ }),
 
+/***/ "./util/event_listeners.js":
+/*!*********************************!*\
+  !*** ./util/event_listeners.js ***!
+  \*********************************/
+/*! exports provided: addEventsToCases, addEventsToRules, addEventsToButtons */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEventsToCases", function() { return addEventsToCases; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEventsToRules", function() { return addEventsToRules; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEventsToButtons", function() { return addEventsToButtons; });
+var addEventsToCases = function addEventsToCases(interfaceView) {
+  var case1 = document.getElementsByClassName("dd");
+  var case2 = document.getElementsByClassName("di");
+  var case3 = document.getElementsByClassName("id");
+  var case4 = document.getElementsByClassName("ii");
+
+  for (var i = 0; i < case1.length; i++) {
+    case1[i].addEventListener("click", function (event) {
+      interfaceView.ballType = "distinguishable";
+      interfaceView.binType = "distinguishable";
+      interfaceView.reset();
+    });
+    case2[i].addEventListener("click", function (event) {
+      interfaceView.ballType = "distinguishable";
+      interfaceView.binType = "indistinguishable";
+      interfaceView.reset();
+    });
+    case3[i].addEventListener("click", function (event) {
+      interfaceView.ballType = "indistinguishable";
+      interfaceView.binType = "distinguishable";
+      interfaceView.reset();
+    });
+    case4[i].addEventListener("click", function (event) {
+      interfaceView.ballType = "indistinguishable";
+      interfaceView.binType = "indistinguishable";
+      interfaceView.reset();
+    });
+  }
+};
+var addEventsToRules = function addEventsToRules(interfaceView) {
+  var rule1 = document.getElementsByClassName("unr");
+  var rule2 = document.getElementsByClassName("inj");
+  var rule3 = document.getElementsByClassName("sur");
+
+  for (var i = 0; i < rule1.length; i++) {
+    rule1[i].addEventListener("click", function (event) {
+      if (interfaceView.usesStarsAndBars()) {
+        document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
+      }
+
+      interfaceView.rules = "unrestricted";
+    });
+    rule2[i].addEventListener("click", function (event) {
+      if (interfaceView.usesStarsAndBars()) {
+        document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
+      }
+
+      interfaceView.rules = "injective";
+    });
+    rule3[i].addEventListener("click", function (event) {
+      if (interfaceView.usesStarsAndBars()) {
+        document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
+      }
+
+      interfaceView.rules = "surjective";
+    });
+  }
+};
+var addEventsToButtons = function addEventsToButtons(interfaceView) {
+  document.getElementsByClassName("reset-state")[0].addEventListener("click", function (event) {
+    interfaceView.resetState();
+    interfaceView.start();
+  });
+  document.getElementsByClassName("reset-problem")[0].addEventListener("click", function (event) {
+    interfaceView.resetInterface();
+    interfaceView.addToConfigurations();
+    interfaceView.start();
+  });
+  document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
+    if (interfaceView["interface"].addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
+      interfaceView.currentPartitions++;
+      interfaceView.addToConfigurations();
+    } else {
+      console.log("Cannot add partition!");
+    }
+  });
+};
+
+/***/ }),
+
 /***/ "./util/formulas.js":
 /*!**************************!*\
   !*** ./util/formulas.js ***!
@@ -1217,7 +1249,6 @@ var calculateDDUnrestricted = function calculateDDUnrestricted(k, n) {
 
 
 var calculateDDInjective = function calculateDDInjective(k, n) {
-  console.log(k + " " + n);
   if (k > n) return 0;
   return calculateFactorial(n) / calculateFactorial(n - k);
 }; //k distinguishable balls, n distinguishable bins, surjective
@@ -1228,8 +1259,8 @@ var calculateDDSurjective = function calculateDDSurjective(k, n) {
 }; //k indistinguishable balls, n distinguishable bins, no restrictions
 
 
-var calculateIDUnrestricted = function calculateIDUnrestricted(k, n) {
-  return calculateBinomialCoefficient(k - 1, n - 1);
+var calculateIDUnrestricted = function calculateIDUnrestricted(n, k) {
+  return calculateBinomialCoefficient(k + n - 1, n - 1);
 }; //k indistinguishable balls, n distinguishable bins, injective
 
 
@@ -1239,12 +1270,12 @@ var calculateIDInjective = function calculateIDInjective(k, n) {
 
 
 var calculateIDSurjective = function calculateIDSurjective(k, n) {
-  return calculateBinomialCoefficient(n + k + 1, n - 1);
+  return calculateBinomialCoefficient(k - 1, n - 1);
 }; //k distinguishable balls, n indistinguishable bins, no restrictions
 
 
 var calculateDIUnrestricted = function calculateDIUnrestricted(k, n) {
-  var numbers = getNumbersArray(k);
+  var numbers = getNumbersArray(n);
 
   var formula = function formula(acc, i) {
     return acc + calculateStirlingNumber(k, i);

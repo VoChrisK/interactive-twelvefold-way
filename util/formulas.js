@@ -56,7 +56,6 @@ const calculateDDUnrestricted = (k, n) => {
 
 //k distinguishable balls, n distinguishable bins, injective
 const calculateDDInjective = (k, n) => {
-    console.log(k + " " + n);
     if(k > n) return 0;
 
     return calculateFactorial(n) / calculateFactorial(n-k);
@@ -68,8 +67,8 @@ const calculateDDSurjective = (k, n) => {
 };
 
 //k indistinguishable balls, n distinguishable bins, no restrictions
-const calculateIDUnrestricted = (k, n) => {
-    return calculateBinomialCoefficient(k-1, n-1);
+const calculateIDUnrestricted = (n, k) => {
+    return calculateBinomialCoefficient(k + n - 1, n - 1);
 };
 
 //k indistinguishable balls, n distinguishable bins, injective
@@ -79,12 +78,12 @@ const calculateIDInjective = (k, n) => {
 
 //k indistinguishable balls, n distinguishable bins, surjective
 const calculateIDSurjective = (k, n) => {
-    return calculateBinomialCoefficient(n+k+1, n-1);
+    return calculateBinomialCoefficient(k - 1, n - 1);
 };
 
 //k distinguishable balls, n indistinguishable bins, no restrictions
 const calculateDIUnrestricted = (k, n) => {
-    let numbers = getNumbersArray(k);
+    let numbers = getNumbersArray(n);
     let formula = (acc, i) => acc + calculateStirlingNumber(k, i)
     return numbers.reduce(formula, 0);
 };
