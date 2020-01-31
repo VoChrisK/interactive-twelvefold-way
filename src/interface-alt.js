@@ -1,5 +1,6 @@
 import Star from "./star";
 import Bar from './bar';
+import LeftMostStar from "./left_most_star";
 
 //this class is concerned with handling the logic for stars and bars
 class InterfaceAlt {
@@ -16,7 +17,11 @@ class InterfaceAlt {
         this.stars = new Array(parseInt(numStars));
 
         for (let i = 0; i < this.stars.length; i++) {
-            this.stars[i] = new Star([this.starPosition[0] * (i + 1), this.starPosition[1]]);
+            if(i === 0) {
+                this.stars[i] = new LeftMostStar([this.starPosition[0] * (i + 1), this.starPosition[1]], this.starPosition[0]);
+            } else {
+                this.stars[i] = new Star([this.starPosition[0] * (i + 1), this.starPosition[1]], this.starPosition[0]);
+            }
         }
     }
 
@@ -29,7 +34,7 @@ class InterfaceAlt {
     }
 
     addStar() {
-        this.stars.push(new Star([this.starPosition[0] * (this.stars.length + 1), this.starPosition[1]]));
+        this.stars.push(new Star([this.starPosition[0] * (this.stars.length + 1), this.starPosition[1]], this.starPosition[0]));
     }
 
     removeStar() {

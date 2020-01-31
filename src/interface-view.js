@@ -12,7 +12,7 @@ class InterfaceView {
         this.numPartitons = numPartitons;
         this.ctx = ctx;
         this.interface = new Interface(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML, [100, 50], [245, 440]);
-        this.interfaceAlt = new InterfaceAlt(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML, [133, 400], [100, 200]);
+        this.interfaceAlt = new InterfaceAlt(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML, [200, 400], [100, 200]);
     }
 
     addToConfigurations() {

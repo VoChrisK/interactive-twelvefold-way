@@ -2,6 +2,7 @@ import Interface from './interface';
 import InterfaceView from './interface-view';
 import { determineFormula } from './../util/formulas';
 import * as EventListeners from './../util/event_listeners';
+import LeftMostStar from './left_most_star';
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvasEl = document.getElementById("canvas");
@@ -14,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if(newInterfaceView.usesStarsAndBars()) {
             for (let i = 0; i < newInterfaceView.interfaceAlt.bars.length; i++) {
                 if (newInterfaceView.interfaceAlt.bars[i].checkBounds(event.offsetX, event.offsetY)) {
-                    console.log("hey");
                     animation = window.requestAnimationFrame(newInterfaceView.interfaceAlt.bars[i].draw);
                     newInterfaceView.interfaceAlt.bars[i].isClicked = true;
                     break; //break here to resolve conflict between overlapping balls
@@ -61,6 +61,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (bar.isClicked) {
                     bar.isClicked = false;
                 }
+                newInterfaceView.interfaceAlt.stars.forEach(star => {
+                    if(star instanceof LeftMostStar) {
+                        star.addLeftBar(bar);
+                        star.removeLeftBar(bar);
+                    }
+                    star.addBar(bar);
+                    star.removeBar(bar);
+                });
             });
             newInterfaceView.startAlt();
         } else {

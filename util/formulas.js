@@ -67,8 +67,8 @@ const calculateDDSurjective = (k, n) => {
 };
 
 //k indistinguishable balls, n distinguishable bins, no restrictions
-const calculateIDUnrestricted = (n, k) => {
-    return calculateBinomialCoefficient(k + n - 1, n - 1);
+const calculateIDUnrestricted = (k, n) => {
+    return calculateBinomialCoefficient(n + k - 1, k - 1);
 };
 
 //k indistinguishable balls, n distinguishable bins, injective
