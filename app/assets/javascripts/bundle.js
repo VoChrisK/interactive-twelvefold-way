@@ -517,7 +517,7 @@ function () {
   }, {
     key: "checkSurjective",
     value: function checkSurjective() {
-      return this.stars[0].leftBars.length > 0 && this.stars[this.stars.length - 1].bars.length > 0;
+      return this.stars[0].leftBars.length > 0 || this.stars[this.stars.length - 1].bars.length > 0;
     }
   }, {
     key: "checkEachPartition",
@@ -537,7 +537,7 @@ function () {
       if (this.checkEachPartition(rules) || !this.checkBars()) return false;
 
       if (rules === "surjective") {
-        if (!this.checkSurjective()) return false;
+        if (this.checkSurjective()) return false;
       }
 
       this.partitions.push(new _partition_alt__WEBPACK_IMPORTED_MODULE_3__["default"](JSON.parse(JSON.stringify(this.stars))));
@@ -888,10 +888,30 @@ function () {
     key: "addPartition",
     value: function addPartition(event, rules, ballType, binType) {
       event.preventDefault();
-      if (this.checkEachPartition(ballType, binType) || this.violateConstraints(rules) || !this.checkBalls()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
-
-      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins))));
+      if (this.checkEachPartition(ballType, binType) || this.violateConstraints(rules) || !this.checkBalls()) return false;
+      console.log(this.cloneBins());
+      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](this.cloneBins()));
       return true;
+    }
+  }, {
+    key: "cloneBins",
+    value: function cloneBins() {
+      var newBins = [];
+      var newBalls;
+      var newBin;
+      var newBall;
+      this.bins.forEach(function (bin) {
+        newBalls = [];
+        bin.balls.forEach(function (ball) {
+          newBall = Object.assign({}, ball);
+          newBalls.push(newBall);
+        });
+        newBin = Object.create(_bin__WEBPACK_IMPORTED_MODULE_0__["default"].prototype, bin);
+        console.log(newBin);
+        newBin.balls = newBalls;
+        newBins.push(newBin);
+      });
+      return newBins;
     }
   }, {
     key: "draw",
@@ -1001,8 +1021,8 @@ function (_Star) {
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
-        ctx.fillText(this.leftBars.length, this.pos[0] - 120, this.pos[1] + 100);
-        ctx.fillText(this.bars.length, this.pos[0] + 90, this.pos[1] + 100);
+        ctx.fillText(this.leftBars.length, this.pos[0] - 120, this.pos[1] + 150);
+        ctx.fillText(this.bars.length, this.pos[0] + 90, this.pos[1] + 150);
       }
     }
   }]);
@@ -1063,7 +1083,7 @@ function () {
         for (var _i = 1; _i < this.stars.length - 1; _i++) {
           //do not account for the right-most gap
           if (this.stars[_i].bars.length !== stars[_i].bars.length) {
-            return false; //this implies that the partition doesn't exist
+            return false;
           }
         }
 
@@ -1123,6 +1143,16 @@ function () {
       }
 
       return counter === this.bins.length;
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx, balls, binType) {
+      balls.forEach(function (ball) {
+        return ball.draw(ctx);
+      });
+      this.bins.forEach(function (bin) {
+        return bin.draw(ctx, binType);
+      });
     }
   }]);
 
@@ -1205,7 +1235,7 @@ function () {
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
-        ctx.fillText(this.bars.length, this.pos[0] + 90, this.pos[1] + 100);
+        ctx.fillText(this.bars.length, this.pos[0] + 90, this.pos[1] + 150);
       }
     }
   }]);
@@ -1418,11 +1448,23 @@ var addEventsToButtons = function addEventsToButtons(interfaceView) {
     } else {
       if (interfaceView["interface"].addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
         interfaceView.currentPartitions++;
-        interfaceView.addToConfigurations();
+        interfaceView.addToConfigurations(); // appendPartition(interfaceView);
       } else {
         console.log("Cannot add partition!");
       }
     }
+  });
+};
+
+var appendPartition = function appendPartition(interfaceView) {
+  var newCanvas = document.createElement("CANVAS");
+  newCanvas.setAttribute("width", "1000");
+  newCanvas.setAttribute("height", "1000");
+  var ctx = newCanvas.getContext("2d");
+  var history = document.getElementsByClassName("history")[0];
+  history.appendChild(newCanvas);
+  interfaceView["interface"].partitions.forEach(function (partition) {
+    return partition.draw(ctx, interfaceView["interface"].balls, interfaceView.binType);
   });
 };
 

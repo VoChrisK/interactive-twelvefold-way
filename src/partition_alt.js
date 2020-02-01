@@ -19,10 +19,9 @@ class PartitionAlt {
             return true;
         } else { //if rules are surjective
             if(this.stars[0].leftBars.length > 0 || this.stars[this.stars.length - 1].bars.length > 0) return true; 
-
             for (let i = 1; i < this.stars.length - 1; i++) { //do not account for the right-most gap
                 if (this.stars[i].bars.length !== stars[i].bars.length) {
-                    return false; //this implies that the partition doesn't exist
+                    return false;
                 }
             }
 

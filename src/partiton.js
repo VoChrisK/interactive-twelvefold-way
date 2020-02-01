@@ -21,6 +21,11 @@ class Partition {
 
         return counter === this.bins.length;
     }
+
+    draw(ctx, balls, binType) {
+        balls.forEach(ball => ball.draw(ctx));
+        this.bins.forEach(bin => bin.draw(ctx, binType));
+    }
 }
 
 export default Partition;

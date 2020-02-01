@@ -56,7 +56,7 @@ class InterfaceAlt {
     }
 
     checkSurjective() {
-        return this.stars[0].leftBars.length > 0 && this.stars[this.stars.length - 1].bars.length > 0;
+        return this.stars[0].leftBars.length > 0 || this.stars[this.stars.length - 1].bars.length > 0;
     }
 
     checkEachPartition(rules) {
@@ -73,7 +73,7 @@ class InterfaceAlt {
         event.preventDefault();
         if(this.checkEachPartition(rules) || !this.checkBars()) return false;
         if (rules === "surjective") {
-            if(!this.checkSurjective()) return false;
+            if(this.checkSurjective()) return false;
         }
 
         this.partitions.push(new PartitionAlt(JSON.parse(JSON.stringify(this.stars))));

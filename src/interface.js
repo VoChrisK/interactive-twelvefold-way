@@ -75,9 +75,29 @@ class Interface {
         event.preventDefault();
         if(this.checkEachPartition(ballType, binType) || this.violateConstraints(rules) || !this.checkBalls()) return false;
 
-        //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
-        this.partitions.push(new Partition(JSON.parse(JSON.stringify(this.bins))));
+        console.log(this.cloneBins());
+        this.partitions.push(new Partition(this.cloneBins()));
         return true;
+    }
+
+    cloneBins() {
+        let newBins = [];
+        let newBalls;
+        let newBin;
+        let newBall;
+
+        this.bins.forEach(bin => {
+            newBalls = [];
+            bin.balls.forEach(ball => {
+                newBall = Object.assign({}, ball);
+                newBalls.push(newBall);
+            });
+            newBin = Object.create(Bin.prototype, bin);
+            console.log(newBin);
+            newBin.balls = newBalls;
+            newBins.push(newBin);
+        });
+        return newBins;
     }
 
     draw(ctx, ballType, binType) {

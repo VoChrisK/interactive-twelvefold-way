@@ -82,9 +82,21 @@ export const addEventsToButtons = (interfaceView) => {
             if (interfaceView.interface.addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
                 interfaceView.currentPartitions++;
                 interfaceView.addToConfigurations();
+                // appendPartition(interfaceView);
             } else {
                 console.log("Cannot add partition!");
             }
         }
     });
+}
+
+const appendPartition = (interfaceView) => {
+    const newCanvas = document.createElement("CANVAS");
+    newCanvas.setAttribute("width", "1000");
+    newCanvas.setAttribute("height", "1000");
+    const ctx = newCanvas.getContext("2d");
+    const history = document.getElementsByClassName("history")[0];
+
+    history.appendChild(newCanvas);
+    interfaceView.interface.partitions.forEach(partition => partition.draw(ctx, interfaceView.interface.balls, interfaceView.binType));
 }

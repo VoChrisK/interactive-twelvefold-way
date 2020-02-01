@@ -49,9 +49,9 @@ class LeftMostStar extends Star {
             ctx.closePath();
             ctx.stroke();
             ctx.fill();
-            ctx.fillText(this.leftBars.length, this.pos[0] - 120, this.pos[1] + 100);
+            ctx.fillText(this.leftBars.length, this.pos[0] - 120, this.pos[1] + 150);
 
-            ctx.fillText(this.bars.length, this.pos[0] + 90, this.pos[1] + 100);
+            ctx.fillText(this.bars.length, this.pos[0] + 90, this.pos[1] + 150);
         }
     }
 }
