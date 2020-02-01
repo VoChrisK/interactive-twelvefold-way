@@ -78,7 +78,7 @@ const calculateIDInjective = (k, n) => {
 
 //k indistinguishable balls, n distinguishable bins, surjective
 const calculateIDSurjective = (k, n) => {
-    return calculateBinomialCoefficient(k - 1, n - 1);
+    return calculateBinomialCoefficient(n - 1, k - 1);
 };
 
 //k distinguishable balls, n indistinguishable bins, no restrictions

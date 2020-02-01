@@ -76,7 +76,7 @@ class Interface {
         if(this.checkEachPartition(ballType, binType) || this.violateConstraints(rules) || !this.checkBalls()) return false;
 
         //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
-        this.partitions.push(new Partition(JSON.parse(JSON.stringify(this.bins)), rules));
+        this.partitions.push(new Partition(JSON.parse(JSON.stringify(this.bins))));
         return true;
     }
 

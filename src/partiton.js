@@ -1,10 +1,7 @@
-import Bin from './bin';
-
 //true values denote there exists a partition, false values denote there doesn't not exist a partition
 class Partition {
-    constructor(bins, rules) {
-        this.bins = bins; //array or object of bins
-        this.rules = rules; //unrestricted, injective, surjective
+    constructor(bins) {
+        this.bins = bins;
     }
 
     //this function checks if there is a parititon. 

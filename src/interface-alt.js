@@ -1,6 +1,7 @@
 import Star from "./star";
 import Bar from './bar';
 import LeftMostStar from "./left_most_star";
+import PartitionAlt from "./partition_alt";
 
 //this class is concerned with handling the logic for stars and bars
 class InterfaceAlt {
@@ -9,6 +10,7 @@ class InterfaceAlt {
         this.bars;
         this.starPosition = starPosition;
         this.barPosition = barPosition;
+        this.partitions = [];
         this.setStars(numStars);
         this.setBars(numBars);
     }
@@ -47,6 +49,35 @@ class InterfaceAlt {
 
     removeBar() {
         this.bars.pop();
+    }
+
+    checkBars() {
+        return this.bars.length === this.stars.reduce((acc, star) => acc + star.bars.length, this.stars[0].leftBars.length);
+    }
+
+    checkSurjective() {
+        return this.stars[0].leftBars.length > 0 && this.stars[this.stars.length - 1].bars.length > 0;
+    }
+
+    checkEachPartition(rules) {
+        for(let i = 0; i < this.partitions.length; i++) {
+            if(this.partitions[i].checkStars(this.stars, rules)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    addPartition(event, rules) {
+        event.preventDefault();
+        if(this.checkEachPartition(rules) || !this.checkBars()) return false;
+        if (rules === "surjective") {
+            if(!this.checkSurjective()) return false;
+        }
+
+        this.partitions.push(new PartitionAlt(JSON.parse(JSON.stringify(this.stars))));
+        return true;
     }
 
     draw(ctx) {

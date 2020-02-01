@@ -438,11 +438,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _star__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./star */ "./src/star.js");
 /* harmony import */ var _bar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bar */ "./src/bar.js");
 /* harmony import */ var _left_most_star__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./left_most_star */ "./src/left_most_star.js");
+/* harmony import */ var _partition_alt__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./partition_alt */ "./src/partition_alt.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -458,6 +460,7 @@ function () {
     this.bars;
     this.starPosition = starPosition;
     this.barPosition = barPosition;
+    this.partitions = [];
     this.setStars(numStars);
     this.setBars(numBars);
   }
@@ -503,6 +506,42 @@ function () {
     key: "removeBar",
     value: function removeBar() {
       this.bars.pop();
+    }
+  }, {
+    key: "checkBars",
+    value: function checkBars() {
+      return this.bars.length === this.stars.reduce(function (acc, star) {
+        return acc + star.bars.length;
+      }, this.stars[0].leftBars.length);
+    }
+  }, {
+    key: "checkSurjective",
+    value: function checkSurjective() {
+      return this.stars[0].leftBars.length > 0 && this.stars[this.stars.length - 1].bars.length > 0;
+    }
+  }, {
+    key: "checkEachPartition",
+    value: function checkEachPartition(rules) {
+      for (var i = 0; i < this.partitions.length; i++) {
+        if (this.partitions[i].checkStars(this.stars, rules)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "addPartition",
+    value: function addPartition(event, rules) {
+      event.preventDefault();
+      if (this.checkEachPartition(rules) || !this.checkBars()) return false;
+
+      if (rules === "surjective") {
+        if (!this.checkSurjective()) return false;
+      }
+
+      this.partitions.push(new _partition_alt__WEBPACK_IMPORTED_MODULE_3__["default"](JSON.parse(JSON.stringify(this.stars))));
+      return true;
     }
   }, {
     key: "draw",
@@ -851,7 +890,7 @@ function () {
       event.preventDefault();
       if (this.checkEachPartition(ballType, binType) || this.violateConstraints(rules) || !this.checkBalls()) return false; //create a deep copy of bins <- JSON.parse(JSON.stringify(bins))
 
-      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins)), rules));
+      this.partitions.push(new _partiton__WEBPACK_IMPORTED_MODULE_2__["default"](JSON.parse(JSON.stringify(this.bins))));
       return true;
     }
   }, {
@@ -975,6 +1014,71 @@ function (_Star) {
 
 /***/ }),
 
+/***/ "./src/partition_alt.js":
+/*!******************************!*\
+  !*** ./src/partition_alt.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _left_most_star__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./left_most_star */ "./src/left_most_star.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var PartitionAlt =
+/*#__PURE__*/
+function () {
+  function PartitionAlt(stars) {
+    _classCallCheck(this, PartitionAlt);
+
+    this.stars = stars;
+  }
+
+  _createClass(PartitionAlt, [{
+    key: "checkStars",
+    value: function checkStars(stars, rules) {
+      if (rules === "unrestricted") {
+        if (this.stars[0] instanceof _left_most_star__WEBPACK_IMPORTED_MODULE_0__["default"] && stars[0] instanceof _left_most_star__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+          if (this.stars[0].leftBars.length !== stars[0].leftBars.length) return false;
+        }
+
+        for (var i = 0; i < this.stars.length; i++) {
+          if (this.stars[i].bars.length !== stars[i].bars.length) {
+            return false; //this implies that the partition doesn't exist
+          }
+        }
+
+        return true;
+      } else {
+        //if rules are surjective
+        if (this.stars[0].leftBars.length > 0 || this.stars[this.stars.length - 1].bars.length > 0) return true;
+
+        for (var _i = 1; _i < this.stars.length - 1; _i++) {
+          //do not account for the right-most gap
+          if (this.stars[_i].bars.length !== stars[_i].bars.length) {
+            return false; //this implies that the partition doesn't exist
+          }
+        }
+
+        return true;
+      }
+    }
+  }]);
+
+  return PartitionAlt;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (PartitionAlt);
+
+/***/ }),
+
 /***/ "./src/partiton.js":
 /*!*************************!*\
   !*** ./src/partiton.js ***!
@@ -984,24 +1088,20 @@ function (_Star) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _bin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bin */ "./src/bin.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
- //true values denote there exists a partition, false values denote there doesn't not exist a partition
-
+//true values denote there exists a partition, false values denote there doesn't not exist a partition
 var Partition =
 /*#__PURE__*/
 function () {
-  function Partition(bins, rules) {
+  function Partition(bins) {
     _classCallCheck(this, Partition);
 
-    this.bins = bins; //array or object of bins
-
-    this.rules = rules; //unrestricted, injective, surjective
+    this.bins = bins;
   } //this function checks if there is a parititon. 
   //It matches each input's bin with each partition's 
   //bin to check if they have the same configuration. 
@@ -1308,11 +1408,20 @@ var addEventsToButtons = function addEventsToButtons(interfaceView) {
     interfaceView.start();
   });
   document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
-    if (interfaceView["interface"].addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
-      interfaceView.currentPartitions++;
-      interfaceView.addToConfigurations();
+    if (interfaceView.usesStarsAndBars()) {
+      if (interfaceView.interfaceAlt.addPartition(event, interfaceView.rules)) {
+        interfaceView.currentPartitions++;
+        interfaceView.addToConfigurations();
+      } else {
+        console.log("Cannot add partition!");
+      }
     } else {
-      console.log("Cannot add partition!");
+      if (interfaceView["interface"].addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
+        interfaceView.currentPartitions++;
+        interfaceView.addToConfigurations();
+      } else {
+        console.log("Cannot add partition!");
+      }
     }
   });
 };
@@ -1422,7 +1531,7 @@ var calculateIDInjective = function calculateIDInjective(k, n) {
 
 
 var calculateIDSurjective = function calculateIDSurjective(k, n) {
-  return calculateBinomialCoefficient(k - 1, n - 1);
+  return calculateBinomialCoefficient(n - 1, k - 1);
 }; //k distinguishable balls, n indistinguishable bins, no restrictions
 
 

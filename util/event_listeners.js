@@ -71,11 +71,20 @@ export const addEventsToButtons = (interfaceView) => {
     });
 
     document.getElementsByClassName("submit-config")[0].addEventListener("submit", event => {
-        if (interfaceView.interface.addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
-            interfaceView.currentPartitions++;
-            interfaceView.addToConfigurations();
+        if(interfaceView.usesStarsAndBars()) {
+            if(interfaceView.interfaceAlt.addPartition(event, interfaceView.rules)) {
+                interfaceView.currentPartitions++;
+                interfaceView.addToConfigurations();
+            } else {
+                console.log("Cannot add partition!");
+            }
         } else {
-            console.log("Cannot add partition!");
+            if (interfaceView.interface.addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
+                interfaceView.currentPartitions++;
+                interfaceView.addToConfigurations();
+            } else {
+                console.log("Cannot add partition!");
+            }
         }
     });
 }
