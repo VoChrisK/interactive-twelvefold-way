@@ -1,4 +1,5 @@
 import LeftMostStar from "./left_most_star";
+import Star from './star';
 
 class PartitionAlt {
     constructor(stars) {
@@ -6,6 +7,7 @@ class PartitionAlt {
     }
 
     checkStars(stars, rules) {
+        console.log(this.stars[0]);
         if(rules === "unrestricted") {
             if(this.stars[0] instanceof LeftMostStar && stars[0] instanceof LeftMostStar) {
                 if(this.stars[0].leftBars.length !== stars[0].leftBars.length) return false;

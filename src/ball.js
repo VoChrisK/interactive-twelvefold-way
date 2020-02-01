@@ -1,24 +1,20 @@
-class Ball {
-    constructor(label, pos, radius) {
-        this.label = label;
-        this.pos = pos;
-        this.radius = radius;
-        this.isClicked = false;
-        this.boundingBox = [
-            [this.pos[0] - this.radius, this.pos[1] - this.radius],
-            [this.pos[0] - this.radius, this.pos[1] + this.radius],
-            [this.pos[0] + this.radius, this.pos[1] - this.radius],
-            [this.pos[0] + this.radius, this.pos[1] + this.radius]
-        ];
-    }
+import MoveableShape from './moveable_shape';
 
-    checkBounds(x, y) {
-        return (x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1]) && (x >= this.boundingBox[1][0] && y < this.boundingBox[1][1]) && (x < this.boundingBox[2][0] && y >= this.boundingBox[2][1]) && (x < this.boundingBox[3][0] && y < this.boundingBox[3][1]);
+class Ball extends MoveableShape {
+    constructor(label, pos, radius) {
+        const boundingBox = [
+            [pos[0] - radius, pos[1] - radius],
+            [pos[0] + radius, pos[1] - radius],
+            [pos[0] + radius, pos[1] + radius],
+            [pos[0] - radius, pos[1] + radius]
+        ];
+        super(pos, boundingBox);
+        this.label = label;
+        this.radius = radius;
     }
 
     draw(ctx, ballType) {
-        //ctx is a number when clicked so I need to have a conditional here
-        if(typeof ctx === "object") {
+        if(typeof ctx === "object") { //ctx is a number when clicked so I need to have a conditional here
             this.recalculateBoundingBox();
             ctx.beginPath();
             ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
@@ -34,9 +30,9 @@ class Ball {
     recalculateBoundingBox() {
         this.boundingBox = [
             [this.pos[0] - this.radius, this.pos[1] - this.radius],
-            [this.pos[0] - this.radius, this.pos[1] + this.radius],
             [this.pos[0] + this.radius, this.pos[1] - this.radius],
-            [this.pos[0] + this.radius, this.pos[1] + this.radius]
+            [this.pos[0] + this.radius, this.pos[1] + this.radius],
+            [this.pos[0] - this.radius, this.pos[1] + this.radius]
         ];
     }
 }

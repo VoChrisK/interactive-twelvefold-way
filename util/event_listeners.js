@@ -1,4 +1,4 @@
-export const addEventsToCases = (interfaceView) => {
+export const addEventsToCases = (display) => {
     let case1 = document.getElementsByClassName("dd");
     let case2 = document.getElementsByClassName("di");
     let case3 = document.getElementsByClassName("id");
@@ -6,82 +6,82 @@ export const addEventsToCases = (interfaceView) => {
 
     for (let i = 0; i < case1.length; i++) {
         case1[i].addEventListener("click", event => {
-            interfaceView.ballType = "distinguishable";
-            interfaceView.binType = "distinguishable";
-            interfaceView.reset();
+            display.moveableType = "distinguishable";
+            display.staticType = "distinguishable";
+            display.reset();
         });
 
         case2[i].addEventListener("click", event => {
-            interfaceView.ballType = "distinguishable";
-            interfaceView.binType = "indistinguishable";
-            interfaceView.reset();
+            display.moveableType = "distinguishable";
+            display.staticType = "indistinguishable";
+            display.reset();
         });
 
         case3[i].addEventListener("click", event => {
-            interfaceView.ballType = "indistinguishable";
-            interfaceView.binType = "distinguishable";
-            interfaceView.reset();
+            display.moveableType = "indistinguishable";
+            display.staticType = "distinguishable";
+            display.reset();
         });
 
         case4[i].addEventListener("click", event => {
-            interfaceView.ballType = "indistinguishable";
-            interfaceView.binType = "indistinguishable";
-            interfaceView.reset();
+            display.moveableType = "indistinguishable";
+            display.staticType = "indistinguishable";
+            display.reset();
         });
     }
 }
 
-export const addEventsToRules = (interfaceView) => {
+export const addEventsToRules = (display) => {
     let rule1 = document.getElementsByClassName("unr");
     let rule2 = document.getElementsByClassName("inj");
     let rule3 = document.getElementsByClassName("sur");
 
     for (let i = 0; i < rule1.length; i++) {
         rule1[i].addEventListener("click", event => {
-            if (interfaceView.usesStarsAndBars()) {
-                document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
-            }
-            interfaceView.rules = "unrestricted";
+            // if (display.usesStarsAndBars()) {
+            //     document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
+            // }
+            display.restriction = "unrestricted";
         })
         rule2[i].addEventListener("click", event => {
-            if (interfaceView.usesStarsAndBars()) {
-                document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
-            }
-            interfaceView.rules = "injective";
+            // if (display.usesStarsAndBars()) {
+            //     document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
+            // }
+            display.restriction = "injective";
         })
         rule3[i].addEventListener("click", event => {
-            if (interfaceView.usesStarsAndBars()) {
-                document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
-            }
-            interfaceView.rules = "surjective";
+            // if (display.usesStarsAndBars()) {
+            //     document.getElementsByClassName("num-balls")[0].innerHTML = parseInt(document.getElementsByClassName("num-balls")[0].innerHTML) + 1;
+            // }
+            display.restriction = "surjective";
         })
     }
 }
 
-export const addEventsToButtons = (interfaceView) => {
+export const addEventsToButtons = (display) => {
     document.getElementsByClassName("reset-state")[0].addEventListener("click", event => {
-        interfaceView.resetState();
-        interfaceView.start();
+        display.resetState();
+        display.start();
     });
 
     document.getElementsByClassName("reset-problem")[0].addEventListener("click", event => {
-        interfaceView.resetInterface();
-        interfaceView.addToConfigurations();
-        interfaceView.start();
+        display.resetInterface();
+        display.addToConfigurations();
+        display.start();
     });
 
     document.getElementsByClassName("submit-config")[0].addEventListener("submit", event => {
-        if(interfaceView.usesStarsAndBars()) {
-            if(interfaceView.interfaceAlt.addPartition(event, interfaceView.rules)) {
-                interfaceView.currentPartitions++;
-                interfaceView.addToConfigurations();
+        if(display.usesStarsAndBars()) {
+            if(display.interfaceAlt.addPartition(event, display.rules)) {
+                display.currentPartitions++;
+                display.addToConfigurations();
             } else {
                 console.log("Cannot add partition!");
             }
         } else {
-            if (interfaceView.interface.addPartition(event, interfaceView.rules, interfaceView.ballType, interfaceView.binType)) {
-                interfaceView.currentPartitions++;
-                interfaceView.addToConfigurations();
+            if (display.interface.addPartition(event, display.rules, display.ballType, display.binType)) {
+                display.currentPartitions++;
+                display.addToConfigurations();
                 // appendPartition(interfaceView);
             } else {
                 console.log("Cannot add partition!");

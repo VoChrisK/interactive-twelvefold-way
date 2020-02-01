@@ -1,7 +1,7 @@
 //true values denote there exists a partition, false values denote there doesn't not exist a partition
-class Partition {
-    constructor(bins) {
-        this.bins = bins;
+class Configuration {
+    constructor(staticShapes) {
+        this.staticShapes = staticShapes;
     }
 
     //this function checks if there is a parititon. 
@@ -11,21 +11,21 @@ class Partition {
     //the counter equals to the total # of bins, then this 
     //implies that the partition already exists or the parition
     //does not adhere to the rules
-    checkBins(bins, checkBothBins) {
+    checkStaticShapes(otherShapes, checkBothShapes) {
         let counter = 0;
-        for(let i = 0; i < this.bins.length; i++) {
-            if (checkBothBins(bins[i], this.bins, i)) {
+        for(let i = 0; i < this.staticShapes.length; i++) {
+            if (checkBothShapes(otherShapes[i], this.staticShapes, i)) {
                 counter++;
             }
         }
 
-        return counter === this.bins.length;
+        return counter === this.otherShapes.length;
     }
 
-    draw(ctx, balls, binType) {
-        balls.forEach(ball => ball.draw(ctx));
-        this.bins.forEach(bin => bin.draw(ctx, binType));
-    }
+    // draw(ctx, balls, binType) {
+    //     balls.forEach(ball => ball.draw(ctx));
+    //     this.bins.forEach(bin => bin.draw(ctx, binType));
+    // }
 }
 
-export default Partition;
+export default Configuration;
