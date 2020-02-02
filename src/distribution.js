@@ -2,9 +2,8 @@ import Ball from './ball';
 import Bin from './bin';
 import Bar from './bar';
 import Star from './star';
-import LeftMostStar from './left_most_star';
 
-class Validation {
+class Distribution {
     constructor() {
         this.starsAndBars = false;
         this.moveableShapePosition;
@@ -14,7 +13,7 @@ class Validation {
     }
 
     usesStarsAndBars(moveableType, staticType, restriction) {
-        this.starsAndBars = (moveableType === "indistinguishable" && staticType === "distinguishable") && (restriction === "unrestricted" || restriction === "surjective");
+        return moveableType === "indistinguishable" && staticType === "distinguishable" && (restriction === "unrestricted" || restriction === "surjective");
     }
 
     setMoveableShapePosition() {
@@ -51,18 +50,15 @@ class Validation {
 
     setStaticShapes(numStaticShapes) {
         const staticShapes = new Array(parseInt(numStaticShapes));
-
         if(this.starsAndBars) {
             for (let i = 0; i < staticShapes.length; i++) {
-                if (i === 0) {
-                    staticShapes[i] = new LeftMostStar([this.staticShapePosition[0] * (i + 1), this.staticShapePosition[1]], this.staticShapePosition[0]);
-                } else {
-                    staticShapes[i] = new Star([this.staticShapePosition[0] * (i + 1), this.staticShapePosition[1]], this.staticShapePosition[0]);
-                }
+                staticShapes[i] = new Star([this.staticShapePosition[0] * i - 50, this.staticShapePosition[1]], this.staticShapePosition[0]);
             }
-        }
-        for (let i = 0; i < staticShapes.length; i++) {
-            staticShapes[i] = new Bin(i + 1, [(this.staticShapePosition[0] * i) + 20, this.staticShapePosition[1]], [40, 160, 300]);
+            staticShapes.push(this.addStaticShape(staticShapes.length));
+        } else {
+            for (let i = 0; i < staticShapes.length; i++) {
+                staticShapes[i] = new Bin(i + 1, [(this.staticShapePosition[0] * i) + 20, this.staticShapePosition[1]], [40, 160, 300]);
+            }
         }
 
         return staticShapes;
@@ -77,8 +73,8 @@ class Validation {
     }
 
     addStaticShape(length) {
-        if(this.starsAndBars()) {
-            return new Star([this.staticShapePosition[0] * (length + 1), this.staticShapePosition[1]], this.staticShapePosition[0]);
+        if(this.starsAndBars) {
+            return new Star([this.staticShapePosition[0] * length - 50, this.staticShapePosition[1]], this.staticShapePosition[0]);
         } else {
             return new Bin(length + 1, [(this.staticShapePosition[0] * (length)) + 20, this.staticShapePosition[1]], [40, 160, 300]);
         }
@@ -106,9 +102,9 @@ class Validation {
         if (this.starsAndBars) {
             document.getElementsByClassName("num-balls")[0].innerHTML = value - 1;
         } else {
-            document.getElementsByClassName("num-balls")[0].innerHTML = value;
+            document.getElementsByClassName("num-balls")[0].innerHTML = value + 1;
         }
     }
 }
 
-export default Validation;
+export default Distribution;

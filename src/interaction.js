@@ -1,5 +1,5 @@
 import Configuration from './configuration';
-import { determineCases, checkConstraints } from '../util/checks';
+import { determineCases, checkConstraints, checkIDSurjective } from '../util/checks';
 
 class Interaction {
     constructor(moveableShapes, staticShapes) {
@@ -46,7 +46,7 @@ class Interaction {
     }
 
     //checks if there exists a partition that is identical. Returns true if that's the case
-    checkEachPartition(moveableType, staticType) {
+    checkEachConfiguration(moveableType, staticType) {
         for (let i = 0; i < this.configurations.length; i++) {
             if (this.configurations[i].checkStaticShapes(this.staticShapes, determineCases(moveableType, staticType))) {
                 return true;
@@ -56,12 +56,21 @@ class Interaction {
         return false;
     }
 
-    addPartition(event, restriction, moveableType, staticType) {
+    addConfiguration(event, restriction, moveableType, staticType, starsAndBars) {
         event.preventDefault();
-        if(this.checkEachPartition(moveableType, staticType) || this.violateRestriction(restriction) || !this.checkMoveableShapes()) return false;
+        if(this.checkEachConfiguration(moveableType, staticType) || !this.checkMoveableShapes()) return false;
+        if(starsAndBars && restriction === "surjective") {
+            if(!checkIDSurjective(this.staticShapes)) return false;
+        } else {
+            if(this.violateRestriction(restriction)) return false;
+        }
 
-        this.configurations.push(new Configuration(JSON.parse(JSON.stringify(this.staticShapes))));
+        this.configurations.push(new Configuration(this.staticShapes));
         return true;
+    }
+
+    cloneStaticShapes() {
+        let newStaticShapes = [];
     }
 
     // cloneBins() {

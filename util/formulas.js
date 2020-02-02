@@ -68,6 +68,8 @@ const calculateDDSurjective = (k, n) => {
 
 //k indistinguishable balls, n distinguishable bins, no restrictions
 const calculateIDUnrestricted = (k, n) => {
+    k += 1; //since I removed one less bar than usual
+    n -= 1; //since I added one more star than usual
     return calculateBinomialCoefficient(n + k - 1, k - 1);
 };
 
@@ -78,6 +80,8 @@ const calculateIDInjective = (k, n) => {
 
 //k indistinguishable balls, n distinguishable bins, surjective
 const calculateIDSurjective = (k, n) => {
+    k += 1;
+    n -= 1;
     return calculateBinomialCoefficient(n - 1, k - 1);
 };
 

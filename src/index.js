@@ -1,7 +1,6 @@
 import Display from './display';
 import { determineFormula } from './../util/formulas';
 import * as EventListeners from './../util/event_listeners';
-import LeftMostStar from './left_most_star';
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvasEl = document.getElementById("canvas");
@@ -46,19 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
         display.start();
     });
 
-    /*                display.interfaceAlt.stars.forEach(star => {
-                    if(star instanceof LeftMostStar) {
-                        star.addLeftBar(bar);
-                        star.removeLeftBar(bar);
-                    }
-                    star.addBar(bar);
-                    star.removeBar(bar);
-                });*/
-
-    //order matters -> rules before cases
     EventListeners.addEventsToRules(display);
     EventListeners.addEventsToCases(display);
-    // EventListeners.addEventsToButtons(display);
+    EventListeners.addEventsToButtons(display);
     display.updateCount(canvasEl);
     display.start();
 });

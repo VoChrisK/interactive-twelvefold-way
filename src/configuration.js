@@ -19,13 +19,15 @@ class Configuration {
             }
         }
 
-        return counter === this.otherShapes.length;
+        return counter === this.staticShapes.length;
     }
 
-    // draw(ctx, balls, binType) {
-    //     balls.forEach(ball => ball.draw(ctx));
-    //     this.bins.forEach(bin => bin.draw(ctx, binType));
-    // }
+    draw(ctx, staticType) {
+        this.staticShapes.forEach(staticShape => {
+            staticShape.draw(ctx, staticType);
+            staticShape.items.forEach(moveableShape => moveableShape.draw(ctx))
+        });
+    }
 }
 
 export default Configuration;

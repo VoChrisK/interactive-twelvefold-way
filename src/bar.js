@@ -1,19 +1,16 @@
-class Bar {
+import MoveableShape from './moveable_shape';
+
+class Bar extends MoveableShape {
     constructor(pos, width, height) {
-        this.pos = pos;
+        const boundingBox = [
+            [pos[0], pos[1]],
+            [pos[0] + width, pos[1]],
+            [pos[0] + width, pos[1] + height],
+            [pos[0], pos[1] + height]
+        ];
+        super(pos, boundingBox);
         this.width = width;
         this.height = height;
-        this.isClicked = false;
-        this.boundingBox = [
-            [this.pos[0], this.pos[1]],
-            [this.pos[0] + this.width, this.pos[1]],
-            [this.pos[0] + this.width, this.pos[1] + this.height],
-            [this.pos[0], this.pos[1] + this.height]
-        ];
-    }
-
-    checkBounds(x, y) {
-        return (x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1]) && (x < this.boundingBox[1][0] && y >= this.boundingBox[1][1]) && (x < this.boundingBox[2][0] && y < this.boundingBox[2][1]) && (x >= this.boundingBox[3][0] && y < this.boundingBox[3][1]);
     }
 
     draw(ctx) {
