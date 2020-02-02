@@ -73,11 +73,31 @@ export const addEventsToButtons = (display) => {
 
 const appendPartition = (display) => {
     const newCanvas = document.createElement("CANVAS");
+    newCanvas.classList.add("configuration")
     newCanvas.setAttribute("width", "300");
-    newCanvas.setAttribute("height", "300");
+    newCanvas.setAttribute("height", "200");
     const ctx = newCanvas.getContext("2d");
+    // scaleNewCanvas(display, ctx);
+    ctx.scale(0.4, 0.4); 
+    
     const history = document.getElementsByClassName("history")[0];
-
+    
+    let length = display.interaction.configurations.length;
     history.appendChild(newCanvas);
-    display.interaction.configurations.forEach(configuration => configuration.draw(ctx, display.staticType));
+    let y = newCanvas.getBoundingClientRect().y;
+    console.log(newCanvas.getBoundingClientRect());
+    display.interaction.configurations[length - 1].draw(ctx, display.moveableType, display.staticType, y);
+    // display.interaction.configurations.forEach(configuration => configuration.draw(ctx, display.staticType));
 }
+
+const scaleNewCanvas = (display, ctx) => {
+    const length = display.interaction.staticShapes.length;
+
+    if (length === 3) {
+        ctx.scale(0.3, 0.3);
+    } else if (length === 4) {
+        ctx.scale(0.3, 0.3);
+    } else {
+        ctx.scale(0.25, 0.25);
+    }
+};

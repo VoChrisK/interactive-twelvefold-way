@@ -1,5 +1,7 @@
 import Configuration from './configuration';
 import { determineCases, checkConstraints, checkIDSurjective } from '../util/checks';
+import StaticShape from './static_shape';
+import MoveableShape from './moveable_shape';
 
 class Interaction {
     constructor(moveableShapes, staticShapes) {
@@ -65,34 +67,28 @@ class Interaction {
             if(this.violateRestriction(restriction)) return false;
         }
 
-        this.configurations.push(new Configuration(this.staticShapes));
+        this.configurations.push(new Configuration(this.cloneStaticShapes()));
         return true;
     }
 
     cloneStaticShapes() {
         let newStaticShapes = [];
+        let newStaticShape;
+        let newMoveableShapes;
+
+        this.staticShapes.forEach(staticShape => {
+            newMoveableShapes = [];
+            staticShape.items.forEach(moveableShape => {
+                newMoveableShapes.push(Object.assign(Object.create(Object.getPrototypeOf(moveableShape)), moveableShape));
+            });
+            newStaticShape = Object.assign(Object.create(Object.getPrototypeOf(staticShape)), staticShape);
+            newStaticShape.items = newMoveableShapes;
+            newStaticShapes.push(newStaticShape);
+        });
+
+        return newStaticShapes;
     }
-
-    // cloneBins() {
-    //     let newBins = [];
-    //     let newBalls;
-    //     let newBin;
-    //     let newBall;
-
-    //     this.bins.forEach(bin => {
-    //         newBalls = [];
-    //         bin.balls.forEach(ball => {
-    //             newBall = Object.assign({}, ball);
-    //             newBalls.push(newBall);
-    //         });
-    //         newBin = Object.create(Bin.prototype, bin);
-    //         console.log(newBin);
-    //         newBin.balls = newBalls;
-    //         newBins.push(newBin);
-    //     });
-    //     return newBins;
-    // }
-
+    
     draw(ctx, moveableType, staticType) {
         this.moveableShapes.forEach(shape => shape.draw(ctx, moveableType));
         this.staticShapes.forEach(shape => shape.draw(ctx, staticType));

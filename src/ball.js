@@ -13,16 +13,23 @@ class Ball extends MoveableShape {
         this.radius = radius;
     }
 
-    draw(ctx, ballType) {
+    draw(ctx, ballType, y) {
         if(typeof ctx === "object") { //ctx is a number when clicked so I need to have a conditional here
             this.recalculateBoundingBox();
+
+            let newPos = this.pos[1];
+            if (this.pos[1] > y) {
+                // console.log(y);
+                newPos = y + 200;
+            }
+
             ctx.beginPath();
-            ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
+            ctx.arc(this.pos[0], newPos, this.radius, 0, Math.PI * 2);
             ctx.stroke();
-            ctx.font = "30px sans-serif";
 
             if(ballType === "distinguishable") {
-                ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+                ctx.font = "24px arial";
+                ctx.fillText(this.label, this.pos[0] - 8, newPos + 8);
             }
         }
     }

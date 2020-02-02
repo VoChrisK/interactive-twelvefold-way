@@ -135,17 +135,24 @@ function (_MoveableShape) {
 
   _createClass(Ball, [{
     key: "draw",
-    value: function draw(ctx, ballType) {
+    value: function draw(ctx, ballType, y) {
       if (_typeof(ctx) === "object") {
         //ctx is a number when clicked so I need to have a conditional here
         this.recalculateBoundingBox();
+        var newPos = this.pos[1];
+
+        if (this.pos[1] > y) {
+          // console.log(y);
+          newPos = y + 200;
+        }
+
         ctx.beginPath();
-        ctx.arc(this.pos[0], this.pos[1], this.radius, 0, Math.PI * 2);
+        ctx.arc(this.pos[0], newPos, this.radius, 0, Math.PI * 2);
         ctx.stroke();
-        ctx.font = "30px sans-serif";
 
         if (ballType === "distinguishable") {
-          ctx.fillText(this.label, this.pos[0] - 8, this.pos[1] + 8);
+          ctx.font = "24px arial";
+          ctx.fillText(this.label, this.pos[0] - 8, newPos + 8);
         }
       }
     }
@@ -303,21 +310,28 @@ function (_StaticShape) {
 
   _createClass(Bin, [{
     key: "draw",
-    value: function draw(ctx, binType) {
+    value: function draw(ctx, binType, y) {
       if (_typeof(ctx) === "object") {
         this.recalculateBoundingBox();
-        ctx.beginPath();
-        ctx.moveTo(this.pos[0], this.pos[1]);
-        ctx.lineTo(this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]);
-        ctx.lineTo(this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]);
-        ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]);
-        ctx.stroke();
+        var newPos = this.pos[1];
 
-        if (binType === "distinguishable") {
-          ctx.fillText(this.label, this.pos[0] + 95, this.pos[1] + 150);
+        if (this.pos[1] > y) {
+          newPos = y;
         }
 
-        ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - 65, this.pos[1] + this.bounds[2] + 30);
+        ctx.beginPath();
+        ctx.moveTo(this.pos[0], newPos);
+        ctx.lineTo(this.pos[0] + this.bounds[0], newPos + this.bounds[2]);
+        ctx.lineTo(this.pos[0] + this.bounds[1], newPos + this.bounds[2]);
+        ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], newPos);
+        ctx.stroke();
+        ctx.font = "24px arial";
+
+        if (binType === "distinguishable") {
+          ctx.fillText(this.label, this.pos[0] + 95, newPos + 150);
+        }
+
+        ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - 65, newPos + this.bounds[2] + 30);
       }
     }
   }, {
@@ -373,6 +387,7 @@ function () {
 
       for (var i = 0; i < this.staticShapes.length; i++) {
         if (checkBothShapes(otherShapes[i], this.staticShapes, i)) {
+          console.log(otherShapes[i].items.length + " " + this.staticShapes[i].items.length);
           counter++;
         }
       }
@@ -381,11 +396,12 @@ function () {
     }
   }, {
     key: "draw",
-    value: function draw(ctx, staticType) {
+    value: function draw(ctx, moveableType, staticType, y) {
       this.staticShapes.forEach(function (staticShape) {
-        staticShape.draw(ctx, staticType);
+        console.log(staticShape);
+        staticShape.draw(ctx, staticType, y);
         staticShape.items.forEach(function (moveableShape) {
-          return moveableShape.draw(ctx);
+          return moveableShape.draw(ctx, moveableType, y);
         });
       });
     }
@@ -784,11 +800,15 @@ document.addEventListener("DOMContentLoaded", function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _configuration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./configuration */ "./src/configuration.js");
 /* harmony import */ var _util_checks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/checks */ "./util/checks.js");
+/* harmony import */ var _static_shape__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./static_shape */ "./src/static_shape.js");
+/* harmony import */ var _moveable_shape__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./moveable_shape */ "./src/moveable_shape.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 
 
@@ -875,32 +895,26 @@ function () {
         if (this.violateRestriction(restriction)) return false;
       }
 
-      this.configurations.push(new _configuration__WEBPACK_IMPORTED_MODULE_0__["default"](this.staticShapes));
+      this.configurations.push(new _configuration__WEBPACK_IMPORTED_MODULE_0__["default"](this.cloneStaticShapes()));
       return true;
     }
   }, {
     key: "cloneStaticShapes",
     value: function cloneStaticShapes() {
       var newStaticShapes = [];
-    } // cloneBins() {
-    //     let newBins = [];
-    //     let newBalls;
-    //     let newBin;
-    //     let newBall;
-    //     this.bins.forEach(bin => {
-    //         newBalls = [];
-    //         bin.balls.forEach(ball => {
-    //             newBall = Object.assign({}, ball);
-    //             newBalls.push(newBall);
-    //         });
-    //         newBin = Object.create(Bin.prototype, bin);
-    //         console.log(newBin);
-    //         newBin.balls = newBalls;
-    //         newBins.push(newBin);
-    //     });
-    //     return newBins;
-    // }
-
+      var newStaticShape;
+      var newMoveableShapes;
+      this.staticShapes.forEach(function (staticShape) {
+        newMoveableShapes = [];
+        staticShape.items.forEach(function (moveableShape) {
+          newMoveableShapes.push(Object.assign(Object.create(Object.getPrototypeOf(moveableShape)), moveableShape));
+        });
+        newStaticShape = Object.assign(Object.create(Object.getPrototypeOf(staticShape)), staticShape);
+        newStaticShape.items = newMoveableShapes;
+        newStaticShapes.push(newStaticShape);
+      });
+      return newStaticShapes;
+    }
   }, {
     key: "draw",
     value: function draw(ctx, moveableType, staticType) {
@@ -1320,14 +1334,30 @@ var addEventsToButtons = function addEventsToButtons(display) {
 
 var appendPartition = function appendPartition(display) {
   var newCanvas = document.createElement("CANVAS");
+  newCanvas.classList.add("configuration");
   newCanvas.setAttribute("width", "300");
-  newCanvas.setAttribute("height", "300");
-  var ctx = newCanvas.getContext("2d");
+  newCanvas.setAttribute("height", "200");
+  var ctx = newCanvas.getContext("2d"); // scaleNewCanvas(display, ctx);
+
+  ctx.scale(0.4, 0.4);
   var history = document.getElementsByClassName("history")[0];
+  var length = display.interaction.configurations.length;
   history.appendChild(newCanvas);
-  display.interaction.configurations.forEach(function (configuration) {
-    return configuration.draw(ctx, display.staticType);
-  });
+  var y = newCanvas.getBoundingClientRect().y;
+  console.log(newCanvas.getBoundingClientRect());
+  display.interaction.configurations[length - 1].draw(ctx, display.moveableType, display.staticType, y); // display.interaction.configurations.forEach(configuration => configuration.draw(ctx, display.staticType));
+};
+
+var scaleNewCanvas = function scaleNewCanvas(display, ctx) {
+  var length = display.interaction.staticShapes.length;
+
+  if (length === 3) {
+    ctx.scale(0.3, 0.3);
+  } else if (length === 4) {
+    ctx.scale(0.3, 0.3);
+  } else {
+    ctx.scale(0.25, 0.25);
+  }
 };
 
 /***/ }),

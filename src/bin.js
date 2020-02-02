@@ -31,21 +31,28 @@ class Bin extends StaticShape {
     //     }
     // }
 
-    draw(ctx, binType) {
+    draw(ctx, binType, y) {
         if (typeof ctx === "object") {
             this.recalculateBoundingBox();
-            ctx.beginPath();
-            ctx.moveTo(this.pos[0], this.pos[1]);
-            ctx.lineTo(this.pos[0] + this.bounds[0], this.pos[1] + this.bounds[2]);
-            ctx.lineTo(this.pos[0] + this.bounds[1], this.pos[1] + this.bounds[2]);
-            ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], this.pos[1]);
-            ctx.stroke();
-
-            if(binType === "distinguishable") {
-                ctx.fillText(this.label, this.pos[0] + 95, this.pos[1] + 150);
+            let newPos = this.pos[1];
+            if(this.pos[1] > y) {
+                newPos = y;
             }
 
-            ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - 65, this.pos[1] + this.bounds[2] + 30);
+            ctx.beginPath();
+            ctx.moveTo(this.pos[0], newPos);
+            ctx.lineTo(this.pos[0] + this.bounds[0], newPos + this.bounds[2]);
+            ctx.lineTo(this.pos[0] + this.bounds[1], newPos + this.bounds[2]);
+            ctx.lineTo(this.pos[0] + this.bounds[0] + this.bounds[1], newPos);
+            
+            ctx.stroke();
+
+            ctx.font = "24px arial";
+            if(binType === "distinguishable") {
+                ctx.fillText(this.label, this.pos[0] + 95, newPos + 150);
+            }
+
+            ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - 65, newPos + this.bounds[2] + 30);
         }
     }
 

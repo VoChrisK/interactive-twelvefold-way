@@ -15,6 +15,7 @@ class Configuration {
         let counter = 0;
         for(let i = 0; i < this.staticShapes.length; i++) {
             if (checkBothShapes(otherShapes[i], this.staticShapes, i)) {
+                console.log(otherShapes[i].items.length + " " + this.staticShapes[i].items.length);
                 counter++;
             }
         }
@@ -22,10 +23,11 @@ class Configuration {
         return counter === this.staticShapes.length;
     }
 
-    draw(ctx, staticType) {
+    draw(ctx, moveableType, staticType, y) {
         this.staticShapes.forEach(staticShape => {
-            staticShape.draw(ctx, staticType);
-            staticShape.items.forEach(moveableShape => moveableShape.draw(ctx))
+            console.log(staticShape);
+            staticShape.draw(ctx, staticType, y);
+            staticShape.items.forEach(moveableShape => moveableShape.draw(ctx, moveableType, y))
         });
     }
 }
