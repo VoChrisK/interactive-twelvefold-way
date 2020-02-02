@@ -97,7 +97,6 @@ class Distribution {
         }
     }
 
-    //updateAmount
     updateDisplayCount(value) {
         if (this.starsAndBars) {
             document.getElementsByClassName("num-balls")[0].innerHTML = value - 1;

@@ -13,10 +13,6 @@ class Bin extends StaticShape {
         this.bounds = bounds //[X1, X2, Y]
     }
 
-    // checkBounds(x, y) {
-    //     return (x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1]) && (x >= this.boundingBox[1][0] && y < this.boundingBox[1][1]) && (x < this.boundingBox[2][0] && y < this.boundingBox[2][1]) && (x < this.boundingBox[3][0] && y >= this.boundingBox[3][1]);
-    // }
-
     // checkCollision(x, y) {
     //     let line1 = [this.boundingBox[1][0] - this.boundingBox[0][0], this.boundingBox[1][1] - this.boundingBox[0][1]];
     //     let line2 = [this.boundingBox[2][0] - this.boundingBox[1][0], this.boundingBox[2][1] - this.boundingBox[1][1]];

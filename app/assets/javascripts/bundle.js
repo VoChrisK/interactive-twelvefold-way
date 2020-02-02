@@ -291,10 +291,7 @@ function (_StaticShape) {
     _this.bounds = bounds; //[X1, X2, Y]
 
     return _this;
-  } // checkBounds(x, y) {
-  //     return (x >= this.boundingBox[0][0] && y >= this.boundingBox[0][1]) && (x >= this.boundingBox[1][0] && y < this.boundingBox[1][1]) && (x < this.boundingBox[2][0] && y < this.boundingBox[2][1]) && (x < this.boundingBox[3][0] && y >= this.boundingBox[3][1]);
-  // }
-  // checkCollision(x, y) {
+  } // checkCollision(x, y) {
   //     let line1 = [this.boundingBox[1][0] - this.boundingBox[0][0], this.boundingBox[1][1] - this.boundingBox[0][1]];
   //     let line2 = [this.boundingBox[2][0] - this.boundingBox[1][0], this.boundingBox[2][1] - this.boundingBox[1][1]];
   //     let line3 = [this.boundingBox[3][0] - this.boundingBox[2][0], this.boundingBox[3][1] - this.boundingBox[2][1]];
@@ -386,7 +383,6 @@ function () {
 
       for (var i = 0; i < this.staticShapes.length; i++) {
         if (checkBothShapes(otherShapes[i], this.staticShapes, i)) {
-          console.log(otherShapes[i].items.length + " " + this.staticShapes[i].items.length);
           counter++;
         }
       }
@@ -485,6 +481,8 @@ function () {
       document.getElementById("ball-count").addEventListener("input", function (event) {
         event.preventDefault();
         newValue = event.target.value;
+        document.getElementsByClassName("num-balls")[0].innerHTML = newValue;
+        if (_this.distribution.starsAndBars) document.getElementsByClassName("num-balls")[0].innerHTML -= 1;
         var moveableShape;
 
         if (newValue > _this.interaction.moveableShapes.length) {
@@ -503,7 +501,7 @@ function () {
       });
       document.getElementById("bin-count").addEventListener("input", function (event) {
         newValue = event.target.value;
-        document.getElementsByClassName("num-bins")[0].innerHTML = event.target.value;
+        document.getElementsByClassName("num-bins")[0].innerHTML = newValue;
         var staticShape;
         var length = _this.interaction.staticShapes.length;
         if (_this.distribution.starsAndBars) length -= 1;
@@ -541,8 +539,8 @@ function () {
   }, {
     key: "restart",
     value: function restart() {
-      this.calculateFormula();
       this.changeDisplay();
+      this.calculateFormula();
       this.resetInterface();
       this.clearConfigurations();
       this.start();
@@ -552,7 +550,7 @@ function () {
     value: function clearConfigurations() {
       var configurations = document.getElementsByClassName("configuration");
 
-      for (var i = 0; i < configurations.length; i++) {
+      for (var i = configurations.length - 1; i >= 0; i--) {
         configurations[i].remove();
       }
     }
@@ -713,8 +711,7 @@ function () {
       } else {
         binLabel.innerText = "Bins";
       }
-    } //updateAmount
-
+    }
   }, {
     key: "updateDisplayCount",
     value: function updateDisplayCount(value) {
@@ -1111,7 +1108,7 @@ function () {
       var bound2 = this.checkBounds(item.boundingBox[1][0], item.boundingBox[1][1]);
       var bound3 = this.checkBounds(item.boundingBox[2][0], item.boundingBox[2][1]);
       var bound4 = this.checkBounds(item.boundingBox[3][0], item.boundingBox[3][1]);
-      return bound1 && bound2 && bound3 && bound4;
+      return bound1 || bound2 || bound3 || bound4;
     }
   }, {
     key: "addItem",

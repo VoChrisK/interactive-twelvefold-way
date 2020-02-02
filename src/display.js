@@ -44,6 +44,8 @@ class Display {
         document.getElementById("ball-count").addEventListener("input", event => {
             event.preventDefault();
             newValue = event.target.value;
+            document.getElementsByClassName("num-balls")[0].innerHTML = newValue;
+            if (this.distribution.starsAndBars) document.getElementsByClassName("num-balls")[0].innerHTML -= 1;
             let moveableShape;
 
             if(newValue > this.interaction.moveableShapes.length) {
@@ -59,7 +61,7 @@ class Display {
 
         document.getElementById("bin-count").addEventListener("input", event => {
             newValue = event.target.value;
-            document.getElementsByClassName("num-bins")[0].innerHTML = event.target.value;
+            document.getElementsByClassName("num-bins")[0].innerHTML = newValue;
             let staticShape;
             let length = this.interaction.staticShapes.length;
 
@@ -92,8 +94,8 @@ class Display {
     }
 
     restart() {
-        this.calculateFormula();
         this.changeDisplay();
+        this.calculateFormula();
         this.resetInterface();
         this.clearConfigurations();
         this.start();
@@ -101,7 +103,7 @@ class Display {
 
     clearConfigurations() {
         const configurations = document.getElementsByClassName("configuration");
-        for(let i = 0; i < configurations.length; i++) {
+        for(let i = configurations.length - 1; i >= 0; i--) {
             configurations[i].remove();
         }
     }

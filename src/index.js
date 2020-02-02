@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 animation = window.requestAnimationFrame(display.interaction.moveableShapes[i].draw);
                 display.interaction.moveableShapes[i].isClicked = true;
                 break; //break here to resolve conflict between overlapping balls
+                
             }
         }
     });

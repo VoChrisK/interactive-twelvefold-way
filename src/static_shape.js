@@ -20,7 +20,7 @@ class StaticShape {
         let bound3 = this.checkBounds(item.boundingBox[2][0], item.boundingBox[2][1]);
         let bound4 = this.checkBounds(item.boundingBox[3][0], item.boundingBox[3][1]);
 
-        return bound1 && bound2 && bound3 && bound4;
+        return bound1 || bound2 || bound3 || bound4;
     }
 
     addItem(item) {

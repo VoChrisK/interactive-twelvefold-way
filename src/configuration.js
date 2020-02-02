@@ -15,7 +15,6 @@ class Configuration {
         let counter = 0;
         for(let i = 0; i < this.staticShapes.length; i++) {
             if (checkBothShapes(otherShapes[i], this.staticShapes, i)) {
-                console.log(otherShapes[i].items.length + " " + this.staticShapes[i].items.length);
                 counter++;
             }
         }
