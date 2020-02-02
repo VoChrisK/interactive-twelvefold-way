@@ -19,8 +19,7 @@ class Ball extends MoveableShape {
 
             let newPos = this.pos[1];
             if (this.pos[1] > y) {
-                // console.log(y);
-                newPos = y + 200;
+                newPos -= y * 2.5;
             }
 
             ctx.beginPath();

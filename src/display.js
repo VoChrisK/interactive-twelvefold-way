@@ -88,13 +88,22 @@ class Display {
     resetInterface() {
         this.resetState();
         this.interaction.configurations = [];
+        this.addToConfigurations();
     }
 
     restart() {
-        this.changeDisplay();
         this.calculateFormula();
+        this.changeDisplay();
         this.resetInterface();
+        this.clearConfigurations();
         this.start();
+    }
+
+    clearConfigurations() {
+        const configurations = document.getElementsByClassName("configuration");
+        for(let i = 0; i < configurations.length; i++) {
+            configurations[i].remove();
+        }
     }
 
     changeDisplay() {

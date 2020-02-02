@@ -107,8 +107,10 @@ const calculateDISurjective = (k, n) => {
 };
 
 //k indistinguishable balls, n indistinguishable bins, no restrictions
-const calculateIIUnrestricted = (n, k) => {
-
+const calculateIIUnrestricted = (k, n) => {
+    let numbers = getNumbersArray(n);
+    let formula = (acc, i) => acc + calculatePartition(k, i)
+    return numbers.reduce(formula, 0);
 };
 
 //k indistinguishable balls, n indistinguishable bins, injective
@@ -121,9 +123,23 @@ const calculateIIInjective = (k, n) => {
 };
 
 //k indistinguishable balls, n indistinguishable bins, surjective
-const calculateIISurjective = (n, k) => {
-
+const calculateIISurjective = (k, n) => {
+    return calculatePartition(k, n);
 };
+
+//calculated using recurrence relation P(n,k)=P(n-1,k-1)+P(n-k,k) <- by wolfram mathworld
+//k and n will be reversed because we use k balls and n bins
+const calculatePartition = (k, n) => {
+    if (k === n) {
+        return 1;
+    }
+    
+    if (k <= 0 || n <= 0) {
+        return 0;
+    }
+
+    return calculatePartition(k - 1, n - 1) + calculatePartition(k - n, n);
+}
 
 const calculateStirlingNumber = (n, k) => {
     let numbers = getNumbersArray(k);

@@ -25,7 +25,6 @@ class Configuration {
 
     draw(ctx, moveableType, staticType, y) {
         this.staticShapes.forEach(staticShape => {
-            console.log(staticShape);
             staticShape.draw(ctx, staticType, y);
             staticShape.items.forEach(moveableShape => moveableShape.draw(ctx, moveableType, y))
         });

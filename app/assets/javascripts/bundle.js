@@ -142,8 +142,7 @@ function (_MoveableShape) {
         var newPos = this.pos[1];
 
         if (this.pos[1] > y) {
-          // console.log(y);
-          newPos = y + 200;
+          newPos -= y * 2.5;
         }
 
         ctx.beginPath();
@@ -398,7 +397,6 @@ function () {
     key: "draw",
     value: function draw(ctx, moveableType, staticType, y) {
       this.staticShapes.forEach(function (staticShape) {
-        console.log(staticShape);
         staticShape.draw(ctx, staticType, y);
         staticShape.items.forEach(function (moveableShape) {
           return moveableShape.draw(ctx, moveableType, y);
@@ -538,14 +536,25 @@ function () {
     value: function resetInterface() {
       this.resetState();
       this.interaction.configurations = [];
+      this.addToConfigurations();
     }
   }, {
     key: "restart",
     value: function restart() {
-      this.changeDisplay();
       this.calculateFormula();
+      this.changeDisplay();
       this.resetInterface();
+      this.clearConfigurations();
       this.start();
+    }
+  }, {
+    key: "clearConfigurations",
+    value: function clearConfigurations() {
+      var configurations = document.getElementsByClassName("configuration");
+
+      for (var i = 0; i < configurations.length; i++) {
+        configurations[i].remove();
+      }
     }
   }, {
     key: "changeDisplay",
@@ -1335,28 +1344,37 @@ var addEventsToButtons = function addEventsToButtons(display) {
 var appendPartition = function appendPartition(display) {
   var newCanvas = document.createElement("CANVAS");
   newCanvas.classList.add("configuration");
-  newCanvas.setAttribute("width", "300");
-  newCanvas.setAttribute("height", "200");
-  var ctx = newCanvas.getContext("2d"); // scaleNewCanvas(display, ctx);
-
-  ctx.scale(0.4, 0.4);
-  var history = document.getElementsByClassName("history")[0];
+  newCanvas.setAttribute("width", "290");
+  var ctx = newCanvas.getContext("2d");
   var length = display.interaction.configurations.length;
-  history.appendChild(newCanvas);
-  var y = newCanvas.getBoundingClientRect().y;
-  console.log(newCanvas.getBoundingClientRect());
-  display.interaction.configurations[length - 1].draw(ctx, display.moveableType, display.staticType, y); // display.interaction.configurations.forEach(configuration => configuration.draw(ctx, display.staticType));
+  var y = scaleNewCanvas(display, ctx, newCanvas);
+  display.interaction.configurations[length - 1].draw(ctx, display.moveableType, display.staticType, y);
 };
 
-var scaleNewCanvas = function scaleNewCanvas(display, ctx) {
+var scaleNewCanvas = function scaleNewCanvas(display, ctx, newCanvas) {
   var length = display.interaction.staticShapes.length;
+  var history = document.getElementsByClassName("history")[0];
 
-  if (length === 3) {
-    ctx.scale(0.3, 0.3);
+  if (length === 1 || length === 2) {
+    newCanvas.setAttribute("height", "275");
+    ctx.scale(0.5, 0.5);
+    history.appendChild(newCanvas);
+    return newCanvas.getBoundingClientRect().height - 150;
+  } else if (length === 3) {
+    newCanvas.setAttribute("height", "225");
+    ctx.scale(0.4, 0.4);
+    history.appendChild(newCanvas);
+    return newCanvas.getBoundingClientRect().height - 100;
   } else if (length === 4) {
+    newCanvas.setAttribute("height", "175");
     ctx.scale(0.3, 0.3);
+    history.appendChild(newCanvas);
+    return newCanvas.getBoundingClientRect().height - 50;
   } else {
-    ctx.scale(0.25, 0.25);
+    newCanvas.setAttribute("height", "125");
+    ctx.scale(0.24, 0.24);
+    history.appendChild(newCanvas);
+    return newCanvas.getBoundingClientRect().height;
   }
 };
 
@@ -1500,7 +1518,15 @@ var calculateDISurjective = function calculateDISurjective(k, n) {
 }; //k indistinguishable balls, n indistinguishable bins, no restrictions
 
 
-var calculateIIUnrestricted = function calculateIIUnrestricted(n, k) {}; //k indistinguishable balls, n indistinguishable bins, injective
+var calculateIIUnrestricted = function calculateIIUnrestricted(k, n) {
+  var numbers = getNumbersArray(n);
+
+  var formula = function formula(acc, i) {
+    return acc + calculatePartition(k, i);
+  };
+
+  return numbers.reduce(formula, 0);
+}; //k indistinguishable balls, n indistinguishable bins, injective
 
 
 var calculateIIInjective = function calculateIIInjective(k, n) {
@@ -1512,7 +1538,23 @@ var calculateIIInjective = function calculateIIInjective(k, n) {
 }; //k indistinguishable balls, n indistinguishable bins, surjective
 
 
-var calculateIISurjective = function calculateIISurjective(n, k) {};
+var calculateIISurjective = function calculateIISurjective(k, n) {
+  return calculatePartition(k, n);
+}; //calculated using recurrence relation P(n,k)=P(n-1,k-1)+P(n-k,k) <- by wolfram mathworld
+//k and n will be reversed because we use k balls and n bins
+
+
+var calculatePartition = function calculatePartition(k, n) {
+  if (k === n) {
+    return 1;
+  }
+
+  if (k <= 0 || n <= 0) {
+    return 0;
+  }
+
+  return calculatePartition(k - 1, n - 1) + calculatePartition(k - n, n);
+};
 
 var calculateStirlingNumber = function calculateStirlingNumber(n, k) {
   var numbers = getNumbersArray(k);
