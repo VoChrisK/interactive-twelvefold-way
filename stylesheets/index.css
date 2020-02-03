@@ -251,7 +251,7 @@ input[type=range][orient=vertical] {
 }
 
 .tips-list > li {
-    font-size: 16px;
+    font-size: 15px;
     white-space: pre-wrap;
     line-height: 1.2;
     margin: 10px 0 10px 40px;
@@ -333,3 +333,24 @@ input[type=range][orient=vertical] {
     0% { visibility: visible; opacity: 1; }
     100% { visibility: hidden; opacity: 0; }
 }
+
+.fa.fa-question-circle:hover  {
+    cursor: not-allowed;
+}
+
+/* .tooltip {
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    visibility: hidden;
+}
+
+.unrestricted-info {
+    position: relative;
+    left: 422px;
+    top: -644px;
+} */

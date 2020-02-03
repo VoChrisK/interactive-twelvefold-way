@@ -96,9 +96,9 @@
     
                 <h1 class="grid-label"><strong>$k$</strong> balls/bars</h1>
                 <h1 class="grid-label"><strong>$n$</strong> bins/stars</h1>
-                <h1 class="grid-label">Unrestricted <i class="fa fa-question-circle"></i></h1>
-                <h1 class="grid-label">Injective <i class="fa fa-question-circle"></i></h1>
-                <h1 class="grid-label">Surjective <i class="fa fa-question-circle"></i></h1>
+                <h1 class="grid-label">Unrestricted <i class="fa fa-question-circle unrestricted-circle"></i></h1>
+                <h1 class="grid-label">Injective <i class="fa fa-question-circle injective-circle"></i></h1>
+                <h1 class="grid-label">Surjective <i class="fa fa-question-circle surjective-circle"></i></h1>
     
                 <h1>distinguishable</h1>
                 <h1>distinguishable</h1>
@@ -164,10 +164,23 @@
                <li>The order in which you place each ball/bar into a bin does not matter. So it doesn't matter whether the 4-ball or 6-ball went in first. What matters is whether there exist a configuration with that combination.</li>
                <li><strong>Indistinguishable</strong> means a shape do not have a number attach to it. You cannot tell the difference between each shape so therefore they are identical. In this scenario, order doesn't matters so some configurations are identical to each other.</li>
                <li>To visualize indistinguishable shapes, imagine yourself at home craving for some scrambled eggs. You open up the fridge and grab a carton of eggs. All the eggs look similar so you pick a couple and put the carton back. No matter what order you pick the eggs, you will always get the same result.</li>
+               <li><strong>Injective</strong> means that all bins must have <strong>at most</strong> one ball. <strong>Surjective</strong> means that all bins must have <strong>at least</strong> one ball. <strong>Unrestricted</strong> means all bin can have as many or as little balls as they want.</li>
                <li>In terms of distinguishable and indistinguishable bins, think of their placements. If you try swapping only their placements and not their contents, will they still have the same contents as before?</li>
             </ul>
         </section>
     </section>
+
+    <!-- <div class="tooltip unrestricted-info">
+        <h1>Unrestricted means all bin can have as many or as little balls as they want.</h1>
+    </div>
+    
+    <div class="tooltip injective-info">
+        <h1>Injective means that all bins must have <strong>at most</strong> one ball.</h1>
+    </div>
+    
+    <div class="tooltip surjective-info">
+        <h1>Surjective means that all bins must have <strong>at least</strong> one ball.</h1>
+    </div> -->
 </body>
 
 </html>
