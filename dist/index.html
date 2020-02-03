@@ -40,7 +40,7 @@
         <p class="info">Twelvefold Way is a series of twelve formulas relating to two finite sets in Combinatorics. Each formula is set with different constraints and configurations.</p>
         <p class="instructions" id="interaction"><strong>Instructions: </strong>Click and hold a ball/bar to move it. You must place it in a bin in order for that ball to count. For stars and bars, you must place a bar in a gap next to a star.</p>
         <p class="tips">Press submit when you place all the balls/bars in the bins/gaps. Your <strong>goal</strong> is to find <i>all</i> arrangements of balls/bars and bins/stars for a given formula.</p>
-        <p class="more-info">If you get stuck on a problem, refer to hints and general tips! If you want to change formulas, please refer to the grid at the bottom of the screen.</p>
+        <p class="more-info">If you get stuck on a problem, refer to the hints and general tips! If you want to change formulas, please refer to the grid at the bottom of the screen.</p>
     </header>
 
     <section class="main-interaction">
@@ -76,6 +76,7 @@
 
         <section class="interface">
             <canvas id="canvas" width="1220" height="795" ></canvas>
+            <h1 class="error-msg">Cannot add configuration!</h1>
         </section>
 
         <aside class="sidebar">
@@ -157,8 +158,13 @@
 
         <section class="general-tips">
             <h1 class="general-tips-header">General Tips</h1>
-            <ul>
-               <li><strong>Distinguishable</strong> means a shape has a label attached to it. You can tell shapes with labels apart and therefore</li>
+            <ul class="tips-list">
+               <li><strong>Distinguishable</strong> means a shape has a number attached to it. You can tell shapes with numbers apart from each other and therefore they are not identical. In this scenario, order matters so a given partition may have multiple arrangements.</li>
+               <li>To visualize distinguishable shapes, imagine yourself playing billiards with a couple of friends. You go first and manage to knock a 4-ball and 6-ball into a hole. This is one of the many outcomes you could have gotten. Another outcome is knocking both a 3-ball and a 7-ball into the same hole. Thus, you knock two balls in one hole but those two balls can be different.</li>
+               <li>The order in which you place each ball/bar into a bin does not matter. So it doesn't matter whether the 4-ball or 6-ball went in first. What matters is whether there exist a configuration with that combination.</li>
+               <li><strong>Indistinguishable</strong> means a shape do not have a number attach to it. You cannot tell the difference between each shape so therefore they are identical. In this scenario, order doesn't matters so some configurations are identical to each other.</li>
+               <li>To visualize indistinguishable shapes, imagine yourself at home craving for some scrambled eggs. You open up the fridge and grab a carton of eggs. All the eggs look similar so you pick a couple and put the carton back. No matter what order you pick the eggs, you will always get the same result.</li>
+               <li>In terms of distinguishable and indistinguishable bins, think of their placements. If you try swapping only their placements and not their contents, will they still have the same contents as before?</li>
             </ul>
         </section>
     </section>

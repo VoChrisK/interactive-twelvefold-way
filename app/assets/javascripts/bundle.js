@@ -497,7 +497,13 @@ function () {
           _this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
         }
 
+        _this.clearConfigurations();
+
         _this.calculateFormula();
+
+        _this.interaction.configurations = [];
+
+        _this.addToConfigurations();
 
         _this.start();
       });
@@ -518,7 +524,13 @@ function () {
           _this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
         }
 
+        _this.clearConfigurations();
+
         _this.calculateFormula();
+
+        _this.interaction.configurations = [];
+
+        _this.addToConfigurations();
 
         _this.start();
       });
@@ -1157,7 +1169,7 @@ var determineCases = function determineCases(moveableType, staticType) {
   if (moveableType.toLowerCase() === "distinguishable") {
     if (staticType.toLowerCase() === "distinguishable") {
       return function (shape1, shape2, i) {
-        return checkOrderOfShapes(shape1.items, shape2[i].items);
+        return checkForSimilarShapes(shape1.items, shape2[i].items);
       };
     } else if (staticType.toLowerCase() === "indistinguishable") {
       return function (shape1, shape2) {
@@ -1175,18 +1187,7 @@ var determineCases = function determineCases(moveableType, staticType) {
       };
     }
   }
-}; //only if the bins and balls are distinguishable
-
-var checkOrderOfShapes = function checkOrderOfShapes(items1, items2) {
-  if (items1.length !== items2.length) return false;
-
-  for (var i = 0; i < items1.length; i++) {
-    if (items1[i].label !== items2[i].label) return false; //return false if the order is incorrect
-  }
-
-  return true; //return true if the order is the same for both bins
 }; //only if the bins are distinguishable, and balls are indistinguishable, check count of bins
-
 
 var checkTotalShapes = function checkTotalShapes(items1, items2) {
   return items1.length === items2.length;
@@ -1348,7 +1349,10 @@ var addEventsToButtons = function addEventsToButtons(display) {
       display.addToConfigurations();
       appendPartition(display);
     } else {
-      console.log("Cannot add partition!");
+      document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
+      setTimeout(function () {
+        return document.getElementsByClassName("error-msg")[0].classList.remove("pop-up");
+      }, 3000);
     }
   });
 };

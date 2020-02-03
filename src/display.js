@@ -55,7 +55,11 @@ class Display {
                 this.interaction.removeMoveableShape();
                 this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
             }
+
+            this.clearConfigurations();
             this.calculateFormula();
+            this.interaction.configurations = [];
+            this.addToConfigurations();
             this.start();
         });
 
@@ -75,7 +79,10 @@ class Display {
                 this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
             }
 
+            this.clearConfigurations();
             this.calculateFormula();
+            this.interaction.configurations = [];
+            this.addToConfigurations();
             this.start();
         });
     }

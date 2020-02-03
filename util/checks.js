@@ -3,7 +3,7 @@ export const determineCases = (moveableType, staticType) => {
     if (moveableType.toLowerCase() === "distinguishable") {
         if (staticType.toLowerCase() === "distinguishable") {
             return (shape1, shape2, i) => {
-                return checkOrderOfShapes(shape1.items, shape2[i].items);
+                return checkForSimilarShapes(shape1.items, shape2[i].items);
             }
         } else if (staticType.toLowerCase() === "indistinguishable") {
             return (shape1, shape2) => {
@@ -21,16 +21,6 @@ export const determineCases = (moveableType, staticType) => {
             }
         }
     }
-}
-
-//only if the bins and balls are distinguishable
-const checkOrderOfShapes = (items1, items2) => {
-    if (items1.length !== items2.length) return false;
-
-    for (let i = 0; i < items1.length; i++) {
-        if (items1[i].label !== items2[i].label) return false; //return false if the order is incorrect
-    }
-    return true; //return true if the order is the same for both bins
 }
 
 //only if the bins are distinguishable, and balls are indistinguishable, check count of bins

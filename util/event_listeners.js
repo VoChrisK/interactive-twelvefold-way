@@ -80,7 +80,8 @@ export const addEventsToButtons = (display) => {
             display.addToConfigurations();
             appendPartition(display);
         } else {
-            console.log("Cannot add partition!");
+            document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
+            setTimeout(() => document.getElementsByClassName("error-msg")[0].classList.remove("pop-up"), 3000);
         }
     });
 }

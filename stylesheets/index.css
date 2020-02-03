@@ -143,13 +143,28 @@ input[type=range][orient=vertical] {
 
 .button-group > button {
     width: 60%;
-    padding: 5px;
+    padding: 8px;
     background-color: black;
     border: none;
     border-radius: 10px;
     color: white;
     font-family: "Lato", sans-serif;
     cursor: pointer;
+    transition: background-color 0.25s;
+}
+
+/*tentative*/
+.button-group > button:last-child {
+    cursor: not-allowed;
+    transition: none;
+}
+
+.button-group > button:last-child:hover {
+    background-color: black;
+}
+
+.button-group > button:hover {
+    background-color: rgb(60, 60, 60);
 }
 
 .history {
@@ -225,9 +240,25 @@ input[type=range][orient=vertical] {
     width: 95%;
     padding-bottom: 15px;
     margin: 15px auto;
-    font-size: 36px;
+    font-size: 24px;
     font-family: "Lato", sans-serif;
     border-bottom: 2px solid black;
+}
+
+.tips-list {
+    text-align: start;
+    list-style: circle;
+}
+
+.tips-list > li {
+    font-size: 16px;
+    white-space: pre-wrap;
+    line-height: 1.2;
+    margin: 10px 0 10px 40px;
+}
+
+.tips-list > li > strong {
+    font-weight: bold;
 }
 
 .grid-formulas > * {
@@ -283,4 +314,22 @@ input[type=range][orient=vertical] {
 
 .formula-info > h1 {
     margin-bottom: 10px;
+}
+
+.error-msg {
+    visibility: hidden;
+    position: relative;
+    top: -600px;
+    left: 357px;
+    font-family: "Teko", sans-serif;
+    font-size: 64px;
+}
+
+.pop-up {
+    animation: appear 3s;
+}
+
+@keyframes appear {
+    0% { visibility: visible; opacity: 1; }
+    100% { visibility: hidden; opacity: 0; }
 }
