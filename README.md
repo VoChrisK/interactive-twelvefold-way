@@ -10,6 +10,7 @@ Interactive Twelvefold Way is an interactive visualization that lets users pract
 * Balls/Bars are draggable by clicking and holding the mouse's left button
 * Collision detection and counter to check whether a ball/bar is in a bin/gap
 * Combinatorical logic and verification based on constraints to check the validity of each configuration
+* Configuration history to keep track of all submitted and correct configurations
 * Adjustable balls/bars and bins/stars and formulas will automatically update
 * Conforming to the Object-oriented principles for reusability and organization (see UML diagram below)
 
