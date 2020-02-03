@@ -25,9 +25,9 @@
     <header id="top-of-page" class="header-container">
         <nav class="header-nav">
             <ul class="nav-links">
-                <li><a href="#">About</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Twelvefold_way" target="_blank">About</a></li>
                 <li><a href="#formulas">Formulas</a></li>
-                <li><a href="#">Portfolio</a></li>
+                <li><a href="https://github.com/VoChrisK/" target="_blank">Portfolio</a></li>
             </ul>
             <ul class="maker-links">
                 <a href="https://github.com/VoChrisK/interactive-twelvefold-way" target="_blank" class="fa fa-github"></a>
@@ -37,15 +37,21 @@
         </nav>
 
         <h1 class="header-name">Interactive Twelvefold Way</h1>
-        <p class="info">Twelvefold Way is a systematic classification of twelve formulas relating to two finite sets in Combinatorics.</p>
-        <p class="instructions"><strong>Instructions: </strong>Click and hold a ball to drag it. You must place it in a bin in order for that ball to count. Press submit when you place all the balls in the bins.
-        <p class="tips">Your goal is to find all configurations for a given problem. If you get stuck on a problem, refer to hints and more info!</p>
-        <p class="more-info">If you want to change formulas, please refer to the grid at the bottom of the screen.</p>
+        <p class="info">Twelvefold Way is a series of twelve formulas relating to two finite sets in Combinatorics. Each formula is set with different constraints and configurations.</p>
+        <p class="instructions" id="interaction"><strong>Instructions: </strong>Click and hold a ball/bar to move it. You must place it in a bin in order for that ball to count. For stars and bars, you must place a bar in a gap next to a star.</p>
+        <p class="tips">Press submit when you place all the balls/bars in the bins/gaps. Your <strong>goal</strong> is to find <i>all</i> arrangements of balls/bars and bins/stars for a given formula.</p>
+        <p class="more-info">If you get stuck on a problem, refer to hints and general tips! If you want to change formulas, please refer to the grid at the bottom of the screen.</p>
     </header>
 
     <section class="main-interaction">
         <aside class="sidebar">
             <h1 class="configuration-count">Configurations: 0/27</h1>
+
+            <div class="formula-info">
+                <h1 class="moveable-type">Ball/Bar type: Distinguishable</h1>
+                <h1 class="static-type">Bin/Star type: Distinguishable</h1>
+                <h1 class="restriction">Restriction: Unrestricted</h1>
+            </div>
 
             <div class="sliders">
                 <div id="ball-label">
@@ -64,10 +70,7 @@
             <div class="button-group">
                 <button class="reset-state">Reset Balls/Bins</button>
                 <button class="reset-problem">Reset Problem</button>
-                <button class="more-info">More Info</button>
                 <button class="hints">Hints</button>
-                <button class="show-config">Show A Configuration</button>
-                <button class="show-solution">Show Solution</button>
             </div>
         </aside>
 
@@ -87,67 +90,76 @@
     </section>
 
     <section class="extras">
-        <section id="formulas" class="grid-formulas">
+        <div class="formulas-container">
+            <section id="formulas" class="grid-formulas">
+    
+                <h1 class="grid-label"><strong>$k$</strong> balls/bars</h1>
+                <h1 class="grid-label"><strong>$n$</strong> bins/stars</h1>
+                <h1 class="grid-label">Unrestricted <i class="fa fa-question-circle"></i></h1>
+                <h1 class="grid-label">Injective <i class="fa fa-question-circle"></i></h1>
+                <h1 class="grid-label">Surjective <i class="fa fa-question-circle"></i></h1>
+    
+                <h1>distinguishable</h1>
+                <h1>distinguishable</h1>
+                <a class="dd unr" href="#interaction">$$n^k$$</a>
+                <a class="dd inj" href="#interaction">
+                    $$\frac{n!}{(n-k)!}$$
+                </a>
+                <a class="dd sur" href="#interaction">
+                    $$S(k,n) × n!$$
+                </a>
+    
+                <h1>distinguishable</h1>
+                <h1>indistinguishable</h1>
+                <a class="di unr" href="#interaction">
+                    $$\sum_{i=0}^k S(k,i)$$
+                </a>
+                <a class="di inj" href="#interaction">
+                    \[ \begin{cases}
+                    1 & k\leq n \\
+                    0 & otherwise
+                    \end{cases}
+                    \]
+                </a>
+                <a class="di sur" href="#interaction">
+                    $$S(k,n)$$
+                </a>
+    
+                <h1>indistinguishable</h1>
+                <h1>distinguishable</h1>
+                <a class="id unr" href="#interaction">
+                    $${n+k-1 \choose n-1}$$
+                </a>
+                <a class="id inj" href="#interaction">
+                    $${n \choose k}$$
+                </a>
+                <a class="id sur" href="#interaction">
+                    $${n-1 \choose k-1}$$
+                </a>
+    
+                <h1>indistinguishable</h1>
+                <h1>indistinguishable</h1>
+                <a class="ii unr" href="#interaction">
+                    $$\sum_{i=0}^k P(k,i)$$
+                </a>
+                <a class="ii inj" href="#interaction">
+                    \[ \begin{cases}
+                    1 & k\leq n \\
+                    0 & otherwise
+                    \end{cases}
+                    \]
+                </a>
+                <a class="ii sur" href="#interaction">
+                    $$P(k,n)$$
+                </a>
+            </section>
+        </div>
 
-            <h1 class="grid-label"><strong>$k$</strong> balls/bars</h1>
-            <h1 class="grid-label"><strong>$n$</strong> bins/stars</h1>
-            <h1 class="grid-label">Unrestricted <i class="fa fa-question-circle"></i></h1>
-            <h1 class="grid-label">Injective <i class="fa fa-question-circle"></i></h1>
-            <h1 class="grid-label">Surjective <i class="fa fa-question-circle"></i></h1>
-
-            <h1>distinguishable</h1>
-            <h1>distinguishable</h1>
-            <a class="dd unr" href="#top-of-page">$$n^k$$</a>
-            <a class="dd inj" href="#top-of-page">
-                $$\frac{n!}{(n-k)!}$$
-            </a>
-            <a class="dd sur" href="#top-of-page">
-                $$S(k,n) × n!$$
-            </a>
-
-            <h1>distinguishable</h1>
-            <h1>indistinguishable</h1>
-            <a class="di unr" href="#top-of-page">
-                $$\sum_{i=0}^k S(k,i)$$
-            </a>
-            <a class="di inj" href="#top-of-page">
-                \[ \begin{cases}
-                1 & k\leq n \\
-                0 & otherwise
-                \end{cases}
-                \]
-            </a>
-            <a class="di sur" href="#top-of-page">
-                $$S(k,n)$$
-            </a>
-
-            <h1>indistinguishable</h1>
-            <h1>distinguishable</h1>
-            <a class="id unr" href="#top-of-page">
-                $${n+k-1 \choose n-1}$$
-            </a>
-            <a class="id inj" href="#top-of-page">
-                $${n \choose k}$$
-            </a>
-            <a class="id sur" href="#top-of-page">
-                $${n-1 \choose k-1}$$
-            </a>
-
-            <h1>indistinguishable</h1>
-            <h1>indistinguishable</h1>
-            <a class="ii unr" href="#top-of-page">
-                $$\sum_{i=0}^k P(k,i)$$
-            </a>
-            <a class="ii inj" href="#top-of-page">
-                \[ \begin{cases}
-                1 & k\leq n \\
-                0 & otherwise
-                \end{cases}
-                \]
-            </a>
-            <a class="ii sur" href="#top-of-page">
-                $$P(k,n)$$
-            </a>
+        <section class="general-tips">
+            <h1 class="general-tips-header">General Tips</h1>
+            <ul>
+               <li><strong>Distinguishable</strong> means a shape has a label attached to it. You can tell shapes with labels apart and therefore</li>
+            </ul>
         </section>
     </section>
 </body>

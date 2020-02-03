@@ -4,10 +4,13 @@ body {
 }
 
 .header-nav {
+    position: fixed;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(138, 138, 138);
+    background-color: rgb(161, 161, 161);
+    box-shadow: 3px 2px 5px black;
     padding: 10px;
     font-family: "Teko", sans-serif;
     font-size: 36px;
@@ -25,8 +28,12 @@ body {
     margin-left: 50px;
 }
 
+.nav-links a {
+    transition: color 0.25s;
+}
+
 .nav-links a:hover {
-    background-color: rgb(65, 64, 64);
+    color: rgb(60, 60, 60);
 }
 
 .header-container {
@@ -43,11 +50,15 @@ body {
 
 .header-name {
     font-size: 36px;
-    margin: 20px 0;
+    padding: 80px 0 20px 0;
 }
 
-.instructions > strong {
+.instructions > strong, .tips > strong {
     font-weight: bold;
+}
+
+.tips > i {
+    font-style: italic;
 }
 
 .interaction-container {
@@ -127,7 +138,7 @@ input[type=range][orient=vertical] {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    height: 33%;
+    height: 22%;
 }
 
 .button-group > button {
@@ -169,22 +180,54 @@ input[type=range][orient=vertical] {
     font-family: "Teko", sans-serif;
     font-size: 32px;
     cursor: pointer;
+    transition: color 0.25s;
+    transition: background-color 0.25s;
 }
 
 .submit:hover {
-    background-color: gray;
+    color: rgb(60, 60, 60);
+    background-color: rgb(161, 161, 161);
+}
+
+.extras {
+    display: flex;
+    justify-content: space-around;
+    height: 60%;
+    margin: 100px 0;
+}
+
+.formulas-container {
+    display: inline-block;
+    width: 37%;
 }
 
 .grid-formulas {
     display: grid;
-    width: 37%;
-    height: 60%;
+    width: 100%;
+    height: 100%;
     grid-template-columns: 20% 20% 20% 20% 20%;
     grid-template-rows: 20% 20% 20% 20% 20%;
     border: 2px solid black;
     border-radius: 5px;
-    margin: 100px auto;
     text-align: center;
+}
+
+.general-tips {
+    display: inline-block;
+    border: 4px solid black;
+    border-radius: 5px;
+    text-align: center;
+    width: 37%;
+    height: 100%;
+}
+
+.general-tips-header {
+    width: 95%;
+    padding-bottom: 15px;
+    margin: 15px auto;
+    font-size: 36px;
+    font-family: "Lato", sans-serif;
+    border-bottom: 2px solid black;
 }
 
 .grid-formulas > * {
@@ -196,8 +239,17 @@ input[type=range][orient=vertical] {
     font-size: 16px;
 }
 
+.maker-links {
+    margin-right: 50px;
+}
+
 .maker-links > a {
     text-decoration: none;
+    transition: color 0.25s;
+}
+
+.maker-links > a:hover {
+    color: rgb(60, 60, 60);
 }
 
 .grid-label > i {
@@ -214,8 +266,21 @@ input[type=range][orient=vertical] {
 
 .grid-formulas a {
     color: black;
+    transition: background-color 0.1s;
 }
 
 .grid-formulas a:hover {
-    background-color: rgb(194, 194, 194);
+    background-color: rgb(161, 161, 161);
+}
+
+.formula-info {
+    width: 95%;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    margin: auto;
+    border-bottom: 2px solid black;
+}
+
+.formula-info > h1 {
+    margin-bottom: 10px;
 }

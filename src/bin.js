@@ -35,6 +35,7 @@ class Bin extends StaticShape {
                 newPos = y;
             }
 
+            ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(this.pos[0], newPos);
             ctx.lineTo(this.pos[0] + this.bounds[0], newPos + this.bounds[2]);

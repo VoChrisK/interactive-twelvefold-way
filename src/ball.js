@@ -22,6 +22,7 @@ class Ball extends MoveableShape {
                 newPos -= y * 2.5;
             }
 
+            ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.arc(this.pos[0], newPos, this.radius, 0, Math.PI * 2);
             ctx.stroke();

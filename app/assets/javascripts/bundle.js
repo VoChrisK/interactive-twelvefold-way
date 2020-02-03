@@ -145,6 +145,7 @@ function (_MoveableShape) {
           newPos -= y * 2.5;
         }
 
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.arc(this.pos[0], newPos, this.radius, 0, Math.PI * 2);
         ctx.stroke();
@@ -315,6 +316,7 @@ function (_StaticShape) {
           newPos = y;
         }
 
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(this.pos[0], newPos);
         ctx.lineTo(this.pos[0] + this.bounds[0], newPos + this.bounds[2]);
@@ -524,8 +526,7 @@ function () {
   }, {
     key: "resetState",
     value: function resetState() {
-      this.interaction.setMoveableShapes(this.interaction.moveableShapes);
-      this.interaction.setStaticShapes(this.interaction.staticShapes);
+      this.updateValues();
       var canvasEl = document.getElementById("canvas");
       this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
     }
@@ -535,6 +536,7 @@ function () {
       this.resetState();
       this.interaction.configurations = [];
       this.addToConfigurations();
+      this.clearConfigurations();
     }
   }, {
     key: "restart",
@@ -542,7 +544,6 @@ function () {
       this.changeDisplay();
       this.calculateFormula();
       this.resetInterface();
-      this.clearConfigurations();
       this.start();
     }
   }, {
@@ -1277,26 +1278,36 @@ var addEventsToCases = function addEventsToCases(display) {
   var case2 = document.getElementsByClassName("di");
   var case3 = document.getElementsByClassName("id");
   var case4 = document.getElementsByClassName("ii");
+  var moveableType = document.getElementsByClassName("moveable-type")[0];
+  var staticType = document.getElementsByClassName("static-type")[0];
 
   for (var i = 0; i < case1.length; i++) {
     case1[i].addEventListener("click", function (event) {
       display.moveableType = "distinguishable";
       display.staticType = "distinguishable";
+      moveableType.innerHTML = "Ball/Bar type: Distinguishable";
+      staticType.innerHTML = "Bin/Star type: Distinguishable";
       display.restart();
     });
     case2[i].addEventListener("click", function (event) {
       display.moveableType = "distinguishable";
       display.staticType = "indistinguishable";
+      moveableType.innerHTML = "Ball/Bar type: Distinguishable";
+      staticType.innerHTML = "Bin/Star type: Indistinguishable";
       display.restart();
     });
     case3[i].addEventListener("click", function (event) {
       display.moveableType = "indistinguishable";
       display.staticType = "distinguishable";
+      moveableType.innerHTML = "Ball/Bar type: Indistinguishable";
+      staticType.innerHTML = "Bin/Star type: Distinguishable";
       display.restart();
     });
     case4[i].addEventListener("click", function (event) {
       display.moveableType = "indistinguishable";
       display.staticType = "indistinguishable";
+      moveableType.innerHTML = "Ball/Bar type: Indistinguishable";
+      staticType.innerHTML = "Bin/Star type: Indistinguishable";
       display.restart();
     });
   }
@@ -1305,16 +1316,20 @@ var addEventsToRules = function addEventsToRules(display) {
   var rule1 = document.getElementsByClassName("unr");
   var rule2 = document.getElementsByClassName("inj");
   var rule3 = document.getElementsByClassName("sur");
+  var restriction = document.getElementsByClassName("restriction")[0];
 
   for (var i = 0; i < rule1.length; i++) {
     rule1[i].addEventListener("click", function (event) {
       display.restriction = "unrestricted";
+      restriction.innerHTML = "Restriction: Unrestricted";
     });
     rule2[i].addEventListener("click", function (event) {
       display.restriction = "injective";
+      restriction.innerHTML = "Restriction: Injective";
     });
     rule3[i].addEventListener("click", function (event) {
       display.restriction = "surjective";
+      restriction.innerHTML = "Restriction: Surjective";
     });
   }
 };

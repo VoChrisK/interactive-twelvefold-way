@@ -81,8 +81,7 @@ class Display {
     }
 
     resetState() {
-        this.interaction.setMoveableShapes(this.interaction.moveableShapes);
-        this.interaction.setStaticShapes(this.interaction.staticShapes);
+        this.updateValues();
         const canvasEl = document.getElementById("canvas");
         this.ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height);
     }
@@ -91,13 +90,13 @@ class Display {
         this.resetState();
         this.interaction.configurations = [];
         this.addToConfigurations();
+        this.clearConfigurations();
     }
 
     restart() {
         this.changeDisplay();
         this.calculateFormula();
         this.resetInterface();
-        this.clearConfigurations();
         this.start();
     }
 
