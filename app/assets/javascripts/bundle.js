@@ -1274,6 +1274,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEventsToCases", function() { return addEventsToCases; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEventsToRules", function() { return addEventsToRules; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEventsToButtons", function() { return addEventsToButtons; });
+/* harmony import */ var _util_search_configuration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../util/search_configuration */ "./util/search_configuration.js");
+
 var addEventsToCases = function addEventsToCases(display) {
   var case1 = document.getElementsByClassName("dd");
   var case2 = document.getElementsByClassName("di");
@@ -1348,6 +1350,7 @@ var addEventsToButtons = function addEventsToButtons(display) {
     if (display.interaction.addConfiguration(event, display.restriction, display.moveableType, display.staticType, display.distribution.starsAndBars)) {
       display.addToConfigurations();
       appendPartition(display);
+      checkCompletion(display);
     } else {
       document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
       setTimeout(function () {
@@ -1355,6 +1358,49 @@ var addEventsToButtons = function addEventsToButtons(display) {
       }, 3000);
     }
   });
+  document.getElementsByClassName("choose")[0].addEventListener("click", function (event) {
+    event.stopImmediatePropagation();
+    removeFadeIn();
+    display.resetInterface();
+    display.addToConfigurations();
+    display.start();
+  });
+  document.getElementsByClassName("choose")[1].addEventListener("click", function (event) {
+    removeFadeIn();
+    document.getElementById("formulas").scrollIntoView();
+  }); // document.getElementsByClassName("show-solution")[0].addEventListener("click", event => {
+  //     let binsArray = [];
+  //     for(let i = 0; i < display.interaction.staticShapes.length; i++) {
+  //         binsArray.push([]);
+  //     }
+  //     console.log(findDDUConfiguration(display.interaction.moveableShapes, display.interaction.staticShapes.length, binsArray));
+  // })
+};
+
+var checkCompletion = function checkCompletion(display) {
+  if (display.interaction.configurations.length === display.totalConfigurations) {
+    document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
+    document.getElementsByClassName("submit")[0].classList.add("not-allowed");
+    document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
+    setTimeout(function () {
+      return document.getElementsByClassName("try-again")[0].classList.add("fade-in");
+    }, 2000);
+    setTimeout(function () {
+      return document.getElementsByClassName("choose")[0].classList.add("fade-in");
+    }, 4000);
+    setTimeout(function () {
+      return document.getElementsByClassName("choose")[1].classList.add("fade-in");
+    }, 4000);
+  }
+};
+
+var removeFadeIn = function removeFadeIn() {
+  document.getElementsByClassName("submit")[0].removeAttribute("disabled");
+  document.getElementsByClassName("submit")[0].classList.remove("not-allowed");
+  document.getElementsByClassName("all-configurations")[0].classList.remove("fade-in");
+  document.getElementsByClassName("try-again")[0].classList.remove("fade-in");
+  document.getElementsByClassName("choose")[0].classList.remove("fade-in");
+  document.getElementsByClassName("choose")[1].classList.remove("fade-in");
 };
 
 var appendPartition = function appendPartition(display) {
@@ -1607,6 +1653,82 @@ var getNumbersArray = function getNumbersArray(n) {
 
   return numbers;
 };
+
+/***/ }),
+
+/***/ "./util/search_configuration.js":
+/*!**************************************!*\
+  !*** ./util/search_configuration.js ***!
+  \**************************************/
+/*! exports provided: findDDUConfiguration, findDDIConfiguration */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findDDUConfiguration", function() { return findDDUConfiguration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findDDIConfiguration", function() { return findDDIConfiguration; });
+/* harmony import */ var _src_bin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../src/bin */ "./src/bin.js");
+
+var findDDUConfiguration = function findDDUConfiguration(moveableShapes, staticLength, binsArray) {
+  if (moveableShapes.length === 0) {
+    return createBins(binsArray);
+  }
+
+  var configurations = [];
+
+  for (var i = 0; i < staticLength; i++) {
+    binsArray = refreshBins(binsArray);
+
+    for (var j = 0; j < moveableShapes.length; j++) {
+      binsArray[i].push(moveableShapes[j]);
+      configurations.push(findDDUConfiguration(moveableShapes.slice(1), staticLength, binsArray));
+    }
+  }
+
+  return configurations;
+};
+var findDDIConfiguration = function findDDIConfiguration(moveableShapes, staticShapes, idx) {
+  if (moveableShapes.length === 0) return staticShapes;
+  var configurations = [];
+  console.log("test");
+
+  for (var i = idx; i < staticShapes.length; i++) {
+    for (var j = 0; j < moveableShapes.length; j++) {
+      staticShapes[i].addItem(moveableShapes[j]);
+      configurations.push(findDDIConfiguration(moveableShapes.slice(1), staticShapes, i + 1));
+    }
+  }
+
+  return configurations;
+};
+
+var refreshBins = function refreshBins(bins) {
+  var binsArray = [];
+
+  for (var i = 0; i < bins.length; i++) {
+    binsArray.push([]);
+  }
+
+  return binsArray;
+};
+
+var createBins = function createBins(bins) {
+  var newBins = [];
+  var newBin;
+
+  for (var i = 0; i < bins.length; i++) {
+    newBin = new _src_bin__WEBPACK_IMPORTED_MODULE_0__["default"](i + 1, [245, 440], [40, 160, 300]);
+    newBin.items = bins[i].slice();
+    newBins.push(newBin);
+  }
+
+  return newBins;
+}; //essentially you iterate
+
+/*
+
+1 2 3 4
+*/
 
 /***/ })
 

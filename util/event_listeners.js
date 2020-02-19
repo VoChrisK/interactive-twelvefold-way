@@ -1,3 +1,5 @@
+import { findDDUConfiguration } from './../util/search_configuration';
+
 export const addEventsToCases = (display) => {
     let case1 = document.getElementsByClassName("dd");
     let case2 = document.getElementsByClassName("di");
@@ -79,11 +81,53 @@ export const addEventsToButtons = (display) => {
         if (display.interaction.addConfiguration(event, display.restriction, display.moveableType, display.staticType, display.distribution.starsAndBars)) {
             display.addToConfigurations();
             appendPartition(display);
+            checkCompletion(display);
         } else {
             document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
             setTimeout(() => document.getElementsByClassName("error-msg")[0].classList.remove("pop-up"), 3000);
         }
     });
+
+    document.getElementsByClassName("choose")[0].addEventListener("click", event => {
+        event.stopImmediatePropagation();
+        removeFadeIn();
+        display.resetInterface();
+        display.addToConfigurations();
+        display.start();
+    });
+
+    document.getElementsByClassName("choose")[1].addEventListener("click", event => {
+        removeFadeIn();
+        document.getElementById("formulas").scrollIntoView();
+    });
+
+    // document.getElementsByClassName("show-solution")[0].addEventListener("click", event => {
+    //     let binsArray = [];
+    //     for(let i = 0; i < display.interaction.staticShapes.length; i++) {
+    //         binsArray.push([]);
+    //     }
+    //     console.log(findDDUConfiguration(display.interaction.moveableShapes, display.interaction.staticShapes.length, binsArray));
+    // })
+}
+
+const checkCompletion = (display) => {
+    if (display.interaction.configurations.length === display.totalConfigurations) {
+        document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
+        document.getElementsByClassName("submit")[0].classList.add("not-allowed");
+        document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
+        setTimeout(() => document.getElementsByClassName("try-again")[0].classList.add("fade-in"), 2000);
+        setTimeout(() => document.getElementsByClassName("choose")[0].classList.add("fade-in"), 4000);
+        setTimeout(() => document.getElementsByClassName("choose")[1].classList.add("fade-in"), 4000);
+    }
+};
+
+const removeFadeIn = () => {
+    document.getElementsByClassName("submit")[0].removeAttribute("disabled");
+    document.getElementsByClassName("submit")[0].classList.remove("not-allowed");
+    document.getElementsByClassName("all-configurations")[0].classList.remove("fade-in");
+    document.getElementsByClassName("try-again")[0].classList.remove("fade-in");
+    document.getElementsByClassName("choose")[0].classList.remove("fade-in");
+    document.getElementsByClassName("choose")[1].classList.remove("fade-in");
 }
 
 const appendPartition = (display) => {
