@@ -27,7 +27,7 @@
             <ul class="nav-links">
                 <li><a href="https://en.wikipedia.org/wiki/Twelvefold_way" target="_blank">About</a></li>
                 <li><a href="#formulas">Formulas</a></li>
-                <li><a href="https://github.com/VoChrisK/" target="_blank">Portfolio</a></li>
+                <li><a href="https://chrisvo.dev/" target="_blank">Portfolio</a></li>
             </ul>
             <ul class="maker-links">
                 <a href="https://github.com/VoChrisK/interactive-twelvefold-way" target="_blank" class="fa fa-github"></a>
@@ -38,9 +38,9 @@
 
         <h1 class="header-name">Interactive Twelvefold Way</h1>
         <p class="info">Twelvefold Way is a series of twelve formulas relating to two finite sets in Combinatorics. Each formula is set with different constraints and configurations.</p>
-        <p class="instructions" id="interaction"><strong>Instructions: </strong>Click and hold a ball/bar to move it. You must place it in a bin in order for that ball to count. For stars and bars, you must place a bar in a gap next to a star.</p>
-        <p class="tips">Press submit when you place all the balls/bars in the bins/gaps. Your <strong>goal</strong> is to find <i>all</i> arrangements of balls/bars and bins/stars for a given formula.</p>
-        <p class="more-info">If you get stuck on a problem, refer to the hints and general tips! If you want to change formulas, please refer to the grid at the bottom of the screen.</p>
+        <p class="instructions" id="interaction"><strong>Instructions: </strong>Click and hold a ball to move it. You must place it in a bin in order for that ball to count. For <strong>formulas</strong> involving stars and bars, you must place a bar in a gap next to a star.</p>
+        <p class="tips">Press submit when you place all the <i>balls</i> in the <i>bins</i> or <i>bars</i> in the <i>gaps</i>. Your <strong>goal</strong> is to find <i>all</i> arrangements of balls and bins or stars and bars for a given formula.</p>
+        <p class="more-info">If you are unsure of some of the terminologies, please refer to general tips below! If you want to change formulas, click on a formula on the grid to change it!</p>
     </header>
 
     <section class="main-interaction">
@@ -175,6 +175,7 @@
         <section class="general-tips">
             <h1 class="general-tips-header">General Tips</h1>
             <ul class="tips-list">
+               <li>A <strong>configuration</strong> is a unique combination of balls in bins (or bars in gaps between stars). A configuration may have to overcome different constraints based on the formula in order for one to count. Each formula has a set of configurations that shows how each formula function under the hood, and thus is extremely helpful to visualize configurations for Combinatorical problems.</li>
                <li><strong>Distinguishable</strong> means a shape has a number attached to it. You can tell shapes with numbers apart from each other and therefore they are not identical. In this scenario, order matters so a given partition may have multiple arrangements.</li>
                <li>To visualize distinguishable shapes, imagine yourself playing billiards with a couple of friends. You go first and manage to knock a 4-ball and 6-ball into a hole. This is one of the many outcomes you could have gotten. Another outcome is knocking both a 3-ball and a 7-ball into the same hole. Thus, you knock two balls in one hole but those two balls can be different.</li>
                <li>The order in which you place each ball/bar into a bin does not matter. So it doesn't matter whether the 4-ball or 6-ball went in first. What matters is whether there exist a configuration with that combination.</li>
