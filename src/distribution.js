@@ -8,8 +8,14 @@ class Distribution {
         this.starsAndBars = false;
         this.moveableShapePosition;
         this.staticShapePosition;
+        this.radius;
+        this.binBounds;
+        this.ballCountPos;
+        this.barCountPos;
+        this.barWidth;
+        this.barHeight;
+        this.setUp();
         this.setMoveableShapePosition();
-        this.setStaticShapePosition();
     }
 
     usesStarsAndBars(moveableType, staticType, restriction) {
@@ -18,17 +24,39 @@ class Distribution {
 
     setMoveableShapePosition() {
         if(this.starsAndBars) {
-            this.moveableShapePosition = [100, 200];
+            this.moveableShapePosition = [100, 100];
         } else {
             this.moveableShapePosition = [100, 50];
         }
     }
 
-    setStaticShapePosition() {
+    setStaticShapePosition(num) {
         if (this.starsAndBars) {
-            this.staticShapePosition = [200, 400];
+            this.staticShapePosition = [40 * num * 1.2, 80 * num];
         } else {
-            this.staticShapePosition = [245, 440];
+            this.staticShapePosition = [49 * num, 88 * num];
+        }
+    }
+
+    setUp() {
+        if (window.innerWidth <= 1280) {
+            this.setStaticShapePosition(3);
+            this.binBounds = [25, 100, 187.5];
+            this.radius = 25;
+            this.ballCountPos = [58, 85];
+            this.barCountPos = [65, 120];
+            this.countPos = [45, 25];
+            this.barWidth = 8;
+            this.barHeight = 50;
+        } else {
+            this.setStaticShapePosition(5);
+            this.binBounds = [40, 160, 300];
+            this.radius = 35;
+            this.ballCountPos = [95, 150];
+            this.barCountPos = [90, 150];
+            this.countPos = [65, 30];
+            this.barWidth = 10;
+            this.barHeight = 60;
         }
     }
 
@@ -37,11 +65,11 @@ class Distribution {
 
         if(this.starsAndBars) {
             for (let i = 0; i < moveableShapes.length; i++) {
-                moveableShapes[i] = new Bar([this.moveableShapePosition[0] * (i + 1), this.moveableShapePosition[1]], 10, 60);
+                moveableShapes[i] = new Bar([this.moveableShapePosition[0] * (i + 1), this.moveableShapePosition[1]], this.barWidth, this.barHeight);
             }
         } else {
             for (let i = 0; i < moveableShapes.length; i++) {
-                moveableShapes[i] = new Ball(i + 1, [this.moveableShapePosition[0] * (i + 1), this.moveableShapePosition[1]], 35);
+                moveableShapes[i] = new Ball(i + 1, [this.moveableShapePosition[0] * (i + 1), this.moveableShapePosition[1]], this.radius);
             }
         }
 
@@ -52,12 +80,12 @@ class Distribution {
         const staticShapes = new Array(parseInt(numStaticShapes));
         if(this.starsAndBars) {
             for (let i = 0; i < staticShapes.length; i++) {
-                staticShapes[i] = new Star([this.staticShapePosition[0] * i - 50, this.staticShapePosition[1]], this.staticShapePosition[0]);
+                staticShapes[i] = new Star([this.staticShapePosition[0] * i - 50, this.staticShapePosition[1]], this.staticShapePosition[0], this.barCountPos);
             }
             staticShapes.push(this.addStaticShape(staticShapes.length));
         } else {
             for (let i = 0; i < staticShapes.length; i++) {
-                staticShapes[i] = new Bin(i + 1, [(this.staticShapePosition[0] * i) + 20, this.staticShapePosition[1]], [40, 160, 300]);
+                staticShapes[i] = new Bin(i + 1, [(this.staticShapePosition[0] * i) + 20, this.staticShapePosition[1]], this.binBounds, this.ballCountPos, this.countPos);
             }
         }
 
@@ -66,17 +94,17 @@ class Distribution {
 
     addMoveableShape(length) {
         if(this.starsAndBars) {
-            return new Bar([this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], 10, 60);
+            return new Bar([this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], this.barWidth, this.barHeight);
         } else {
-            return new Ball(length + 1, [this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], 35);
+            return new Ball(length + 1, [this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], this.radius);
         }
     }
 
     addStaticShape(length) {
         if(this.starsAndBars) {
-            return new Star([this.staticShapePosition[0] * length - 50, this.staticShapePosition[1]], this.staticShapePosition[0]);
+            return new Star([this.staticShapePosition[0] * length - 50, this.staticShapePosition[1]], this.staticShapePosition[0], this.barCountPos);
         } else {
-            return new Bin(length + 1, [(this.staticShapePosition[0] * (length)) + 20, this.staticShapePosition[1]], [40, 160, 300]);
+            return new Bin(length + 1, [(this.staticShapePosition[0] * (length)) + 20, this.staticShapePosition[1]], this.binBounds, this.ballCountPos, this.countPos);
         }
     }
 

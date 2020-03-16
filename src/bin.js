@@ -1,7 +1,7 @@
 import StaticShape from './static_shape';
 
 class Bin extends StaticShape {
-    constructor(label, pos, bounds) {
+    constructor(label, pos, bounds, numPos, ballCountPos) {
         const boundingBox = [
             [pos[0], pos[1]],
             [pos[0] + bounds[0] + bounds[1], pos[1]],
@@ -11,6 +11,8 @@ class Bin extends StaticShape {
         super(pos, boundingBox);
         this.label = label;
         this.bounds = bounds //[X1, X2, Y]
+        this.numPos = numPos;
+        this.ballCountPos = ballCountPos;
     }
 
     // checkCollision(x, y) {
@@ -46,10 +48,10 @@ class Bin extends StaticShape {
 
             ctx.font = "24px arial";
             if(binType === "distinguishable") {
-                ctx.fillText(this.label, this.pos[0] + 95, newPos + 150);
+                ctx.fillText(this.label, this.pos[0] + this.numPos[0], newPos + this.numPos[1]);
             }
 
-            ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - 65, newPos + this.bounds[2] + 30);
+            ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - this.ballCountPos[0], newPos + this.bounds[2] + this.ballCountPos[1]);
         }
     }
 

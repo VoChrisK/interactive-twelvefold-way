@@ -1,0 +1,22 @@
+/* @media only screen and (min-width: 1900px) {
+    .main-interaction { width: 1820px; height: 795px; }
+} */
+
+@media only screen and (max-width: 1460px) {
+    .header-name { font-size: 28px; }
+    #top-of-page > p { font-size: 14px; }
+}
+
+@media only screen and (max-width: 1280px) {
+    .main-interaction { width: 1220px; height: 495px; }
+    .configuration-count { font-size: 22px; }
+    .formula-info { font-size: 14px; }
+    .sliders { height: 48%; }
+    #ball-label-header, #bin-label-header, .num-balls, .num-bins { font-size: 16px; margin: 8px 0; }
+    .button-group { height: 20%; }
+}
+
+/*
+    1220px width
+    495px height
+*/

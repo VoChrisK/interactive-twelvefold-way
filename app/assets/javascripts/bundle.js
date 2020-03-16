@@ -281,7 +281,7 @@ var Bin =
 function (_StaticShape) {
   _inherits(Bin, _StaticShape);
 
-  function Bin(label, pos, bounds) {
+  function Bin(label, pos, bounds, numPos, ballCountPos) {
     var _this;
 
     _classCallCheck(this, Bin);
@@ -291,6 +291,8 @@ function (_StaticShape) {
     _this.label = label;
     _this.bounds = bounds; //[X1, X2, Y]
 
+    _this.numPos = numPos;
+    _this.ballCountPos = ballCountPos;
     return _this;
   } // checkCollision(x, y) {
   //     let line1 = [this.boundingBox[1][0] - this.boundingBox[0][0], this.boundingBox[1][1] - this.boundingBox[0][1]];
@@ -326,10 +328,10 @@ function (_StaticShape) {
         ctx.font = "24px arial";
 
         if (binType === "distinguishable") {
-          ctx.fillText(this.label, this.pos[0] + 95, newPos + 150);
+          ctx.fillText(this.label, this.pos[0] + this.numPos[0], newPos + this.numPos[1]);
         }
 
-        ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - 65, newPos + this.bounds[2] + 30);
+        ctx.fillText(this.items.length, this.pos[0] + this.bounds[1] - this.ballCountPos[0], newPos + this.bounds[2] + this.ballCountPos[1]);
       }
     }
   }, {
@@ -572,8 +574,7 @@ function () {
     value: function changeDisplay() {
       if (this.distribution.starsAndBars !== this.distribution.usesStarsAndBars(this.moveableType, this.staticType, this.restriction)) {
         this.distribution.starsAndBars = this.distribution.usesStarsAndBars(this.moveableType, this.staticType, this.restriction);
-        this.distribution.setMoveableShapePosition();
-        this.distribution.setStaticShapePosition();
+        this.distribution.setUp();
         this.distribution.updateDisplayCount(this.interaction.moveableShapes.length);
         this.updateValues();
         this.distribution.changeLabels();
@@ -626,8 +627,14 @@ function () {
     this.starsAndBars = false;
     this.moveableShapePosition;
     this.staticShapePosition;
+    this.radius;
+    this.binBounds;
+    this.ballCountPos;
+    this.barCountPos;
+    this.barWidth;
+    this.barHeight;
+    this.setUp();
     this.setMoveableShapePosition();
-    this.setStaticShapePosition();
   }
 
   _createClass(Distribution, [{
@@ -639,18 +646,41 @@ function () {
     key: "setMoveableShapePosition",
     value: function setMoveableShapePosition() {
       if (this.starsAndBars) {
-        this.moveableShapePosition = [100, 200];
+        this.moveableShapePosition = [100, 100];
       } else {
         this.moveableShapePosition = [100, 50];
       }
     }
   }, {
     key: "setStaticShapePosition",
-    value: function setStaticShapePosition() {
+    value: function setStaticShapePosition(num) {
       if (this.starsAndBars) {
-        this.staticShapePosition = [200, 400];
+        this.staticShapePosition = [40 * num * 1.2, 80 * num];
       } else {
-        this.staticShapePosition = [245, 440];
+        this.staticShapePosition = [49 * num, 88 * num];
+      }
+    }
+  }, {
+    key: "setUp",
+    value: function setUp() {
+      if (window.innerWidth <= 1280) {
+        this.setStaticShapePosition(3);
+        this.binBounds = [25, 100, 187.5];
+        this.radius = 25;
+        this.ballCountPos = [58, 85];
+        this.barCountPos = [65, 120];
+        this.countPos = [45, 25];
+        this.barWidth = 8;
+        this.barHeight = 50;
+      } else {
+        this.setStaticShapePosition(5);
+        this.binBounds = [40, 160, 300];
+        this.radius = 35;
+        this.ballCountPos = [95, 150];
+        this.barCountPos = [90, 150];
+        this.countPos = [65, 30];
+        this.barWidth = 10;
+        this.barHeight = 60;
       }
     }
   }, {
@@ -660,11 +690,11 @@ function () {
 
       if (this.starsAndBars) {
         for (var i = 0; i < moveableShapes.length; i++) {
-          moveableShapes[i] = new _bar__WEBPACK_IMPORTED_MODULE_2__["default"]([this.moveableShapePosition[0] * (i + 1), this.moveableShapePosition[1]], 10, 60);
+          moveableShapes[i] = new _bar__WEBPACK_IMPORTED_MODULE_2__["default"]([this.moveableShapePosition[0] * (i + 1), this.moveableShapePosition[1]], this.barWidth, this.barHeight);
         }
       } else {
         for (var _i = 0; _i < moveableShapes.length; _i++) {
-          moveableShapes[_i] = new _ball__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [this.moveableShapePosition[0] * (_i + 1), this.moveableShapePosition[1]], 35);
+          moveableShapes[_i] = new _ball__WEBPACK_IMPORTED_MODULE_0__["default"](_i + 1, [this.moveableShapePosition[0] * (_i + 1), this.moveableShapePosition[1]], this.radius);
         }
       }
 
@@ -677,13 +707,13 @@ function () {
 
       if (this.starsAndBars) {
         for (var i = 0; i < staticShapes.length; i++) {
-          staticShapes[i] = new _star__WEBPACK_IMPORTED_MODULE_3__["default"]([this.staticShapePosition[0] * i - 50, this.staticShapePosition[1]], this.staticShapePosition[0]);
+          staticShapes[i] = new _star__WEBPACK_IMPORTED_MODULE_3__["default"]([this.staticShapePosition[0] * i - 50, this.staticShapePosition[1]], this.staticShapePosition[0], this.barCountPos);
         }
 
         staticShapes.push(this.addStaticShape(staticShapes.length));
       } else {
         for (var _i2 = 0; _i2 < staticShapes.length; _i2++) {
-          staticShapes[_i2] = new _bin__WEBPACK_IMPORTED_MODULE_1__["default"](_i2 + 1, [this.staticShapePosition[0] * _i2 + 20, this.staticShapePosition[1]], [40, 160, 300]);
+          staticShapes[_i2] = new _bin__WEBPACK_IMPORTED_MODULE_1__["default"](_i2 + 1, [this.staticShapePosition[0] * _i2 + 20, this.staticShapePosition[1]], this.binBounds, this.ballCountPos, this.countPos);
         }
       }
 
@@ -693,18 +723,18 @@ function () {
     key: "addMoveableShape",
     value: function addMoveableShape(length) {
       if (this.starsAndBars) {
-        return new _bar__WEBPACK_IMPORTED_MODULE_2__["default"]([this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], 10, 60);
+        return new _bar__WEBPACK_IMPORTED_MODULE_2__["default"]([this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], this.barWidth, this.barHeight);
       } else {
-        return new _ball__WEBPACK_IMPORTED_MODULE_0__["default"](length + 1, [this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], 35);
+        return new _ball__WEBPACK_IMPORTED_MODULE_0__["default"](length + 1, [this.moveableShapePosition[0] * (length + 1), this.moveableShapePosition[1]], this.radius);
       }
     }
   }, {
     key: "addStaticShape",
     value: function addStaticShape(length) {
       if (this.starsAndBars) {
-        return new _star__WEBPACK_IMPORTED_MODULE_3__["default"]([this.staticShapePosition[0] * length - 50, this.staticShapePosition[1]], this.staticShapePosition[0]);
+        return new _star__WEBPACK_IMPORTED_MODULE_3__["default"]([this.staticShapePosition[0] * length - 50, this.staticShapePosition[1]], this.staticShapePosition[0], this.barCountPos);
       } else {
-        return new _bin__WEBPACK_IMPORTED_MODULE_1__["default"](length + 1, [this.staticShapePosition[0] * length + 20, this.staticShapePosition[1]], [40, 160, 300]);
+        return new _bin__WEBPACK_IMPORTED_MODULE_1__["default"](length + 1, [this.staticShapePosition[0] * length + 20, this.staticShapePosition[1]], this.binBounds, this.ballCountPos, this.countPos);
       }
     }
   }, {
@@ -764,6 +794,12 @@ document.addEventListener("DOMContentLoaded", function () {
   var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_1__["determineFormula"])("distinguishable", "distinguishable", "unrestricted")(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML);
   var display = new _display__WEBPACK_IMPORTED_MODULE_0__["default"]("distinguishable", "distinguishable", "unrestricted", result, ctx);
   var animation;
+
+  if (window.innerWidth <= 1280) {
+    canvasEl.width = 775;
+    canvasEl.height = 505;
+  }
+
   canvasEl.addEventListener("mousedown", function (event) {
     for (var i = 0; i < display.interaction.moveableShapes.length; i++) {
       if (display.interaction.moveableShapes[i].checkBounds(event.offsetX, event.offsetY)) {
@@ -1038,7 +1074,7 @@ var Star =
 function (_StaticShape) {
   _inherits(Star, _StaticShape);
 
-  function Star(pos, gap) {
+  function Star(pos, gap, barCountPos) {
     var _this;
 
     _classCallCheck(this, Star);
@@ -1046,6 +1082,7 @@ function (_StaticShape) {
     var boundingBox = [[pos[0], pos[1] - 20], [pos[0] + gap, pos[1] - 20], [pos[0] + gap, pos[1] + 90], [pos[0], pos[1] + 90]];
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Star).call(this, pos, boundingBox));
     _this.gap = gap;
+    _this.barCountPos = barCountPos;
     return _this;
   }
 
@@ -1067,7 +1104,7 @@ function (_StaticShape) {
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
-        ctx.fillText(this.items.length, this.pos[0] + 90, this.pos[1] + 150);
+        ctx.fillText(this.items.length, this.pos[0] + this.barCountPos[0], this.pos[1] + this.barCountPos[1]);
       }
     }
   }]);

@@ -117,8 +117,7 @@ class Display {
     changeDisplay() {
         if (this.distribution.starsAndBars !== this.distribution.usesStarsAndBars(this.moveableType, this.staticType, this.restriction)) {
             this.distribution.starsAndBars = this.distribution.usesStarsAndBars(this.moveableType, this.staticType, this.restriction);
-            this.distribution.setMoveableShapePosition();
-            this.distribution.setStaticShapePosition();
+            this.distribution.setUp();
             this.distribution.updateDisplayCount(this.interaction.moveableShapes.length);
             this.updateValues();
             this.distribution.changeLabels();

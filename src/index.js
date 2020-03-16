@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const result = determineFormula("distinguishable", "distinguishable", "unrestricted")(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML);
     const display = new Display("distinguishable", "distinguishable", "unrestricted", result, ctx);
     let animation;
+    
+    if(window.innerWidth <= 1280) {
+        canvasEl.width = 775;
+        canvasEl.height = 505;  
+    }
 
     canvasEl.addEventListener("mousedown", event => {
         for(let i = 0; i < display.interaction.moveableShapes.length; i++) {

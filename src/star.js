@@ -1,7 +1,7 @@
 import StaticShape from './static_shape';
 
 class Star extends StaticShape {
-    constructor(pos, gap) {
+    constructor(pos, gap, barCountPos) {
         const boundingBox = [
             [pos[0], pos[1] - 20],
             [pos[0] + gap, pos[1] - 20],
@@ -10,6 +10,7 @@ class Star extends StaticShape {
         ];
         super(pos, boundingBox);
         this.gap = gap;
+        this.barCountPos = barCountPos;
     }
 
     draw(ctx) {
@@ -28,7 +29,7 @@ class Star extends StaticShape {
             ctx.closePath();
             ctx.stroke();
             ctx.fill();
-            ctx.fillText(this.items.length, this.pos[0] + 90, this.pos[1] + 150);
+            ctx.fillText(this.items.length, this.pos[0] + this.barCountPos[0], this.pos[1] + this.barCountPos[1]);
         }
     }
 }
