@@ -132,36 +132,49 @@ const removeFadeIn = () => {
 
 const appendPartition = (display) => {
     const newCanvas = document.createElement("CANVAS");
-    newCanvas.classList.add("configuration")
-    newCanvas.setAttribute("width", "290");
+    newCanvas.classList.add("configuration");
+    let subtractHeight = 0;
+
+    if(window.innerWidth <= 1580) {
+        newCanvas.setAttribute("width", "190");
+        subtractHeight = 51;
+    } else {
+        newCanvas.setAttribute("width", "290");
+    }
     const ctx = newCanvas.getContext("2d");
     
     let length = display.interaction.configurations.length;
-    let y = scaleNewCanvas(display, ctx, newCanvas);
+    let y = scaleNewCanvas(display, ctx, newCanvas, subtractHeight);
     display.interaction.configurations[length - 1].draw(ctx, display.moveableType, display.staticType, y);
+    document.getElementsByClassName("history")[0].scrollTop = document.getElementsByClassName("history")[0].lastChild.offsetTop;
 }
 
-const scaleNewCanvas = (display, ctx, newCanvas) => {
+const scaleNewCanvas = (display, ctx, newCanvas, subtractHeight) => {
     const length = display.interaction.staticShapes.length;
     const history = document.getElementsByClassName("history")[0];
+    let height;
 
     if(length === 1 || length === 2) {
-        newCanvas.setAttribute("height", "275");
+        height = 275 - subtractHeight;
+        newCanvas.setAttribute("height", height);
         ctx.scale(0.5, 0.5);
         history.appendChild(newCanvas);
         return newCanvas.getBoundingClientRect().height - 150;
     } else if (length === 3) {
-        newCanvas.setAttribute("height", "225");
+        height = 225 - subtractHeight;
+        newCanvas.setAttribute("height", height);
         ctx.scale(0.4, 0.4);
         history.appendChild(newCanvas);
         return newCanvas.getBoundingClientRect().height - 100;
     } else if (length === 4) {
-        newCanvas.setAttribute("height", "175");
+        height = 175 - subtractHeight;
+        newCanvas.setAttribute("height", height);
         ctx.scale(0.3, 0.3);
         history.appendChild(newCanvas);
         return newCanvas.getBoundingClientRect().height - 50;
     } else {
-        newCanvas.setAttribute("height", "125");
+        height = 125 - subtractHeight;
+        newCanvas.setAttribute("height", height);
         ctx.scale(0.24, 0.24);
         history.appendChild(newCanvas);
         return newCanvas.getBoundingClientRect().height;

@@ -24,7 +24,7 @@ class Distribution {
 
     setMoveableShapePosition() {
         if(this.starsAndBars) {
-            this.moveableShapePosition = [100, 100];
+            this.moveableShapePosition = [100, 200];
         } else {
             this.moveableShapePosition = [100, 50];
         }
@@ -32,14 +32,14 @@ class Distribution {
 
     setStaticShapePosition(num) {
         if (this.starsAndBars) {
-            this.staticShapePosition = [40 * num * 1.2, 80 * num];
+            this.staticShapePosition = [40 * num * 1.2, 80 * num * 1.2];
         } else {
             this.staticShapePosition = [49 * num, 88 * num];
         }
     }
 
     setUp() {
-        if (window.innerWidth <= 1280) {
+        if (window.innerWidth <= 1580) {
             this.setStaticShapePosition(3);
             this.binBounds = [25, 100, 187.5];
             this.radius = 25;

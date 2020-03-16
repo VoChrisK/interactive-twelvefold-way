@@ -646,7 +646,7 @@ function () {
     key: "setMoveableShapePosition",
     value: function setMoveableShapePosition() {
       if (this.starsAndBars) {
-        this.moveableShapePosition = [100, 100];
+        this.moveableShapePosition = [100, 200];
       } else {
         this.moveableShapePosition = [100, 50];
       }
@@ -655,7 +655,7 @@ function () {
     key: "setStaticShapePosition",
     value: function setStaticShapePosition(num) {
       if (this.starsAndBars) {
-        this.staticShapePosition = [40 * num * 1.2, 80 * num];
+        this.staticShapePosition = [40 * num * 1.2, 80 * num * 1.2];
       } else {
         this.staticShapePosition = [49 * num, 88 * num];
       }
@@ -663,7 +663,7 @@ function () {
   }, {
     key: "setUp",
     value: function setUp() {
-      if (window.innerWidth <= 1280) {
+      if (window.innerWidth <= 1580) {
         this.setStaticShapePosition(3);
         this.binBounds = [25, 100, 187.5];
         this.radius = 25;
@@ -795,7 +795,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var display = new _display__WEBPACK_IMPORTED_MODULE_0__["default"]("distinguishable", "distinguishable", "unrestricted", result, ctx);
   var animation;
 
-  if (window.innerWidth <= 1280) {
+  if (window.innerWidth <= 1580) {
     canvasEl.width = 775;
     canvasEl.height = 505;
   }
@@ -1443,34 +1443,48 @@ var removeFadeIn = function removeFadeIn() {
 var appendPartition = function appendPartition(display) {
   var newCanvas = document.createElement("CANVAS");
   newCanvas.classList.add("configuration");
-  newCanvas.setAttribute("width", "290");
+  var subtractHeight = 0;
+
+  if (window.innerWidth <= 1580) {
+    newCanvas.setAttribute("width", "190");
+    subtractHeight = 51;
+  } else {
+    newCanvas.setAttribute("width", "290");
+  }
+
   var ctx = newCanvas.getContext("2d");
   var length = display.interaction.configurations.length;
-  var y = scaleNewCanvas(display, ctx, newCanvas);
+  var y = scaleNewCanvas(display, ctx, newCanvas, subtractHeight);
   display.interaction.configurations[length - 1].draw(ctx, display.moveableType, display.staticType, y);
+  document.getElementsByClassName("history")[0].scrollTop = document.getElementsByClassName("history")[0].lastChild.offsetTop;
 };
 
-var scaleNewCanvas = function scaleNewCanvas(display, ctx, newCanvas) {
+var scaleNewCanvas = function scaleNewCanvas(display, ctx, newCanvas, subtractHeight) {
   var length = display.interaction.staticShapes.length;
   var history = document.getElementsByClassName("history")[0];
+  var height;
 
   if (length === 1 || length === 2) {
-    newCanvas.setAttribute("height", "275");
+    height = 275 - subtractHeight;
+    newCanvas.setAttribute("height", height);
     ctx.scale(0.5, 0.5);
     history.appendChild(newCanvas);
     return newCanvas.getBoundingClientRect().height - 150;
   } else if (length === 3) {
-    newCanvas.setAttribute("height", "225");
+    height = 225 - subtractHeight;
+    newCanvas.setAttribute("height", height);
     ctx.scale(0.4, 0.4);
     history.appendChild(newCanvas);
     return newCanvas.getBoundingClientRect().height - 100;
   } else if (length === 4) {
-    newCanvas.setAttribute("height", "175");
+    height = 175 - subtractHeight;
+    newCanvas.setAttribute("height", height);
     ctx.scale(0.3, 0.3);
     history.appendChild(newCanvas);
     return newCanvas.getBoundingClientRect().height - 50;
   } else {
-    newCanvas.setAttribute("height", "125");
+    height = 125 - subtractHeight;
+    newCanvas.setAttribute("height", height);
     ctx.scale(0.24, 0.24);
     history.appendChild(newCanvas);
     return newCanvas.getBoundingClientRect().height;

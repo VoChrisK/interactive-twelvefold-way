@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const display = new Display("distinguishable", "distinguishable", "unrestricted", result, ctx);
     let animation;
     
-    if(window.innerWidth <= 1280) {
+    if(window.innerWidth <= 1580) {
         canvasEl.width = 775;
         canvasEl.height = 505;  
     }
