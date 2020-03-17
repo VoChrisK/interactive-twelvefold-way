@@ -135,9 +135,13 @@ const appendPartition = (display) => {
     newCanvas.classList.add("configuration");
     let subtractHeight = 0;
 
-    if(window.innerWidth <= 1580) {
+    if(window.innerWidth <= 1500) {
         newCanvas.setAttribute("width", "190");
         subtractHeight = 51;
+    } else if (window.innerWidth > 1500 && window.innerWidth <= 1850) {
+        newCanvas.setAttribute("width", "216");
+        console.log("test");
+        subtractHeight = 40;
     } else {
         newCanvas.setAttribute("width", "290");
     }

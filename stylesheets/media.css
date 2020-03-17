@@ -7,22 +7,38 @@
     #top-of-page > p { font-size: 14px; }
 }
 
-@media only screen and (max-width: 1580px) {
-    .main-interaction { width: 1220px; height: 495px; }
-    .configuration-count { font-size: 22px; }
+@media only screen and (max-width: 1850px) {
+    .main-interaction { width: 1420px; height: 595px; }
+    .configuration-count, .history > h1 { font-size: 26px; }
+    .formula-info { font-size: 15px; }
+    #ball-label-header, #bin-label-header, .num-balls, .num-bins { font-size: 18px; margin: 8px 0; }
+    .button-group { height: 17%; }
+    .history { height: 92%; }
+    .submit-config { height: 8%; }
+    .extras { width: 1470px; height: 500px; }
+    .formulas-container, .general-tips { width: 650px; }
+    .grid-formulas > * { font-size: 16px; }
+    .tips-list > li { margin: 5px 0 5px 30px; font-size: 13.8px; width: 93%; }
+    .error-msg { top: -500px; font-size: 48px; }
+    .all-configurations { top: -525px; font-size: 48px; }
+    .try-again { top: -500px; font-size: 48px; }
+    .yes, .no { top: -475px; font-size: 48px; }
+}
+
+@media only screen and (max-width: 1500px) {
+    .main-interaction { width: 1220px; height: 505px; }
+    .configuration-count, .history > h1 { font-size: 22px; }
     .formula-info { font-size: 14px; }
     .sliders { height: 48%; }
     #ball-label-header, #bin-label-header, .num-balls, .num-bins { font-size: 16px; margin: 8px 0; }
     .button-group { height: 20%; }
     .history { height: 90%; }
-    .history > h1 { font-size: 22px; }
     .submit-config { height: 10%; }
     .extras { width: 1270px; height: 450px; }
     .formulas-container, .general-tips { width: 550px; }
     .grid-formulas > * { font-size: 13px; }
     .tips-list > li { margin: 5px 0 5px 30px; font-size: 11.7px; width: 93%; }
     .error-msg { top: -400px; font-size: 48px; }
-    .all-configurations { top: -425px; font-size: 48px; }
     .all-configurations { top: -485px; font-size: 48px; }
     .try-again { top: -460px; font-size: 48px; }
     .yes, .no { top: -435px; font-size: 48px; }

@@ -15,7 +15,6 @@ class Distribution {
         this.barWidth;
         this.barHeight;
         this.setUp();
-        this.setMoveableShapePosition();
     }
 
     usesStarsAndBars(moveableType, staticType, restriction) {
@@ -39,7 +38,9 @@ class Distribution {
     }
 
     setUp() {
-        if (window.innerWidth <= 1580) {
+        this.setMoveableShapePosition();
+        
+        if (window.innerWidth <= 1500) {
             this.setStaticShapePosition(3);
             this.binBounds = [25, 100, 187.5];
             this.radius = 25;
@@ -48,6 +49,15 @@ class Distribution {
             this.countPos = [45, 25];
             this.barWidth = 8;
             this.barHeight = 50;
+        } else if (window.innerWidth > 1500 && window.innerWidth <= 1850) {
+            this.setStaticShapePosition(3.5);
+            this.binBounds = [32, 128, 240];
+            this.radius = 30;
+            this.ballCountPos = [75, 120];
+            this.barCountPos = [75, 150];
+            this.countPos = [52, 30];
+            this.barWidth = 10;
+            this.barHeight = 60;
         } else {
             this.setStaticShapePosition(5);
             this.binBounds = [40, 160, 300];

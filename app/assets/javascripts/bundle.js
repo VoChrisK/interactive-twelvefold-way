@@ -634,7 +634,6 @@ function () {
     this.barWidth;
     this.barHeight;
     this.setUp();
-    this.setMoveableShapePosition();
   }
 
   _createClass(Distribution, [{
@@ -663,7 +662,9 @@ function () {
   }, {
     key: "setUp",
     value: function setUp() {
-      if (window.innerWidth <= 1580) {
+      this.setMoveableShapePosition();
+
+      if (window.innerWidth <= 1500) {
         this.setStaticShapePosition(3);
         this.binBounds = [25, 100, 187.5];
         this.radius = 25;
@@ -672,6 +673,15 @@ function () {
         this.countPos = [45, 25];
         this.barWidth = 8;
         this.barHeight = 50;
+      } else if (window.innerWidth > 1500 && window.innerWidth <= 1850) {
+        this.setStaticShapePosition(3.5);
+        this.binBounds = [32, 128, 240];
+        this.radius = 30;
+        this.ballCountPos = [75, 120];
+        this.barCountPos = [75, 150];
+        this.countPos = [52, 30];
+        this.barWidth = 10;
+        this.barHeight = 60;
       } else {
         this.setStaticShapePosition(5);
         this.binBounds = [40, 160, 300];
@@ -795,9 +805,12 @@ document.addEventListener("DOMContentLoaded", function () {
   var display = new _display__WEBPACK_IMPORTED_MODULE_0__["default"]("distinguishable", "distinguishable", "unrestricted", result, ctx);
   var animation;
 
-  if (window.innerWidth <= 1580) {
+  if (window.innerWidth <= 1500) {
     canvasEl.width = 775;
     canvasEl.height = 505;
+  } else if (window.innerWidth > 1500 && window.innerWidth <= 1850) {
+    canvasEl.width = 975;
+    canvasEl.height = 595;
   }
 
   canvasEl.addEventListener("mousedown", function (event) {
@@ -1445,9 +1458,13 @@ var appendPartition = function appendPartition(display) {
   newCanvas.classList.add("configuration");
   var subtractHeight = 0;
 
-  if (window.innerWidth <= 1580) {
+  if (window.innerWidth <= 1500) {
     newCanvas.setAttribute("width", "190");
     subtractHeight = 51;
+  } else if (window.innerWidth > 1500 && window.innerWidth <= 1850) {
+    newCanvas.setAttribute("width", "216");
+    console.log("test");
+    subtractHeight = 40;
   } else {
     newCanvas.setAttribute("width", "290");
   }
