@@ -4,6 +4,8 @@ Interactive Twelvefold Way is an interactive visualization that lets users pract
 [Live Site](https://vochrisk.github.io/interactive-twelvefold-way/)
 
 ![alt text](https://github.com/VoChrisK/personal-website/blob/master/images/personal-website-gif-3.gif)
+
+
 ![alt text](https://github.com/VoChrisK/interactive-twelvefold-way/blob/master/app/assets/images/twelvefold-way-intro.gif)
 
 ## Technologies and Languages
