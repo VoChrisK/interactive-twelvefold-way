@@ -23,6 +23,37 @@
 </head>
 
 <body>
+    <div class="tutorial">
+        <p id="step-one" class="hidden">Welcome to the Interactive Twelvefold Way. This tutorial will guide you to use this app! (Press anywhere on the screen to continue)</p>
+        <p id="step-two" class="hidden">The purpose of this app is to visualize how each formula have a certain number of configurations.</p>
+        <p id="step-three" class="hidden">The objective of the app is to find all the different ways you can put the balls into the bins.</p>
+        <p id="step-four" class="hidden">Let's start with an easy example.</p>
+        <p id="step-five" class="hidden">Go ahead and move any ball to any bin. Click and hold on a ball and drag it with your mouse to move it.</p>
+        <p id="step-six" class="hidden">Great! Now go ahead and move the other ball to any bin.</p>
+        <p id="step-seven" class="hidden">When you put all the balls into the bins, press submit to record your submission.</p>
+        <p id="step-eight" class="hidden">Go ahead and press submit now!</p>
+        <p id="step-nine" class="hidden">Nice, you've gotten a correct configuration!</p>
+        <p id="step-ten" class="hidden">Now, go ahead move ball #2 to the adjacent bin.</p>
+        <p id="step-eleven" class="hidden">Go ahead and press submit.</p>
+        <p id="step-twelve" class="hidden">Congrats! You scored another correct configuration!</p>
+        <p id="step-thirteen" class="hidden">Notice how the orders in which you place the balls are different in the two configurations.</p>
+        <p id="step-fourteen" class="hidden">You want to find all these orders in order to find all the configurations of a formula!</p>
+        <p id="step-fifteen" class="hidden">Now go ahead and find the rest of the configurations. When you find all of them, the tutorial will resume.</p>
+
+        <p id="step-sixteen" class="hidden">Congratulations! You found all the configurations for this formula</p>
+        <p id="step-seventeen" class="hidden">For reference, this formula is $$n^k$$. If you plug n = 2 (# of bins) and k = 2 (# of balls), you will get 4. And now you understand how you get 4 in a much deeper level.</p>
+        <p id="step-eighteen" class="hidden">Now let's try out a different formula. Click on the Formulas tab on the navbar to navigate to the formulas grid.</p>
+        <p id="step-nineteen" class="hidden">Now click on this formula: $${n+k-1 \choose n-1}$$</p>
+        <p id="step-twenty" class="hidden">This formula uses the stars-and-bars model instead of the balls-and-bins model.</p>
+        <p id="step-twenty-one" class="hidden">The objective remains the same. You want to find all the different ways to put each bar into the gaps next to stars.</p>
+        <p id="step-twenty-two" class="hidden">Think of it like this: You want to find all the different ways you can separate the stars into different groups.</p>
+        <p id="step-twenty-three" class="hidden">Now let's find all the different ways. Go ahead and put the bar into any gaps.</p>
+        <p id="step-twenty-four" class="hidden">Press submit when you place all bars into the gaps.</p>
+        <p id="step-twenty-five" class="hidden">You got a correct configuration! Notice the different groups of stars. You have stars (or no stars) to the left of the bar and stars (or no stars) to the right.</p>
+        <p id="step-twenty-six" class="hidden">Now go ahead and find the rest of the configurations. The tutorial will resume when you find them all!</p>
+
+    </div>
+
     <header id="top-of-page" class="header-container">
         <nav class="header-nav">
             <ul class="nav-links">
@@ -38,10 +69,17 @@
         </nav>
 
         <h1 class="header-name">Interactive Twelvefold Way</h1>
-        <p class="info">Twelvefold Way is a series of twelve formulas relating to two finite sets in Combinatorics. Each formula is set with different constraints and configurations.</p>
-        <p class="instructions" id="interaction"><strong>Instructions: </strong>Find <strong>all the different ways</strong> you can put the balls into the bins. For example, <strong>one way</strong> is to put balls 1 and 2 in bin #1 and ball 3 in bin #2. Click and hold on a ball to move it.</p>
-        <p class="tips">For <i>formulas</i> involving stars and bars, you must find all the ways of distributing bars into gaps next to stars. Press submit when you put all the <i>balls</i> into the <i>bins</i> <strong>or</strong> <i>bars</i> into the <i>gaps</i>.</p>
-        <p class="more-info">Certain formulas are bounded to certain restrictions. Please refer to general tips below for more information on them. If you want to change formulas, click on a formula on the grid to change it!</p>
+        <p class="info">Twelvefold Way is a series of twelve formulas relating to two finite sets in Combinatorics. Each
+            formula is set with different constraints and configurations.</p>
+        <p class="instructions" id="interaction"><strong>Instructions: </strong>Find <strong>all the different
+                ways</strong> you can put the balls into the bins. For example, <strong>one way</strong> is to put balls
+            1 and 2 in bin #1 and ball 3 in bin #2. Click and hold on a ball to move it.</p>
+        <p class="tips">For <i>formulas</i> involving stars and bars, you must find all the ways of distributing bars
+            into gaps next to stars. Press submit when you put all the <i>balls</i> into the <i>bins</i>
+            <strong>or</strong> <i>bars</i> into the <i>gaps</i>.</p>
+        <p class="more-info">Certain formulas are bounded to certain restrictions. Please refer to general tips below
+            for more information on them. If you want to change formulas, click on a formula on the grid to change it!
+        </p>
     </header>
 
     <section class="main-interaction">
@@ -60,7 +98,7 @@
                     <input type="range" id="ball-count" min="1" max="5" orient="vertical">
                     <strong class="num-balls">3</strong>
                 </div>
-    
+
                 <div id="bin-label">
                     <h1 id="bin-label-header">Bins</h1>
                     <input type="range" id="bin-count" min="1" max="5" orient="vertical">
@@ -77,7 +115,7 @@
         </aside>
 
         <section class="interface">
-            <canvas id="canvas" width="1220" height="795" ></canvas>
+            <canvas id="canvas" width="1220" height="795"></canvas>
             <h1 class="error-msg">Cannot add configuration!</h1>
             <h1 class="all-configurations">You got all the configurations! Well done!</h1>
             <h1 class="try-again">Try again?</h1>
@@ -98,25 +136,25 @@
     <section class="extras">
         <div class="formulas-container">
             <section id="formulas" class="grid-formulas">
-    
+
                 <h1 class="grid-label"><strong>$k$</strong> balls/bars</h1>
                 <h1 class="grid-label"><strong>$n$</strong> bins/stars</h1>
                 <h1 class="grid-label">Unrestricted <i class="fa fa-question-circle unrestricted-circle">
-                    <div class="tooltip unrestricted-info">
-                        <h1>Unrestricted means all bin can have as many or as little balls as they want.</h1>
-                    </div>
-                </i></h1>
+                        <div class="tooltip unrestricted-info">
+                            <h1>Unrestricted means all bin can have as many or as little balls as they want.</h1>
+                        </div>
+                    </i></h1>
                 <h1 class="grid-label">Injective <i class="fa fa-question-circle injective-circle">
-                    <div class="tooltip injective-info">
-                        <h1>Injective means that all bins must have <strong>at most</strong> one ball.</h1>
-                    </div>
-                </i></h1>
+                        <div class="tooltip injective-info">
+                            <h1>Injective means that all bins must have <strong>at most</strong> one ball.</h1>
+                        </div>
+                    </i></h1>
                 <h1 class="grid-label">Surjective <i class="fa fa-question-circle surjective-circle">
                         <div class="tooltip surjective-info">
                             <h1>Surjective means that all bins must have <strong>at least</strong> one ball.</h1>
                         </div>
-                </i></h1>
-    
+                    </i></h1>
+
                 <h1>distinguishable</h1>
                 <h1>distinguishable</h1>
                 <a class="dd unr" href="#interaction">$$n^k$$</a>
@@ -126,7 +164,7 @@
                 <a class="dd sur" href="#interaction">
                     $$S(k,n) × n!$$
                 </a>
-    
+
                 <h1>distinguishable</h1>
                 <h1>indistinguishable</h1>
                 <a class="di unr" href="#interaction">
@@ -142,7 +180,7 @@
                 <a class="di sur" href="#interaction">
                     $$S(k,n)$$
                 </a>
-    
+
                 <h1>indistinguishable</h1>
                 <h1>distinguishable</h1>
                 <a class="id unr" href="#interaction">
@@ -154,7 +192,7 @@
                 <a class="id sur" href="#interaction">
                     $${n-1 \choose k-1}$$
                 </a>
-    
+
                 <h1>indistinguishable</h1>
                 <h1>indistinguishable</h1>
                 <a class="ii unr" href="#interaction">
@@ -176,13 +214,30 @@
         <section class="general-tips">
             <h1 class="general-tips-header">General Tips</h1>
             <ul class="tips-list">
-               <li>A <strong>configuration</strong> is a unique combination of balls in bins (or bars in gaps between stars). A configuration may have to overcome different constraints based on the formula in order for one to count. Each formula has a set of configurations that shows how each formula function under the hood, and thus is extremely helpful to visualize configurations for Combinatorical problems.</li>
-               <li><strong>Distinguishable</strong> means a shape has a number attached to it. You can tell shapes with numbers apart from each other and therefore they are not identical. In this scenario, order matters so a given configuration may have multiple arrangements.</li>
-               <li>To visualize distinguishable shapes, imagine yourself playing billiards with a couple of friends. You go first and manage to knock a 4-ball and 6-ball into a hole. This is one of the many outcomes you could have gotten. Another outcome is knocking both a 3-ball and a 7-ball into the same hole. Thus, you knock two balls in one hole but those two balls can be different.</li>
-               <li>The order in which you place each ball/bar into a bin does not matter. So it doesn't matter whether the 4-ball or 6-ball went in first. What matters is whether there exist a configuration with that combination.</li>
-               <li><strong>Indistinguishable</strong> means a shape do not have a number attach to it. You cannot tell the difference between each shape so therefore they are identical. In this scenario, order doesn't matters so some configurations are identical to each other.</li>
-               <li>To visualize indistinguishable shapes, imagine yourself at home craving for some scrambled eggs. You open up the fridge and grab a carton of eggs. All the eggs look similar so you pick a couple and put the carton back. No matter what order you pick the eggs, you will always get the same result.</li>
-               <li>In terms of distinguishable and indistinguishable bins, think of their placements. If you try swapping only their placements and not their contents, will they still have the same contents as before?</li>
+                <li>A <strong>configuration</strong> is a unique combination of balls in bins (or bars in gaps between
+                    stars). A configuration may have to overcome different constraints based on the formula in order for
+                    one to count. Each formula has a set of configurations that shows how each formula function under
+                    the hood, and thus is extremely helpful to visualize configurations for Combinatorical problems.
+                </li>
+                <li><strong>Distinguishable</strong> means a shape has a number attached to it. You can tell shapes with
+                    numbers apart from each other and therefore they are not identical. In this scenario, order matters
+                    so a given configuration may have multiple arrangements.</li>
+                <li>To visualize distinguishable shapes, imagine yourself playing billiards with a couple of friends.
+                    You go first and manage to knock a 4-ball and 6-ball into a hole. This is one of the many outcomes
+                    you could have gotten. Another outcome is knocking both a 3-ball and a 7-ball into the same hole.
+                    Thus, you knock two balls in one hole but those two balls can be different.</li>
+                <li>The order in which you place each ball/bar into a bin does not matter. So it doesn't matter whether
+                    the 4-ball or 6-ball went in first. What matters is whether there exist a configuration with that
+                    combination.</li>
+                <li><strong>Indistinguishable</strong> means a shape do not have a number attach to it. You cannot tell
+                    the difference between each shape so therefore they are identical. In this scenario, order doesn't
+                    matters so some configurations are identical to each other.</li>
+                <li>To visualize indistinguishable shapes, imagine yourself at home craving for some scrambled eggs. You
+                    open up the fridge and grab a carton of eggs. All the eggs look similar so you pick a couple and put
+                    the carton back. No matter what order you pick the eggs, you will always get the same result.</li>
+                <li>In terms of distinguishable and indistinguishable bins, think of their placements. If you try
+                    swapping only their placements and not their contents, will they still have the same contents as
+                    before?</li>
             </ul>
         </section>
     </section>
