@@ -414,14 +414,6 @@ input[type=range][orient=vertical] {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-.tutorial, .tutorial > * {
-    position: absolute;
-}
-
-/* #step-one {
-    top: 200px;
-} */
-
 .hidden {
     display: none;
 }

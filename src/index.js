@@ -1,4 +1,5 @@
 import Display from './display';
+import Tutorial from './tutorial';
 import { determineFormula } from './../util/formulas';
 import * as EventListeners from './../util/event_listeners';
 
@@ -7,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = canvasEl.getContext("2d");
     const result = determineFormula("distinguishable", "distinguishable", "unrestricted")(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML);
     const display = new Display("distinguishable", "distinguishable", "unrestricted", result, ctx);
+    const tutorial = new Tutorial();
     let animation;
 
     if(window.innerWidth <= 1500) {
@@ -16,6 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
         canvasEl.width = 975;
         canvasEl.height = 595;  
     }
+
+    document.getElementsByClassName("darken-screen")[0].addEventListener("click", event => {
+        if(tutorial.currentStep === 15) {
+            tutorial.hideAllTutorials();
+        } else if(!tutorial.finishTutorial() && !tutorial.checkInteractiveStep() && !tutorial.checkSubmissionStep()) {
+            tutorial.nextStep();
+        }
+    });
 
     canvasEl.addEventListener("mousedown", event => {
         for(let i = 0; i < display.interaction.moveableShapes.length; i++) {
@@ -43,12 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
         window.cancelAnimationFrame(animation);
         ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
         display.interaction.moveableShapes.forEach(shape => {
+            let flag = false;
             if (shape.isClicked) {
                 shape.isClicked = false;
                 display.interaction.staticShapes.forEach(otherShape => {
                     otherShape.addItem(shape);
                     otherShape.removeItem(shape);
+                    if(otherShape.items.length > 0) flag = true;
                 });
+
+                if(flag && !tutorial.finishTutorial()) {
+                    if(tutorial.checkInteractiveStep()) {
+                        tutorial.nextStep();
+                    }
+                }
             }
         });
         display.start();
@@ -56,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     EventListeners.addEventsToRules(display);
     EventListeners.addEventsToCases(display);
-    EventListeners.addEventsToButtons(display);
+    EventListeners.addEventsToButtons(display, tutorial);
     display.updateCount(canvasEl);
     display.start();
 });

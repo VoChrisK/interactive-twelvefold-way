@@ -22,7 +22,6 @@ export const findDDIConfiguration = (moveableShapes, staticShapes, idx) => {
     if(moveableShapes.length === 0) return staticShapes;
 
     let configurations = [];
-    console.log("test")
 
     for (let i = idx; i < staticShapes.length; i++) {
         for (let j = 0; j < moveableShapes.length; j++) {

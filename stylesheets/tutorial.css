@@ -1,0 +1,47 @@
+.tutorial, .tutorial > * {
+    position: absolute;
+}
+
+.tutorial {
+    width: 100%;
+    text-align: center;
+    color: rgb(250, 244, 228);
+    font-family: 'Lato', 'sans-serif';
+    z-index: 20;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.long {
+    font-size: 28px;
+    width: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.float {
+    width: 15%;
+    padding: 10px;
+    background-color: black;
+    border-radius: 10px;
+}
+
+#step-5, #step-6 {
+    top: -110px;
+    left: 600px;
+}
+
+#step-7, #step-8, #step-9, #step-11, #step-12 {
+    top: 415px;
+    left: 937px;
+}
+
+#step-10 {
+    top: 100px;
+    left: 325px;
+}
+
+#step-13, #step-14 {
+    left: 900px;
+}

@@ -793,16 +793,19 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _display__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./display */ "./src/display.js");
-/* harmony import */ var _util_formulas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../util/formulas */ "./util/formulas.js");
-/* harmony import */ var _util_event_listeners__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../util/event_listeners */ "./util/event_listeners.js");
+/* harmony import */ var _tutorial__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tutorial */ "./src/tutorial.js");
+/* harmony import */ var _util_formulas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../util/formulas */ "./util/formulas.js");
+/* harmony import */ var _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../util/event_listeners */ "./util/event_listeners.js");
+
 
 
 
 document.addEventListener("DOMContentLoaded", function () {
   var canvasEl = document.getElementById("canvas");
   var ctx = canvasEl.getContext("2d");
-  var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_1__["determineFormula"])("distinguishable", "distinguishable", "unrestricted")(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML);
+  var result = Object(_util_formulas__WEBPACK_IMPORTED_MODULE_2__["determineFormula"])("distinguishable", "distinguishable", "unrestricted")(document.getElementsByClassName("num-balls")[0].innerHTML, document.getElementsByClassName("num-bins")[0].innerHTML);
   var display = new _display__WEBPACK_IMPORTED_MODULE_0__["default"]("distinguishable", "distinguishable", "unrestricted", result, ctx);
+  var tutorial = new _tutorial__WEBPACK_IMPORTED_MODULE_1__["default"]();
   var animation;
 
   if (window.innerWidth <= 1500) {
@@ -813,6 +816,13 @@ document.addEventListener("DOMContentLoaded", function () {
     canvasEl.height = 595;
   }
 
+  document.getElementsByClassName("darken-screen")[0].addEventListener("click", function (event) {
+    if (tutorial.currentStep === 15) {
+      tutorial.hideAllTutorials();
+    } else if (!tutorial.finishTutorial() && !tutorial.checkInteractiveStep() && !tutorial.checkSubmissionStep()) {
+      tutorial.nextStep();
+    }
+  });
   canvasEl.addEventListener("mousedown", function (event) {
     for (var i = 0; i < display.interaction.moveableShapes.length; i++) {
       if (display.interaction.moveableShapes[i].checkBounds(event.offsetX, event.offsetY)) {
@@ -838,19 +848,28 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
 
     display.interaction.moveableShapes.forEach(function (shape) {
+      var flag = false;
+
       if (shape.isClicked) {
         shape.isClicked = false;
         display.interaction.staticShapes.forEach(function (otherShape) {
           otherShape.addItem(shape);
           otherShape.removeItem(shape);
+          if (otherShape.items.length > 0) flag = true;
         });
+
+        if (flag && !tutorial.finishTutorial()) {
+          if (tutorial.checkInteractiveStep()) {
+            tutorial.nextStep();
+          }
+        }
       }
     });
     display.start();
   });
-  _util_event_listeners__WEBPACK_IMPORTED_MODULE_2__["addEventsToRules"](display);
-  _util_event_listeners__WEBPACK_IMPORTED_MODULE_2__["addEventsToCases"](display);
-  _util_event_listeners__WEBPACK_IMPORTED_MODULE_2__["addEventsToButtons"](display);
+  _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__["addEventsToRules"](display);
+  _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__["addEventsToCases"](display);
+  _util_event_listeners__WEBPACK_IMPORTED_MODULE_3__["addEventsToButtons"](display, tutorial);
   display.updateCount(canvasEl);
   display.start();
 });
@@ -1203,6 +1222,92 @@ function () {
 
 /***/ }),
 
+/***/ "./src/tutorial.js":
+/*!*************************!*\
+  !*** ./src/tutorial.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Tutorial =
+/*#__PURE__*/
+function () {
+  function Tutorial() {
+    _classCallCheck(this, Tutorial);
+
+    this.currentStep = 1;
+    this.totalSteps = 26;
+  }
+
+  _createClass(Tutorial, [{
+    key: "finishTutorial",
+    value: function finishTutorial() {
+      return this.currentStep > this.totalSteps;
+    }
+  }, {
+    key: "checkInteractiveStep",
+    value: function checkInteractiveStep() {
+      return [5, 6, 10, 18, 19].includes(this.currentStep);
+    }
+  }, {
+    key: "checkSubmissionStep",
+    value: function checkSubmissionStep() {
+      return [8, 11].includes(this.currentStep);
+    }
+  }, {
+    key: "removeDarkScreen",
+    value: function removeDarkScreen() {
+      if (document.getElementsByClassName("darken-screen")[0]) {
+        document.getElementsByClassName("darken-screen")[0].classList.remove("darken-screen");
+      }
+    }
+  }, {
+    key: "addDarkScreen",
+    value: function addDarkScreen() {
+      if (!document.getElementsByClassName("darken-screen")[0]) {
+        document.getElementsByTagName("body")[0].classList.add("darken-screen");
+      }
+    }
+  }, {
+    key: "modifyScreen",
+    value: function modifyScreen() {
+      if (this.checkInteractiveStep() || this.checkSubmissionStep()) {
+        this.removeDarkScreen();
+      } else {
+        this.addDarkScreen();
+      }
+    }
+  }, {
+    key: "hideAllTutorials",
+    value: function hideAllTutorials() {
+      document.getElementById("step-".concat(this.currentStep)).classList.add("hidden");
+      this.removeDarkScreen();
+    }
+  }, {
+    key: "nextStep",
+    value: function nextStep() {
+      document.getElementById("step-".concat(this.currentStep)).classList.add("hidden");
+      this.currentStep++;
+      document.getElementById("step-".concat(this.currentStep)).classList.remove("hidden");
+      this.modifyScreen();
+    }
+  }]);
+
+  return Tutorial;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Tutorial);
+
+/***/ }),
+
 /***/ "./util/checks.js":
 /*!************************!*\
   !*** ./util/checks.js ***!
@@ -1386,7 +1491,7 @@ var addEventsToRules = function addEventsToRules(display) {
     });
   }
 };
-var addEventsToButtons = function addEventsToButtons(display) {
+var addEventsToButtons = function addEventsToButtons(display, tutorial) {
   document.getElementsByClassName("reset-state")[0].addEventListener("click", function (event) {
     display.resetState();
     display.start();
@@ -1398,9 +1503,13 @@ var addEventsToButtons = function addEventsToButtons(display) {
   });
   document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
     if (display.interaction.addConfiguration(event, display.restriction, display.moveableType, display.staticType, display.distribution.starsAndBars)) {
+      if (tutorial.checkSubmissionStep()) {
+        tutorial.nextStep();
+      }
+
       display.addToConfigurations();
       appendPartition(display);
-      checkCompletion(display);
+      checkCompletion(display, tutorial);
     } else {
       document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
       setTimeout(function () {
@@ -1427,8 +1536,9 @@ var addEventsToButtons = function addEventsToButtons(display) {
   // })
 };
 
-var checkCompletion = function checkCompletion(display) {
+var checkCompletion = function checkCompletion(display, tutorial) {
   if (display.interaction.configurations.length === display.totalConfigurations) {
+    tutorial.nextStep();
     document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
     document.getElementsByClassName("submit")[0].classList.add("not-allowed");
     document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
@@ -1463,7 +1573,6 @@ var appendPartition = function appendPartition(display) {
     subtractHeight = 51;
   } else if (window.innerWidth > 1500 && window.innerWidth <= 1850) {
     newCanvas.setAttribute("width", "216");
-    console.log("test");
     subtractHeight = 40;
   } else {
     newCanvas.setAttribute("width", "290");
@@ -1758,7 +1867,6 @@ var findDDUConfiguration = function findDDUConfiguration(moveableShapes, staticL
 var findDDIConfiguration = function findDDIConfiguration(moveableShapes, staticShapes, idx) {
   if (moveableShapes.length === 0) return staticShapes;
   var configurations = [];
-  console.log("test");
 
   for (var i = idx; i < staticShapes.length; i++) {
     for (var j = 0; j < moveableShapes.length; j++) {

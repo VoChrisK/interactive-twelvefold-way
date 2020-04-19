@@ -65,7 +65,7 @@ export const addEventsToRules = (display) => {
     }
 }
 
-export const addEventsToButtons = (display) => {
+export const addEventsToButtons = (display, tutorial) => {
     document.getElementsByClassName("reset-state")[0].addEventListener("click", event => {
         display.resetState();
         display.start();
@@ -79,9 +79,12 @@ export const addEventsToButtons = (display) => {
 
     document.getElementsByClassName("submit-config")[0].addEventListener("submit", event => {
         if (display.interaction.addConfiguration(event, display.restriction, display.moveableType, display.staticType, display.distribution.starsAndBars)) {
+            if(tutorial.checkSubmissionStep()) {
+                tutorial.nextStep();
+            }
             display.addToConfigurations();
             appendPartition(display);
-            checkCompletion(display);
+            checkCompletion(display, tutorial);
         } else {
             document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
             setTimeout(() => document.getElementsByClassName("error-msg")[0].classList.remove("pop-up"), 3000);
@@ -110,8 +113,9 @@ export const addEventsToButtons = (display) => {
     // })
 }
 
-const checkCompletion = (display) => {
+const checkCompletion = (display, tutorial) => {
     if (display.interaction.configurations.length === display.totalConfigurations) {
+        tutorial.nextStep();
         document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
         document.getElementsByClassName("submit")[0].classList.add("not-allowed");
         document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
@@ -140,7 +144,6 @@ const appendPartition = (display) => {
         subtractHeight = 51;
     } else if (window.innerWidth > 1500 && window.innerWidth <= 1850) {
         newCanvas.setAttribute("width", "216");
-        console.log("test");
         subtractHeight = 40;
     } else {
         newCanvas.setAttribute("width", "290");
