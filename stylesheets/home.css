@@ -1,0 +1,72 @@
+body {
+    text-align: center;
+    background: url("./../images/math-background.jpg") repeat;
+}
+
+.title, .continue {
+    font-size: 48px;
+    font-weight: bold;
+    font-family: "Teko", sans-serif;
+    letter-spacing: 2px;
+}
+
+.external-links, .title, .continue {
+    width: 25%;
+    margin: 40px auto;
+}
+
+.title {
+    width: 35%;
+}
+
+.continue {
+    width: 25%;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.balls-and-bins-image, .external-links, .title, .continue {
+    box-shadow: 0 2px 5px black;
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 10px;
+    background-color: rgb(250, 244, 228);
+}
+
+.external-links > a {
+    color: black;
+    text-decoration: none;
+    padding: 0 15px;
+    border-radius: 10px;
+    font-size: 48px;
+    transition: color 0.25s, transform 0.25s;
+}
+
+.external-links > a:hover {
+    color: rgb(60, 60, 60);
+    transform: translateY(-2px);
+}
+
+#cv-website {
+    display: inline-block;
+    position: relative;
+    margin-left: 15px;
+    top: -5px;
+    font-family: 'Tomorrow', sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    padding: 5px 8px;
+    border: 3px solid black;
+    border-radius: 10px;
+}
+
+.continue {
+    display: block;
+    font-size: 36px;
+    transition: color 0.25s;
+}
+
+.continue:hover {
+    color: rgb(161, 161, 161);
+}

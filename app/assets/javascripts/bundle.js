@@ -854,6 +854,7 @@ document.addEventListener("DOMContentLoaded", function () {
     display.start();
   });
   canvasEl.addEventListener("mouseup", function (event) {
+    event.stopPropagation();
     window.cancelAnimationFrame(animation);
     ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
 

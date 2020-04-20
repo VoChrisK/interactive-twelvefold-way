@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(tutorial.currentStep === 15 || tutorial.currentStep === 26) {
             tutorial.hideAllTutorials();
         } else if(!tutorial.finishTutorial() && !tutorial.checkInteractiveStep() && !tutorial.checkSubmissionStep()) {
-            tutorial.nextStep();
+                tutorial.nextStep();
         }
     });
 
@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     canvasEl.addEventListener("mouseup", event => {
+        event.stopPropagation();
         window.cancelAnimationFrame(animation);
         ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
         display.interaction.moveableShapes.forEach(shape => {
