@@ -20,9 +20,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.getElementsByClassName("darken-screen")[0].addEventListener("click", event => {
-        if(tutorial.currentStep === 15) {
+        if(tutorial.currentStep === 15 || tutorial.currentStep === 26) {
             tutorial.hideAllTutorials();
         } else if(!tutorial.finishTutorial() && !tutorial.checkInteractiveStep() && !tutorial.checkSubmissionStep()) {
+            tutorial.nextStep();
+        }
+    });
+
+    document.getElementsByClassName("formulas")[0].addEventListener("click", event => {
+        if(!tutorial.finishTutorial() && tutorial.currentStep === 18) {
+            tutorial.nextStep();
+        }
+    });
+
+    document.getElementsByClassName("id unr")[0].addEventListener("click", event => {
+        if (!tutorial.finishTutorial() && tutorial.currentStep === 19) {
             tutorial.nextStep();
         }
     });

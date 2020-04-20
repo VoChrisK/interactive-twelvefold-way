@@ -115,13 +115,16 @@ export const addEventsToButtons = (display, tutorial) => {
 
 const checkCompletion = (display, tutorial) => {
     if (display.interaction.configurations.length === display.totalConfigurations) {
-        tutorial.nextStep();
-        document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
-        document.getElementsByClassName("submit")[0].classList.add("not-allowed");
-        document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
-        setTimeout(() => document.getElementsByClassName("try-again")[0].classList.add("fade-in"), 2000);
-        setTimeout(() => document.getElementsByClassName("choose")[0].classList.add("fade-in"), 4000);
-        setTimeout(() => document.getElementsByClassName("choose")[1].classList.add("fade-in"), 4000);
+        if(tutorial.finishTutorial()) {
+            document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
+            document.getElementsByClassName("submit")[0].classList.add("not-allowed");
+            document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
+            setTimeout(() => document.getElementsByClassName("try-again")[0].classList.add("fade-in"), 2000);
+            setTimeout(() => document.getElementsByClassName("choose")[0].classList.add("fade-in"), 4000);
+            setTimeout(() => document.getElementsByClassName("choose")[1].classList.add("fade-in"), 4000);
+        } else {
+            tutorial.nextStep();
+        }
     }
 };
 

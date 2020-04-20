@@ -1,7 +1,7 @@
 class Tutorial {
     constructor() {
         this.currentStep = 1;
-        this.totalSteps = 26;
+        this.totalSteps = 33;
     }
 
     finishTutorial() {
@@ -9,11 +9,11 @@ class Tutorial {
     }
 
     checkInteractiveStep() {
-        return [5, 6, 10, 18, 19].includes(this.currentStep);
+        return [6, 7, 10, 18, 19, 23].includes(this.currentStep);
     }
 
     checkSubmissionStep() {
-        return [8, 11].includes(this.currentStep);
+        return [8, 11, 24].includes(this.currentStep);
     }
 
     removeDarkScreen() {
@@ -44,8 +44,14 @@ class Tutorial {
     nextStep() {
         document.getElementById(`step-${this.currentStep}`).classList.add("hidden");
         this.currentStep++;
-        document.getElementById(`step-${this.currentStep}`).classList.remove("hidden");
-        this.modifyScreen();
+
+        if(this.finishTutorial()) {
+            document.getElementsByTagName("body")[0].classList.remove("darken-screen");
+        } else {
+            document.getElementById(`step-${this.currentStep}`).classList.remove("hidden");
+            this.modifyScreen();
+        }
+
     }
 }
 

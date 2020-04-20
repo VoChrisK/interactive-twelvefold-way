@@ -27,12 +27,12 @@
     border-radius: 10px;
 }
 
-#step-5, #step-6 {
+#step-6, #step-7 {
     top: -110px;
     left: 600px;
 }
 
-#step-7, #step-8, #step-9, #step-11, #step-12 {
+#step-8, #step-9, #step-11, #step-12, #step-24 {
     top: 415px;
     left: 937px;
 }
@@ -44,4 +44,29 @@
 
 #step-13, #step-14 {
     left: 900px;
+}
+
+#step-18 {
+    top: -130px;
+    left: 100px;
+}
+
+#step-19 {
+    top: 846px;
+    left: 754px;
+}
+
+#step-23 {
+    top: 60px;
+    left: 600px;
+}
+
+#step-31 {
+    top: 120px;
+    left: 284px;
+}
+
+#step-32 {
+    top: 400px;
+    left: 1120px;   
 }

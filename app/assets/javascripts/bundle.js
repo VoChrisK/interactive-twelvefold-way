@@ -817,9 +817,19 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.getElementsByClassName("darken-screen")[0].addEventListener("click", function (event) {
-    if (tutorial.currentStep === 15) {
+    if (tutorial.currentStep === 15 || tutorial.currentStep === 26) {
       tutorial.hideAllTutorials();
     } else if (!tutorial.finishTutorial() && !tutorial.checkInteractiveStep() && !tutorial.checkSubmissionStep()) {
+      tutorial.nextStep();
+    }
+  });
+  document.getElementsByClassName("formulas")[0].addEventListener("click", function (event) {
+    if (!tutorial.finishTutorial() && tutorial.currentStep === 18) {
+      tutorial.nextStep();
+    }
+  });
+  document.getElementsByClassName("id unr")[0].addEventListener("click", function (event) {
+    if (!tutorial.finishTutorial() && tutorial.currentStep === 19) {
       tutorial.nextStep();
     }
   });
@@ -1244,7 +1254,7 @@ function () {
     _classCallCheck(this, Tutorial);
 
     this.currentStep = 1;
-    this.totalSteps = 26;
+    this.totalSteps = 33;
   }
 
   _createClass(Tutorial, [{
@@ -1255,12 +1265,12 @@ function () {
   }, {
     key: "checkInteractiveStep",
     value: function checkInteractiveStep() {
-      return [5, 6, 10, 18, 19].includes(this.currentStep);
+      return [6, 7, 10, 18, 19, 23].includes(this.currentStep);
     }
   }, {
     key: "checkSubmissionStep",
     value: function checkSubmissionStep() {
-      return [8, 11].includes(this.currentStep);
+      return [8, 11, 24].includes(this.currentStep);
     }
   }, {
     key: "removeDarkScreen",
@@ -1296,8 +1306,13 @@ function () {
     value: function nextStep() {
       document.getElementById("step-".concat(this.currentStep)).classList.add("hidden");
       this.currentStep++;
-      document.getElementById("step-".concat(this.currentStep)).classList.remove("hidden");
-      this.modifyScreen();
+
+      if (this.finishTutorial()) {
+        document.getElementsByTagName("body")[0].classList.remove("darken-screen");
+      } else {
+        document.getElementById("step-".concat(this.currentStep)).classList.remove("hidden");
+        this.modifyScreen();
+      }
     }
   }]);
 
@@ -1538,19 +1553,22 @@ var addEventsToButtons = function addEventsToButtons(display, tutorial) {
 
 var checkCompletion = function checkCompletion(display, tutorial) {
   if (display.interaction.configurations.length === display.totalConfigurations) {
-    tutorial.nextStep();
-    document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
-    document.getElementsByClassName("submit")[0].classList.add("not-allowed");
-    document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
-    setTimeout(function () {
-      return document.getElementsByClassName("try-again")[0].classList.add("fade-in");
-    }, 2000);
-    setTimeout(function () {
-      return document.getElementsByClassName("choose")[0].classList.add("fade-in");
-    }, 4000);
-    setTimeout(function () {
-      return document.getElementsByClassName("choose")[1].classList.add("fade-in");
-    }, 4000);
+    if (tutorial.finishTutorial()) {
+      document.getElementsByClassName("submit")[0].setAttribute("disabled", "true");
+      document.getElementsByClassName("submit")[0].classList.add("not-allowed");
+      document.getElementsByClassName("all-configurations")[0].classList.add("fade-in");
+      setTimeout(function () {
+        return document.getElementsByClassName("try-again")[0].classList.add("fade-in");
+      }, 2000);
+      setTimeout(function () {
+        return document.getElementsByClassName("choose")[0].classList.add("fade-in");
+      }, 4000);
+      setTimeout(function () {
+        return document.getElementsByClassName("choose")[1].classList.add("fade-in");
+      }, 4000);
+    } else {
+      tutorial.nextStep();
+    }
   }
 };
 
