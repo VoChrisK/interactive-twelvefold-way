@@ -78,6 +78,7 @@ export const addEventsToButtons = (display, tutorial) => {
     });
 
     document.getElementsByClassName("submit-config")[0].addEventListener("submit", event => {
+        document.getElementsByClassName("click-submit")[0].classList.remove("show");
         if (display.interaction.addConfiguration(event, display.restriction, display.moveableType, display.staticType, display.distribution.starsAndBars)) {
             if(tutorial.checkSubmissionStep()) {
                 tutorial.nextStep();
@@ -86,8 +87,10 @@ export const addEventsToButtons = (display, tutorial) => {
             appendPartition(display);
             checkCompletion(display, tutorial);
         } else {
-            document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
-            setTimeout(() => document.getElementsByClassName("error-msg")[0].classList.remove("pop-up"), 3000);
+            if(tutorial.finishTutorial()) {
+                document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
+                setTimeout(() => document.getElementsByClassName("error-msg")[0].classList.remove("pop-up"), 3000);
+            }
         }
     });
 
@@ -123,8 +126,12 @@ const checkCompletion = (display, tutorial) => {
             setTimeout(() => document.getElementsByClassName("choose")[0].classList.add("fade-in"), 4000);
             setTimeout(() => document.getElementsByClassName("choose")[1].classList.add("fade-in"), 4000);
         } else {
+            
             tutorial.nextStep();
         }
+    } else {
+        document.getElementsByClassName("confirmation")[0].classList.add("pop-up");
+        setTimeout(() => document.getElementsByClassName("confirmation")[0].classList.remove("pop-up"), 3000);
     }
 };
 

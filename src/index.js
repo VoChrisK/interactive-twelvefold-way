@@ -67,13 +67,19 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.clearRect(0, 0, canvasEl.clientWidth, canvasEl.height); //clear canvas to prevent trailing circles
         display.interaction.moveableShapes.forEach(shape => {
             let flag = false;
+            let count = 0;
             if (shape.isClicked) {
                 shape.isClicked = false;
                 display.interaction.staticShapes.forEach(otherShape => {
                     otherShape.addItem(shape);
                     otherShape.removeItem(shape);
+                    count += otherShape.items.length;
                     if(otherShape.items.length > 0) flag = true;
                 });
+
+                if(count === display.interaction.moveableShapes.length) {
+                    document.getElementsByClassName("click-submit")[0].classList.add("show");
+                }
 
                 if(flag && !tutorial.finishTutorial()) {
                     if(tutorial.checkInteractiveStep()) {

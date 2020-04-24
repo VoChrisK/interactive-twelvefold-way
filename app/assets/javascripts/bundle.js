@@ -860,14 +860,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     display.interaction.moveableShapes.forEach(function (shape) {
       var flag = false;
+      var count = 0;
 
       if (shape.isClicked) {
         shape.isClicked = false;
         display.interaction.staticShapes.forEach(function (otherShape) {
           otherShape.addItem(shape);
           otherShape.removeItem(shape);
+          count += otherShape.items.length;
           if (otherShape.items.length > 0) flag = true;
         });
+
+        if (count === display.interaction.moveableShapes.length) {
+          document.getElementsByClassName("click-submit")[0].classList.add("show");
+        }
 
         if (flag && !tutorial.finishTutorial()) {
           if (tutorial.checkInteractiveStep()) {
@@ -1518,6 +1524,8 @@ var addEventsToButtons = function addEventsToButtons(display, tutorial) {
     display.start();
   });
   document.getElementsByClassName("submit-config")[0].addEventListener("submit", function (event) {
+    document.getElementsByClassName("click-submit")[0].classList.remove("show");
+
     if (display.interaction.addConfiguration(event, display.restriction, display.moveableType, display.staticType, display.distribution.starsAndBars)) {
       if (tutorial.checkSubmissionStep()) {
         tutorial.nextStep();
@@ -1527,10 +1535,12 @@ var addEventsToButtons = function addEventsToButtons(display, tutorial) {
       appendPartition(display);
       checkCompletion(display, tutorial);
     } else {
-      document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
-      setTimeout(function () {
-        return document.getElementsByClassName("error-msg")[0].classList.remove("pop-up");
-      }, 3000);
+      if (tutorial.finishTutorial()) {
+        document.getElementsByClassName("error-msg")[0].classList.add("pop-up");
+        setTimeout(function () {
+          return document.getElementsByClassName("error-msg")[0].classList.remove("pop-up");
+        }, 3000);
+      }
     }
   });
   document.getElementsByClassName("choose")[0].addEventListener("click", function (event) {
@@ -1570,6 +1580,11 @@ var checkCompletion = function checkCompletion(display, tutorial) {
     } else {
       tutorial.nextStep();
     }
+  } else {
+    document.getElementsByClassName("confirmation")[0].classList.add("pop-up");
+    setTimeout(function () {
+      return document.getElementsByClassName("confirmation")[0].classList.remove("pop-up");
+    }, 3000);
   }
 };
 
